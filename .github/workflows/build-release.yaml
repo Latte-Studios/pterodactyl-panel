@@ -1,0 +1,166 @@
+name: Build release
+
+# Builds a deployable tarball of the Latte fork and pushes it to GHCR as an OCI
+# artifact, tagged with the commit SHA:
+#
+#   ghcr.io/latte-studios/panel-release:<sha>
+#
+# The tarball is the application tree with vendor/ resolved and the assets
+# compiled, i.e. the same thing the upstream release tarball is. It is not a
+# container image: the node runs the Panel with the distribution's nginx and
+# php-fpm installed from the official guide, and the deploy pipeline
+# (Latte-Studios/pterodactyl-deploy) unpacks this next to the running release
+# and swaps a symlink. The upstream docker.yaml in this repository still builds
+# the image on `1.0-develop` and on releases, neither of which the fork uses.
+#
+# Composer resolves against config.platform.php in composer.json (8.2.0), so
+# the vendor tree is valid on any 8.2+ host regardless of the runner's PHP.
+#
+# A push to latte-main also triggers the production deploy, through the
+# `deploy` job below, using a PAT with actions:write on pterodactyl-deploy
+# (secret DEPLOY_TRIGGER_TOKEN). A manual dispatch only builds.
+
+on:
+  push:
+    branches: [latte-main]
+  workflow_dispatch:
+
+concurrency:
+  # Not cancel-in-progress: a half-pushed artifact is worse than a redundant build.
+  group: build-release-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  packages: write
+
+env:
+  REGISTRY: ghcr.io
+  ARTIFACT: latte-studios/panel-release
+
+jobs:
+  build:
+    name: Build and push
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: yarn
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.3"
+          extensions: bcmath, curl, gd, mbstring, pdo_mysql, xml, zip
+          tools: composer:v2
+          coverage: none
+
+      - name: Install frontend dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Typecheck and test frontend
+        run: |
+          yarn tsc
+          yarn test
+
+      - name: Build assets
+        run: yarn build:production
+
+      - name: Install PHP dependencies
+        run: composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist --no-progress
+
+      # Everything the host needs and nothing it must not have: no .git, no
+      # node_modules, no tests, and no storage/ or .env — those live in the
+      # shared directory on the host and each release symlinks to them.
+      - name: Pack
+        run: |
+          set -euo pipefail
+          version="$(sed -n "s/^    'version' => '\(.*\)',$/\1/p" config/app.php)"
+          echo "packing panel $version from $GITHUB_SHA"
+          mkdir -p dist
+          tar -czf dist/panel.tar.gz \
+            --exclude='./.git' \
+            --exclude='./.github' \
+            --exclude='./node_modules' \
+            --exclude='./tests' \
+            --exclude='./storage' \
+            --exclude='./dist' \
+            --exclude='./.env' \
+            --exclude='./.env.*' \
+            --exclude='./bootstrap/cache/*' \
+            --exclude='./.idea' \
+            --exclude='./.vscode' \
+            --exclude='./graphify-out' \
+            .
+          ls -lh dist/panel.tar.gz
+          echo "version=$version" >> "$GITHUB_ENV"
+
+      - name: Setup oras
+        uses: oras-project/setup-oras@v1
+
+      - name: Login to GHCR
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | oras login "$REGISTRY" -u "${{ github.actor }}" --password-stdin
+
+      # The commit SHA is the only tag a deploy is allowed to pin, so it is
+      # always pushed. `latte-main` follows the branch for humans reading the
+      # package page; the deploy workflow refuses it.
+      - name: Push artifact
+        working-directory: dist
+        run: |
+          set -euo pipefail
+          ref="$REGISTRY/$ARTIFACT"
+          oras push "$ref:$GITHUB_SHA" \
+            --artifact-type application/vnd.latte-studios.panel.release \
+            --annotation "org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}" \
+            --annotation "org.opencontainers.image.revision=$GITHUB_SHA" \
+            --annotation "org.opencontainers.image.version=$version" \
+            panel.tar.gz:application/gzip
+          if [ "$GITHUB_REF" = "refs/heads/latte-main" ]; then
+            oras tag "$ref:$GITHUB_SHA" latte-main
+          fi
+
+      - name: Summary
+        run: |
+          {
+            echo "### Pushed"
+            echo
+            echo '```'
+            echo "$REGISTRY/$ARTIFACT:$GITHUB_SHA  (panel $version)"
+            echo '```'
+            echo
+            echo "Deploy it with:"
+            echo
+            echo '```'
+            echo "gh workflow run deploy-production.yml --repo Latte-Studios/pterodactyl-deploy -f wings_tag=keep -f panel_tag=$GITHUB_SHA"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  # The deploy itself stays in pterodactyl-deploy — this job only hands it the
+  # immutable SHA that was just pushed. The Environment over there can require
+  # a reviewer before anything touches the host.
+  deploy:
+    name: Trigger deploy
+    needs: build
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    permissions: {}
+    steps:
+      - name: Dispatch deploy workflow
+        env:
+          GH_TOKEN: ${{ secrets.DEPLOY_TRIGGER_TOKEN }}
+        run: |
+          set -euo pipefail
+          if [ -z "${GH_TOKEN}" ]; then
+            echo "::error::DEPLOY_TRIGGER_TOKEN is not set. The artifact was pushed, but nothing was deployed. Create a fine-grained PAT with actions:write on Latte-Studios/pterodactyl-deploy and add it as a repository secret."
+            exit 1
+          fi
+          echo "dispatching deploy-production.yml with panel_tag=${GITHUB_SHA}"
+          gh workflow run deploy-production.yml \
+            --repo Latte-Studios/pterodactyl-deploy \
+            -f wings_tag=keep \
+            -f "panel_tag=${GITHUB_SHA}"
