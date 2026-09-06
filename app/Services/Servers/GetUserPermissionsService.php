@@ -21,6 +21,7 @@ class GetUserPermissionsService
                 $permissions[] = 'admin.websocket.errors';
                 $permissions[] = 'admin.websocket.install';
                 $permissions[] = 'admin.websocket.transfer';
+                $permissions[] = 'admin.websocket.host';
             }
 
             return $permissions;

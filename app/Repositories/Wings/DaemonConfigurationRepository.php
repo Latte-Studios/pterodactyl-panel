@@ -30,6 +30,23 @@ class DaemonConfigurationRepository extends DaemonRepository
     }
 
     /**
+     * Returns the current resource utilization of the machine the wings instance
+     * is running on.
+     *
+     * @throws DaemonConnectionException
+     */
+    public function getSystemUtilization(): array
+    {
+        try {
+            $response = $this->getHttpClient()->get('/api/system/utilization');
+        } catch (TransferException $exception) {
+            throw new DaemonConnectionException($exception);
+        }
+
+        return json_decode($response->getBody()->__toString(), true) ?? [];
+    }
+
+    /**
      * Updates the configuration information for a daemon. Updates the information for
      * this instance using a passed-in model. This allows us to change plenty of information
      * in the model, and still use the old, pre-update model to actually make the HTTP request.
