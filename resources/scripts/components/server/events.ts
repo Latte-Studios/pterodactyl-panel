@@ -11,6 +11,7 @@ export enum SocketEvent {
     TRANSFER_STATUS = 'transfer status',
     BACKUP_COMPLETED = 'backup completed',
     BACKUP_RESTORE_COMPLETED = 'backup restore completed',
+    HOST_STATS = 'host stats',
 }
 
 export enum SocketRequest {

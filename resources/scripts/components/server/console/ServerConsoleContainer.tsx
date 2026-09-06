@@ -10,6 +10,9 @@ import StatGraphs from '@/components/server/console/StatGraphs';
 import PowerButtons from '@/components/server/console/PowerButtons';
 import ServerDetailsBlock from '@/components/server/console/ServerDetailsBlock';
 import { Alert } from '@/components/elements/alert';
+import HostPressureAlert from '@/components/server/console/HostPressureAlert';
+import HostStatsBlock from '@/components/server/console/HostStatsBlock';
+import useHostStats from '@/plugins/useHostStats';
 
 export type PowerAction = 'start' | 'stop' | 'restart' | 'kill';
 
@@ -20,9 +23,11 @@ const ServerConsoleContainer = () => {
     const isTransferring = ServerContext.useStoreState((state) => state.server.data!.isTransferring);
     const eggFeatures = ServerContext.useStoreState((state) => state.server.data!.eggFeatures, isEqual);
     const isNodeUnderMaintenance = ServerContext.useStoreState((state) => state.server.data!.isNodeUnderMaintenance);
+    const hostStats = useHostStats();
 
     return (
         <ServerContentBlock title={'Console'}>
+            <HostPressureAlert stats={hostStats} />
             {(isNodeUnderMaintenance || isInstalling || isTransferring) && (
                 <Alert type={'warning'} className={'mb-4'}>
                     {isNodeUnderMaintenance
@@ -58,6 +63,7 @@ const ServerConsoleContainer = () => {
                     <StatGraphs />
                 </Spinner.Suspense>
             </div>
+            <HostStatsBlock stats={hostStats} className={'mt-4'} />
             <Features enabled={eggFeatures} />
         </ServerContentBlock>
     );

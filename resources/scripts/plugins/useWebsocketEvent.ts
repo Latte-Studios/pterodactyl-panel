@@ -2,7 +2,7 @@ import { ServerContext } from '@/state/server';
 import { useEffect, useRef } from 'react';
 import { SocketEvent } from '@/components/server/events';
 
-const useWebsocketEvent = (event: SocketEvent, callback: (data: string) => void) => {
+const useWebsocketEvent = (event: SocketEvent, callback: (data: string) => void, enabled = true) => {
     const { connected, instance } = ServerContext.useStoreState((state) => state.socket);
     const savedCallback = useRef<any>(null);
 
@@ -12,14 +12,14 @@ const useWebsocketEvent = (event: SocketEvent, callback: (data: string) => void)
 
     return useEffect(() => {
         const eventListener = (event: SocketEvent) => savedCallback.current(event);
-        if (connected && instance) {
+        if (enabled && connected && instance) {
             instance.addListener(event, eventListener);
         }
 
         return () => {
             instance && instance.removeListener(event, eventListener);
         };
-    }, [event, connected, instance]);
+    }, [event, connected, instance, enabled]);
 };
 
 export default useWebsocketEvent;

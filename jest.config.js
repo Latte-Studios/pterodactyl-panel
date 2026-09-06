@@ -21,8 +21,12 @@ module.exports = {
         '<rootDir>/resources/scripts/setup-tests.ts',
     ],
     transform: {
-        '.*\\.[t|j]sx$': 'babel-jest',
-        '.*\\.ts$': 'ts-jest',
+        // Under the test environment the babel preset targets the running version of
+        // node, which pulls in a plugin that the pinned version of @babel/core is too
+        // old to load. TypeScript is compiled by ts-jest instead, which does not go
+        // through babel at all.
+        '.*\\.tsx?$': 'ts-jest',
+        '.*\\.jsx$': 'babel-jest',
     },
     testPathIgnorePatterns: ['/node_modules/'],
 };
