@@ -1,0 +1,105 @@
+/*
+ * One contained button per screen is a review rule, not something the code can
+ * enforce, so every variant here is available at every size.
+ */
+.button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    box-sizing: border-box;
+    height: 40px;
+    padding: 0 20px;
+    border: 2px solid transparent;
+    border-radius: var(--ls-radius-pill);
+    font-family: var(--ls-font);
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background-color 100ms ease, border-color 100ms ease, color 100ms ease;
+}
+
+.button:focus-visible {
+    outline: 2px solid var(--ls-focus);
+    outline-offset: 2px;
+}
+
+.button:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.small {
+    height: 32px;
+    padding: 0 14px;
+    font-size: 13px;
+}
+
+.large {
+    height: 48px;
+    padding: 0 24px;
+    font-size: 16px;
+}
+
+.block {
+    width: 100%;
+}
+
+.iconOnly {
+    padding: 0;
+    width: 40px;
+}
+
+.iconOnly.small {
+    width: 32px;
+}
+
+.iconOnly.large {
+    width: 48px;
+}
+
+.contained {
+    background-color: var(--ls-primary);
+    color: var(--ls-on-primary);
+}
+
+.contained:hover:not(:disabled),
+.contained:active:not(:disabled) {
+    background-color: var(--ls-primary-hover);
+}
+
+.outline {
+    background-color: transparent;
+    border-color: var(--ls-primary);
+    color: var(--ls-primary);
+}
+
+.outline:hover:not(:disabled),
+.outline:active:not(:disabled) {
+    background-color: var(--ls-tint);
+}
+
+.text {
+    background-color: transparent;
+    color: var(--ls-primary);
+    padding: 0 8px;
+}
+
+.text:hover:not(:disabled),
+.text:active:not(:disabled) {
+    background-color: var(--ls-tint);
+}
+
+.danger {
+    background-color: transparent;
+    border-color: var(--ls-danger);
+    color: var(--ls-danger);
+}
+
+.danger:hover:not(:disabled),
+.danger:active:not(:disabled) {
+    background-color: var(--ls-bad-bg);
+}

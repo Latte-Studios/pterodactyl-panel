@@ -1,0 +1,74 @@
+/*
+ * The type scale from section 9 of the brand book. Screens compose these
+ * classes instead of restating sizes, so a change to the scale is one edit.
+ */
+.h1 {
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--ls-ink);
+}
+
+.h2 {
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1.25;
+    color: var(--ls-ink);
+}
+
+.cardTitle {
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1.3;
+    color: var(--ls-ink);
+}
+
+.body {
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--ls-ink);
+}
+
+.ui {
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.4;
+    color: var(--ls-ink);
+}
+
+.label {
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.3;
+    color: var(--ls-ink);
+}
+
+.caption {
+    font-size: 12px;
+    font-weight: 300;
+    line-height: 1.4;
+    color: var(--ls-ink-70);
+}
+
+.eyebrow {
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ls-primary);
+}
+
+.section {
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ls-ink-50);
+}
+
+.mono {
+    font-family: var(--ls-mono);
+}

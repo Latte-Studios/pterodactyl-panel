@@ -1,0 +1,74 @@
+.toolbar {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 22px;
+}
+
+.search {
+    width: 320px;
+    max-width: 100%;
+}
+
+.divider {
+    width: 1px;
+    align-self: stretch;
+    min-height: 24px;
+    background-color: var(--ls-border);
+}
+
+.chips {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.spacer {
+    flex: 1 1 auto;
+}
+
+.chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    box-sizing: border-box;
+    height: 32px;
+    padding: 0 14px;
+    border: 1px solid var(--ls-border);
+    border-radius: var(--ls-radius-pill);
+    background-color: transparent;
+    color: var(--ls-ink-70);
+    font-family: var(--ls-font);
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1;
+    cursor: pointer;
+    transition: background-color 100ms ease, border-color 100ms ease, color 100ms ease;
+}
+
+.chip:hover {
+    background-color: var(--ls-tint);
+}
+
+.chip:focus-visible {
+    outline: 2px solid var(--ls-focus);
+    outline-offset: 2px;
+}
+
+.chipActive {
+    border-color: var(--ls-primary);
+    background-color: var(--ls-tint);
+    color: var(--ls-primary);
+}
+
+@media (max-width: 640px) {
+    .search {
+        width: 100%;
+    }
+
+    .divider {
+        display: none;
+    }
+}

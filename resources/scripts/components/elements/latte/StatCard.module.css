@@ -1,0 +1,74 @@
+.card {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    box-sizing: border-box;
+    padding: 16px 18px;
+    background-color: var(--ls-paper);
+    border: 1px solid var(--ls-card-border);
+    border-radius: var(--ls-radius-card);
+    box-shadow: var(--ls-shadow-card);
+}
+
+.label {
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ls-ink-50);
+}
+
+.value {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1.15;
+    color: var(--ls-ink);
+}
+
+.compact .value {
+    font-size: 20px;
+}
+
+.compact {
+    gap: 4px;
+    padding: 12px 14px;
+}
+
+.unit {
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--ls-ink-50);
+}
+
+.hint {
+    font-size: 12px;
+    font-weight: 300;
+    line-height: 1.4;
+    color: var(--ls-ink-70);
+}
+
+.track {
+    height: 6px;
+    margin-top: 4px;
+    border-radius: var(--ls-radius-pill);
+    background-color: var(--ls-hairline);
+    overflow: hidden;
+}
+
+.bar {
+    height: 100%;
+    border-radius: var(--ls-radius-pill);
+    background-color: var(--ls-primary);
+    transition: width 250ms ease;
+}
+
+.barOpen { background-color: var(--ls-open); }
+.barProgress { background-color: var(--ls-progress); }
+.barWaiting { background-color: var(--ls-waiting); }
+.barClosed { background-color: var(--ls-closed); }
+.barOk { background-color: var(--ls-ok); }
+.barBad { background-color: var(--ls-bad); }

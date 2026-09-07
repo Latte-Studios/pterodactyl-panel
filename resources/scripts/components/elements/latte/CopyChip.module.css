@@ -1,0 +1,65 @@
+.chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    box-sizing: border-box;
+    height: 32px;
+    max-width: 100%;
+    padding: 0 10px;
+    border: 1px solid var(--ls-border);
+    border-radius: var(--ls-radius-pill);
+    background-color: transparent;
+    color: var(--ls-ink);
+    font-family: var(--ls-font);
+    cursor: pointer;
+    transition: background-color 100ms ease, border-color 100ms ease;
+}
+
+.chip:hover {
+    background-color: var(--ls-tint);
+}
+
+.chip:focus-visible {
+    outline: 2px solid var(--ls-focus);
+    outline-offset: 2px;
+}
+
+.inline {
+    height: 28px;
+    padding: 0 8px;
+}
+
+.leading {
+    width: 16px;
+    height: 16px;
+    flex: none;
+    color: var(--ls-ink-50);
+}
+
+.inline .leading {
+    width: 14px;
+    height: 14px;
+}
+
+.value {
+    font-family: var(--ls-mono);
+    font-size: 13px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.inline .value {
+    font-size: 12px;
+}
+
+.copy {
+    width: 14px;
+    height: 14px;
+    flex: none;
+    color: var(--ls-ink-50);
+}
+
+.copied .copy {
+    color: var(--ls-ok);
+}

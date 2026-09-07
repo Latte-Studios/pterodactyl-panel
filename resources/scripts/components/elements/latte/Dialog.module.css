@@ -1,0 +1,88 @@
+.scrim {
+    position: fixed;
+    inset: 0;
+    z-index: 40;
+    background-color: rgb(var(--ls-ink-rgb) / 0.4);
+}
+
+.positioner {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.dialog {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 520px;
+    max-height: 100%;
+    background-color: var(--ls-paper);
+    border: 1px solid var(--ls-card-border);
+    border-radius: var(--ls-radius-card);
+    box-shadow: var(--ls-shadow-card);
+}
+
+.header {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 20px 20px 0;
+}
+
+.icon {
+    width: 20px;
+    height: 20px;
+    flex: none;
+    margin-top: 2px;
+    color: var(--ls-primary);
+}
+
+.iconDanger {
+    color: var(--ls-danger);
+}
+
+.title {
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1.3;
+    color: var(--ls-ink);
+}
+
+.description {
+    margin-top: 4px;
+    font-size: 14px;
+    line-height: 1.4;
+    color: var(--ls-ink-70);
+}
+
+.body {
+    padding: 16px 20px;
+    overflow-y: auto;
+}
+
+.footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    padding: 0 20px 20px;
+}
+
+/* Below the fold the dialog behaves as a bottom sheet. */
+@media (max-width: 640px) {
+    .positioner {
+        align-items: flex-end;
+        padding: 0;
+    }
+
+    .dialog {
+        max-width: none;
+        border-radius: var(--ls-radius-card) var(--ls-radius-card) 0 0;
+    }
+}

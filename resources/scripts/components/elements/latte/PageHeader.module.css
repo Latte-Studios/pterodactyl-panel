@@ -1,0 +1,54 @@
+.header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 22px;
+}
+
+.eyebrow {
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ls-primary);
+    margin-bottom: 4px;
+}
+
+.title {
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--ls-ink);
+}
+
+.subtitle {
+    margin-top: 6px;
+    font-size: 14px;
+    line-height: 1.4;
+    color: var(--ls-ink-70);
+}
+
+/* The actions line up with the h1, not with the subtitle below it. */
+.actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: none;
+}
+
+@media (max-width: 640px) {
+    .header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .title {
+        font-size: 24px;
+    }
+
+    .actions {
+        justify-content: flex-start;
+    }
+}

@@ -1,0 +1,55 @@
+.wrapper {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+}
+
+.wrapper.disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.track {
+    position: relative;
+    box-sizing: border-box;
+    width: 36px;
+    height: 20px;
+    flex: none;
+    border-radius: var(--ls-radius-pill);
+    background-color: var(--ls-border-strong);
+    border: none;
+    padding: 0;
+    cursor: inherit;
+    transition: background-color 100ms ease;
+}
+
+.track:focus-visible {
+    outline: 2px solid var(--ls-focus);
+    outline-offset: 2px;
+}
+
+.on {
+    background-color: var(--ls-primary);
+}
+
+.knob {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 16px;
+    height: 16px;
+    border-radius: var(--ls-radius-pill);
+    background-color: var(--ls-paper);
+    transition: transform 100ms ease;
+}
+
+.on .knob {
+    transform: translateX(16px);
+}
+
+.label {
+    font-size: 14px;
+    line-height: 1.4;
+    color: var(--ls-ink);
+}

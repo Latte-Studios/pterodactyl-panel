@@ -1,0 +1,52 @@
+.chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    box-sizing: border-box;
+    height: 24px;
+    padding: 0 10px;
+    border-radius: var(--ls-radius-pill);
+    font-family: var(--ls-font);
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+.dot {
+    width: 6px;
+    height: 6px;
+    border-radius: var(--ls-radius-pill);
+    background-color: currentColor;
+    flex: none;
+}
+
+.open {
+    color: var(--ls-open);
+    background-color: var(--ls-open-bg);
+}
+
+.progress {
+    color: var(--ls-progress);
+    background-color: var(--ls-progress-bg);
+}
+
+.waiting {
+    color: var(--ls-waiting);
+    background-color: var(--ls-waiting-bg);
+}
+
+.closed {
+    color: var(--ls-closed);
+    background-color: var(--ls-closed-bg);
+}
+
+.ok {
+    color: var(--ls-ok);
+    background-color: var(--ls-ok-bg);
+}
+
+.bad {
+    color: var(--ls-bad);
+    background-color: var(--ls-bad-bg);
+}
