@@ -150,7 +150,8 @@ body.latte samp {
 
 body.latte code {
     background-color: var(--ls-tint);
-    color: var(--ls-secondary);
+    color: var(--ls-primary);
+    border: 1px solid var(--ls-card-border);
     border-radius: 4px;
 }
 
@@ -220,7 +221,17 @@ body.latte .main-header .navbar .sidebar-toggle .icon-bar {
     background-color: var(--ls-sidebar-ink);
 }
 
+body.latte .main-header .navbar .nav > li > a {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
 body.latte .main-header .user-menu .user-image {
+    width: 28px;
+    height: 28px;
+    margin: 0;
+    float: none;
     border-radius: var(--ls-radius-pill);
     border: 1px solid rgba(255, 255, 255, .23);
 }
@@ -351,7 +362,8 @@ body.latte .box {
     border: 1px solid var(--ls-card-border);
     border-top: 1px solid var(--ls-card-border);
     border-radius: var(--ls-radius-card);
-    box-shadow: var(--ls-shadow-card);
+    /* pterodactyl.css marks its own card shadow as important. */
+    box-shadow: var(--ls-shadow-card) !important;
     margin-bottom: 22px;
 }
 
@@ -364,6 +376,24 @@ body.latte .box.box-default {
     border-top-color: var(--ls-card-border);
 }
 
+/*
+ * Bootstrap clears floats with `::before` and `::after` table pseudo elements.
+ * In a flex container those become flex items of their own, which is why the
+ * header content ends up spread out or centred instead of pinned to the edges.
+ */
+body.latte .box-header::before,
+body.latte .box-header::after,
+body.latte .box-body::before,
+body.latte .box-body::after,
+body.latte .box-footer::before,
+body.latte .box-footer::after,
+body.latte .nav-tabs::before,
+body.latte .nav-tabs::after,
+body.latte .box-tools::before,
+body.latte .box-tools::after {
+    display: none;
+}
+
 body.latte .box-header {
     display: flex;
     align-items: center;
@@ -371,11 +401,15 @@ body.latte .box-header {
     gap: 12px;
     flex-wrap: wrap;
     padding: 16px 20px;
+    background: transparent;
     border-bottom: 1px solid var(--ls-hairline);
     color: var(--ls-ink);
 }
 
 body.latte .box-header > .box-title {
+    /* Bootstrap's pull helpers leave auto margins behind, which would push both
+       ends of the header towards the middle once it became a flex container. */
+    margin: 0;
     font-size: 20px;
     font-weight: 700;
     line-height: 1.2;
@@ -385,7 +419,14 @@ body.latte .box-header > .box-tools {
     position: static;
     display: flex;
     align-items: center;
+    justify-content: flex-end;
     gap: 8px;
+    margin: 0 0 0 auto;
+    width: auto;
+}
+
+body.latte .box-header > .box-tools form {
+    margin: 0;
 }
 
 body.latte .box-body {
@@ -423,12 +464,19 @@ body.latte .box-body.no-padding {
     border-radius: 0 0 var(--ls-radius-card) var(--ls-radius-card);
 }
 
-body.latte .table > thead > tr > th {
+/*
+ * Several admin views put their header cells in the first row of `tbody`
+ * instead of a `thead`, so both spellings are styled the same way.
+ */
+body.latte .table > thead > tr > th,
+body.latte .table > tbody > tr > th {
     font-size: 12px;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.06em;
     color: var(--ls-ink-50);
+    background: transparent;
+    border-top: 0;
     border-bottom: 1px solid var(--ls-border);
     padding: 12px 20px;
     vertical-align: middle;
@@ -442,6 +490,14 @@ body.latte .table > tbody > tr > td {
 }
 
 body.latte .table > tbody > tr:first-child > td {
+    border-top: 0;
+}
+
+body.latte .table > tbody > tr:has(> th):hover {
+    background-color: transparent;
+}
+
+body.latte .table > tbody > tr:has(> th) + tr > td {
     border-top: 0;
 }
 
@@ -576,6 +632,46 @@ body.latte .btn-group > .btn:last-child:not(:first-child) {
     border-radius: 0 var(--ls-radius-pill) var(--ls-radius-pill) 0;
 }
 
+/*
+ * Bootstrap's radio button group is a segmented control, not a row of buttons.
+ * The selected segment is tinted rather than filled, so the screen keeps a
+ * single contained button.
+ */
+body.latte .btn-group[data-toggle='buttons'] {
+    display: inline-flex;
+    padding: 0;
+    border: 2px solid var(--ls-primary);
+    border-radius: var(--ls-radius-pill);
+    overflow: hidden;
+}
+
+body.latte .btn-group[data-toggle='buttons'] > .btn,
+body.latte .btn-group[data-toggle='buttons'] > .btn.btn-primary {
+    height: 36px;
+    margin: 0;
+    border: 0;
+    border-radius: 0;
+    background-color: transparent;
+    color: var(--ls-ink-70);
+    font-weight: 400;
+}
+
+body.latte .btn-group[data-toggle='buttons'] > .btn + .btn {
+    border-left: 1px solid var(--ls-border);
+}
+
+body.latte .btn-group[data-toggle='buttons'] > .btn:hover {
+    background-color: var(--ls-tint);
+    color: var(--ls-ink);
+}
+
+body.latte .btn-group[data-toggle='buttons'] > .btn.active,
+body.latte .btn-group[data-toggle='buttons'] > .btn.btn-primary.active {
+    background-color: var(--ls-tint);
+    color: var(--ls-primary);
+    font-weight: 700;
+}
+
 /* --------------------------------------------------------------- chip ---- */
 
 body.latte .label,
@@ -674,6 +770,69 @@ body.latte .input-group .form-control:last-child,
 body.latte .input-group-addon:last-child,
 body.latte .input-group-btn:last-child > .btn {
     border-radius: 0 var(--ls-radius-input) var(--ls-radius-input) 0;
+}
+
+/*
+ * Search groups pair an input with one or two buttons. They keep a single
+ * height and one rounded outline around the whole group, whatever size class
+ * the view happens to use. The last button carries an inline radius in some
+ * views, which is why the corners are forced here.
+ */
+body.latte .input-group,
+body.latte .input-group-sm {
+    display: flex;
+}
+
+body.latte .input-group-btn {
+    display: flex;
+    /* Bootstrap sizes this at 1%, which collapses it inside a flex row. */
+    flex: 0 0 auto;
+    width: auto;
+}
+
+body.latte .input-group > .form-control,
+body.latte .input-group-sm > .form-control,
+body.latte .input-group-btn > .btn {
+    height: 40px;
+    float: none;
+    font-size: 14px;
+}
+
+/* Bootstrap gives the input the full group width, which pushes the buttons out
+   of the group once it lays out as a flex row. */
+body.latte .input-group > .form-control {
+    flex: 1 1 auto;
+    width: auto;
+    min-width: 0;
+}
+
+/* The brand book puts the search field at 320px; the buttons sit next to it. */
+body.latte .box-header .input-group {
+    width: auto;
+    max-width: 100%;
+}
+
+body.latte .box-header .input-group > .form-control {
+    flex: 0 1 320px;
+}
+
+body.latte .input-group-btn > .btn {
+    border-radius: 0;
+    margin: 0;
+    border-width: 1px;
+}
+
+body.latte .input-group-btn > .btn:not(:last-child) {
+    border-right-width: 0;
+}
+
+body.latte .input-group-btn:last-child > .btn:last-child,
+body.latte .input-group-btn:last-child > a:last-child > .btn {
+    border-radius: 0 var(--ls-radius-input) var(--ls-radius-input) 0 !important;
+}
+
+body.latte .input-group-btn > a {
+    display: flex;
 }
 
 body.latte .has-error .form-control {
@@ -843,39 +1002,42 @@ body.latte .callout a {
     text-decoration: underline;
 }
 
+/* pterodactyl.css paints the alerts as solid blocks and marks them important. */
 body.latte .alert-success,
 body.latte .callout-success {
-    background-color: var(--ls-ok-bg);
-    color: var(--ls-ok);
+    background: var(--ls-ok-bg) !important;
+    color: var(--ls-ok) !important;
 }
 
 body.latte .alert-info,
 body.latte .callout-info {
-    background-color: var(--ls-progress-bg);
-    color: var(--ls-progress);
+    background: var(--ls-progress-bg) !important;
+    color: var(--ls-progress) !important;
 }
 
 body.latte .alert-warning,
 body.latte .callout-warning {
-    background-color: var(--ls-waiting-bg);
-    color: var(--ls-waiting);
+    background: var(--ls-waiting-bg) !important;
+    color: var(--ls-waiting) !important;
 }
 
 body.latte .alert-danger,
 body.latte .callout-danger {
-    background-color: var(--ls-bad-bg);
-    color: var(--ls-danger);
+    background: var(--ls-bad-bg) !important;
+    color: var(--ls-danger) !important;
+}
+
+body.latte .alert code,
+body.latte .callout code {
+    background-color: transparent;
+    border-color: currentColor;
+    color: inherit;
 }
 
 body.latte .callout-default,
 body.latte .callout.callout-slim {
     background-color: var(--ls-open-bg);
     color: var(--ls-open);
-}
-
-body.latte .callout code {
-    background-color: transparent;
-    color: inherit;
 }
 
 /* ----------------------------------------------------------- progress ---- */
@@ -1005,6 +1167,128 @@ body.latte .tooltip-inner {
     font-family: var(--ls-font);
 }
 
+/* ------------------------------------------- pterodactyl.css skin ---- */
+
+/*
+ * pterodactyl.css carries a complete blue-grey dark skin of its own, written
+ * with single class selectors. Most of it loses to the rules above on
+ * specificity; what follows is the remainder, either because this file never
+ * set the property or because the original marks it important.
+ */
+
+body.latte .text-muted,
+body.latte .text-gray,
+body.latte .small-box .icon {
+    color: var(--ls-ink-50) !important;
+}
+
+body.latte .text-green {
+    color: var(--ls-ok) !important;
+}
+
+body.latte .text-danger {
+    color: var(--ls-danger) !important;
+}
+
+body.latte .bg-gray {
+    background-color: var(--ls-tint) !important;
+}
+
+body.latte .modal-body,
+body.latte .modal-header,
+body.latte .modal-footer {
+    background: var(--ls-paper);
+}
+
+body.latte .well {
+    background-color: var(--ls-tint);
+    border: 1px solid var(--ls-border);
+    border-radius: var(--ls-radius-input);
+    box-shadow: none;
+}
+
+body.latte .small-box {
+    background-color: var(--ls-paper);
+    border: 1px solid var(--ls-card-border);
+    border-radius: var(--ls-radius-card);
+    box-shadow: var(--ls-shadow-card);
+    color: var(--ls-ink);
+}
+
+body.latte .small-box h3,
+body.latte .small-box p {
+    color: var(--ls-ink);
+}
+
+body.latte .small-box-footer {
+    background: var(--ls-tint);
+    color: var(--ls-ink-70);
+}
+
+body.latte .nav-tabs-custom > .nav-tabs > li.active > a,
+body.latte .nav-tabs-custom > .nav-tabs > li.active:hover > a {
+    background-color: transparent;
+}
+
+body.latte .select2-container--default .select2-results__option {
+    background-color: var(--ls-paper);
+    color: var(--ls-ink);
+}
+
+body.latte .select2-container--default .select2-results__option[aria-selected='true'],
+body.latte .select2-container--default .select2-results__option[aria-selected='true']:hover {
+    background-color: var(--ls-tint);
+    color: var(--ls-ink);
+}
+
+body.latte .content-header > .breadcrumb {
+    background: transparent !important;
+    padding: 0;
+    font-size: 13px;
+}
+
+body.latte .content-header > .breadcrumb > li > a,
+body.latte .content-header > .breadcrumb > .active {
+    color: var(--ls-ink-50);
+}
+
+body.latte .content-header > .breadcrumb > li > a:hover {
+    color: var(--ls-primary);
+}
+
+/*
+ * AdminLTE's colour helpers are used directly by a few views for status
+ * labels. They are mapped onto the status tones so no view has to change.
+ */
+body.latte .label.bg-maroon,
+body.latte .label.bg-red,
+body.latte .bg-red {
+    background-color: var(--ls-bad-bg) !important;
+    color: var(--ls-bad) !important;
+}
+
+body.latte .label.bg-green,
+body.latte .bg-green {
+    background-color: var(--ls-ok-bg) !important;
+    color: var(--ls-ok) !important;
+}
+
+body.latte .label.bg-orange,
+body.latte .label.bg-yellow,
+body.latte .bg-orange,
+body.latte .bg-yellow {
+    background-color: var(--ls-waiting-bg) !important;
+    color: var(--ls-waiting) !important;
+}
+
+body.latte .label.bg-blue,
+body.latte .label.bg-aqua,
+body.latte .bg-blue,
+body.latte .bg-aqua {
+    background-color: var(--ls-progress-bg) !important;
+    color: var(--ls-progress) !important;
+}
+
 /* ------------------------------------------------------------- mobile ---- */
 
 @media (max-width: 767px) {
@@ -1053,7 +1337,8 @@ body.latte .tooltip-inner {
         width: 100%;
     }
 
-    body.latte .table > thead {
+    body.latte .table > thead,
+    body.latte .table > tbody > tr:has(> th) {
         display: none;
     }
 

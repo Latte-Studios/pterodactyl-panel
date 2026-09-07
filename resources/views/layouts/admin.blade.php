@@ -237,7 +237,15 @@
             <script>
                 $(function () {
                     $('table').each(function () {
-                        var labels = $(this).find('> thead > tr').last().find('th').map(function () {
+                        // Several views put their header cells in the first row
+                        // of the body rather than in a thead.
+                        var header = $(this).find('> thead > tr').last();
+
+                        if (header.length === 0) {
+                            header = $(this).find('> tbody > tr').has('> th').first();
+                        }
+
+                        var labels = header.find('> th').map(function () {
                             return $(this).text().trim();
                         }).get();
 
