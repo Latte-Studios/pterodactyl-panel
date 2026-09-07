@@ -71,6 +71,14 @@ export default createGlobalStyle`
         --ls-terminal: #1E140C;
         --ls-terminal-ink: #F3E9DF;
 
+        /* The sidebar keeps one ink in both themes: it is Wolf Expresso in light
+           and the darkest brown in dark, so white always sits on top of it. */
+        --ls-sidebar-ink: rgba(255,255,255,.70);
+        --ls-sidebar-ink-strong: #FFFFFF;
+        --ls-sidebar-ink-muted: rgba(255,255,255,.50);
+        --ls-sidebar-hover: rgba(255,255,255,.08);
+        --ls-sidebar-active: rgba(255,255,255,.14);
+
         --ls-ground-rgb: 250 248 245;
         --ls-paper-rgb: 255 255 255;
         --ls-sidebar-rgb: 116 80 47;

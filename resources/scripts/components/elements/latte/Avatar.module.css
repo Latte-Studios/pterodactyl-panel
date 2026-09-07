@@ -29,5 +29,5 @@
 }
 
 .primary { background-color: var(--ls-primary); }
-.secondary { background-color: var(--ls-secondary); color: #FFFFFF; }
-.mocha { background-color: var(--ls-mocha); color: #FFFFFF; }
+.secondary { background-color: var(--ls-secondary); color: var(--ls-sidebar-ink-strong); }
+.mocha { background-color: var(--ls-mocha); color: var(--ls-sidebar-ink-strong); }

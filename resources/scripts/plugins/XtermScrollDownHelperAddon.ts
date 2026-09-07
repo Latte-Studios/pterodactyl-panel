@@ -45,8 +45,12 @@ export class ScrollDownHelperAddon implements ITerminalAddon {
         this.element.style.bottom = '.5rem';
         this.element.style.padding = '.5rem';
         this.element.style.fontSize = '1.25em';
-        this.element.style.boxShadow = '0 2px 8px #000';
-        this.element.style.backgroundColor = '#252526';
+        // The button floats over the terminal, so it takes the terminal tokens
+        // rather than a colour of its own.
+        this.element.style.borderRadius = 'var(--ls-radius-pill)';
+        this.element.style.border = '1px solid var(--ls-sidebar-hover)';
+        this.element.style.color = 'var(--ls-terminal-ink)';
+        this.element.style.backgroundColor = 'var(--ls-terminal)';
         this.element.style.zIndex = '999';
         this.element.style.cursor = 'pointer';
 

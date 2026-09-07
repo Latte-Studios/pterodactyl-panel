@@ -11,7 +11,7 @@
     justify-content: center;
     min-height: 100vh;
     padding: 40px 20px;
-    background-color: #74502f;
+    background-color: var(--ls-sidebar);
     overflow: hidden;
 }
 
@@ -26,7 +26,7 @@
 .brand {
     position: relative;
     margin-bottom: 28px;
-    color: #ffffff;
+    color: var(--ls-sidebar-ink-strong);
     font-size: 52px;
     font-weight: 400;
     line-height: 1.1;

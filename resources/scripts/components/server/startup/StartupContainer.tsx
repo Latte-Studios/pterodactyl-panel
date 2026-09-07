@@ -1,6 +1,4 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import TitledGreyBox from '@/components/elements/TitledGreyBox';
-import tw from 'twin.macro';
 import VariableBox from '@/components/server/startup/VariableBox';
 import Card from '@/components/elements/latte/Card';
 import styles from './startup.module.css';

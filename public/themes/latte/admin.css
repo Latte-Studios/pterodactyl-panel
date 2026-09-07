@@ -66,7 +66,7 @@
     --ls-sidebar-ink-strong: #FFFFFF;
     --ls-sidebar-hover: rgba(255,255,255,.08);
     --ls-sidebar-active: rgba(255,255,255,.14);
-    --ls-sidebar-section: rgba(255,255,255,.50);
+    --ls-sidebar-ink-muted: rgba(255,255,255,.50);
 }
 
 [data-theme="dark"] {
@@ -243,7 +243,7 @@ body.latte .sidebar-menu > li.header {
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    color: var(--ls-sidebar-section);
+    color: var(--ls-sidebar-ink-muted);
     background: transparent;
     padding: 18px 12px 8px;
 }
