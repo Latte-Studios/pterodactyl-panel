@@ -380,13 +380,13 @@ body.latte .box.box-default {
  * Bootstrap clears floats with `::before` and `::after` table pseudo elements.
  * In a flex container those become flex items of their own, which is why the
  * header content ends up spread out or centred instead of pinned to the edges.
+ *
+ * Only the containers this file lays out as flex are listed. Everywhere else
+ * the clearfix has to stay: the card footer still contains floated buttons, and
+ * without it the footer collapses and they hang outside the card.
  */
 body.latte .box-header::before,
 body.latte .box-header::after,
-body.latte .box-body::before,
-body.latte .box-body::after,
-body.latte .box-footer::before,
-body.latte .box-footer::after,
 body.latte .nav-tabs::before,
 body.latte .nav-tabs::after,
 body.latte .box-tools::before,
