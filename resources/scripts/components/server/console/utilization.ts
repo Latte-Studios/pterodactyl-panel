@@ -1,33 +1,36 @@
 import { HostPressureLevel } from '@/api/server/hostStats';
+import { StatusTone } from '@/components/elements/latte/status';
 
 /**
- * Returns the background color a stat block should use for a value, or undefined
- * when the value is low enough that the block keeps its default styling.
+ * Returns the tone a reading should carry, or undefined when the value is low
+ * enough that it keeps the default ink. Colours come from the tone, never from
+ * a class name picked here.
  */
-export const getBackgroundColor = (value: number, max: number | null): string | undefined => {
+export const getTone = (value: number, max: number | null): StatusTone | undefined => {
     const delta = !max ? 0 : value / max;
 
+    if (delta > 0.9) {
+        return 'bad';
+    }
+
     if (delta > 0.8) {
-        if (delta > 0.9) {
-            return 'bg-red-500';
-        }
-        return 'bg-yellow-500';
+        return 'waiting';
     }
 
     return undefined;
 };
 
 /**
- * Returns the background color for a level that the daemon already resolved,
- * which uses the thresholds configured for that node rather than the fixed
- * percentages a container is measured against.
+ * Returns the tone for a level the daemon already resolved, which uses the
+ * thresholds configured for that node rather than the fixed percentages a
+ * container is measured against.
  */
-export const getLevelColor = (level: HostPressureLevel): string | undefined => {
+export const getLevelTone = (level: HostPressureLevel): StatusTone | undefined => {
     switch (level) {
         case 'critical':
-            return 'bg-red-500';
+            return 'bad';
         case 'warning':
-            return 'bg-yellow-500';
+            return 'waiting';
         default:
             return undefined;
     }

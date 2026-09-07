@@ -1,5 +1,6 @@
 import React from 'react';
-import { Alert } from '@/components/elements/alert';
+import { ExclamationIcon } from '@heroicons/react/outline';
+import Alert from '@/components/elements/latte/Alert';
 import { HostPressureResource, HostStats } from '@/api/server/hostStats';
 
 const RESOURCE_LABELS: Record<HostPressureResource, string> = {
@@ -29,12 +30,12 @@ const HostPressureAlert = ({ stats }: { stats: HostStats | null }) => {
     }
 
     const strained = (Object.keys(stats.pressure.resources) as HostPressureResource[])
-        .filter((resource) => stats.pressure.resources[resource] !== 'ok')
-        .map((resource) => `${RESOURCE_LABELS[resource]} at ${percentFor(stats, resource).toFixed(1)}%`);
+        .filter(resource => stats.pressure.resources[resource] !== 'ok')
+        .map(resource => `${RESOURCE_LABELS[resource]} at ${percentFor(stats, resource).toFixed(1)}%`);
 
     return (
-        <Alert type={stats.pressure.level === 'critical' ? 'danger' : 'warning'} className={'mb-4'}>
-            The machine this server runs on is under pressure ({strained.join(', ')}). The graphs below only measure
+        <Alert tone={stats.pressure.level === 'critical' ? 'bad' : 'waiting'} icon={ExclamationIcon}>
+            The machine this server runs on is under pressure ({strained.join(', ')}). The readings above only measure
             this server, so they can look healthy while the host itself is saturated.
         </Alert>
     );

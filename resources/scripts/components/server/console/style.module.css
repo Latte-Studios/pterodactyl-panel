@@ -31,7 +31,8 @@
     }
 
     & > .container {
-        @apply rounded-t p-1 sm:p-2 bg-black min-h-[16rem] flex-1 font-mono text-sm;
+        @apply p-1 sm:p-2 bg-ls-terminal min-h-[16rem] flex-1 font-mono text-sm;
+        border-radius: var(--ls-radius-card) var(--ls-radius-card) 0 0;
 
         & #terminal {
             @apply h-full;
@@ -41,7 +42,7 @@
             }
 
             &::-webkit-scrollbar-thumb {
-                @apply bg-gray-900;
+                @apply bg-ls-terminal-ink/25;
             }
         }
     }
@@ -51,13 +52,18 @@
     }
 
     & .command_input {
-        @apply relative bg-gray-900 px-2 text-gray-100 pl-10 pr-4 py-2 w-full font-mono text-sm sm:rounded-b;
+        @apply relative bg-ls-terminal px-2 text-ls-terminal-ink pl-10 pr-4 py-2 w-full font-mono text-sm;
         @apply focus:ring-0 outline-none focus-visible:outline-none;
         @apply border-0 border-b-2 border-transparent transition-colors duration-100;
-        @apply active:border-cyan-500 focus:border-cyan-500;
+        @apply active:border-ls-accent focus:border-ls-accent;
+        border-radius: 0 0 var(--ls-radius-card) var(--ls-radius-card);
+        border-top: 1px solid rgb(var(--ls-terminal-ink-rgb) / 0.1);
     }
 }
 
 .chart_container {
-    @apply bg-gray-600 rounded shadow-lg pt-2 border-b-4 border-gray-700 relative;
+    @apply bg-ls-paper pt-2 relative;
+    border: 1px solid var(--ls-card-border);
+    border-radius: var(--ls-radius-card);
+    box-shadow: var(--ls-shadow-card);
 }

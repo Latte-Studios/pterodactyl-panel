@@ -9,7 +9,6 @@ import { ScrollDownHelperAddon } from '@/plugins/XtermScrollDownHelperAddon';
 import SpinnerOverlay from '@/components/elements/SpinnerOverlay';
 import { ServerContext } from '@/state/server';
 import { usePermissions } from '@/plugins/usePermissions';
-import { theme as th } from 'twin.macro';
 import useEventListener from '@/plugins/useEventListener';
 import { debounce } from 'debounce';
 import { usePersistedState } from '@/plugins/usePersistedState';
@@ -20,10 +19,16 @@ import { ChevronDoubleRightIcon } from '@heroicons/react/solid';
 import 'xterm/css/xterm.css';
 import styles from './style.module.css';
 
+// The terminal keeps the same ground in both themes: a light console is
+// unreadable with the ANSI palette servers actually emit.
+const TERMINAL_BACKGROUND = '#1E140C';
+const TERMINAL_FOREGROUND = '#F3E9DF';
+
 const theme = {
-    background: th`colors.black`.toString(),
-    cursor: 'transparent',
-    black: th`colors.black`.toString(),
+    background: TERMINAL_BACKGROUND,
+    foreground: TERMINAL_FOREGROUND,
+    cursor: '#C28E5F',
+    black: TERMINAL_BACKGROUND,
     red: '#E54B4B',
     green: '#9ECE58',
     yellow: '#FAED70',
@@ -39,7 +44,7 @@ const theme = {
     brightMagenta: '#C792EA',
     brightCyan: '#89DDFF',
     brightWhite: '#ffffff',
-    selection: '#FAF089',
+    selection: 'rgba(194, 142, 95, 0.35)',
 };
 
 const terminalProps: ITerminalOptions = {
@@ -47,7 +52,7 @@ const terminalProps: ITerminalOptions = {
     cursorStyle: 'underline',
     allowTransparency: true,
     fontSize: 12,
-    fontFamily: th('fontFamily.mono'),
+    fontFamily: 'ui-monospace, "Cascadia Mono", Consolas, monospace',
     rows: 30,
     theme: theme,
 };

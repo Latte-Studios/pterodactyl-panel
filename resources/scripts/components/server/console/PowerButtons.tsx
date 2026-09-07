@@ -1,75 +1,125 @@
-import React, { useEffect, useState } from 'react';
-import { Button } from '@/components/elements/button/index';
+import React, { useEffect, useRef, useState } from 'react';
+import classNames from 'classnames';
+import { ChevronDownIcon, ExclamationIcon } from '@heroicons/react/outline';
 import Can from '@/components/elements/Can';
 import { ServerContext } from '@/state/server';
 import { PowerAction } from '@/components/server/console/ServerConsoleContainer';
-import { Dialog } from '@/components/elements/dialog';
+import Button from '@/components/elements/latte/Button';
+import Dialog from '@/components/elements/latte/Dialog';
+import styles from './console.module.css';
 
 interface PowerButtonProps {
     className?: string;
 }
 
+/**
+ * Start is the one contained button on the console. Restart is an outline,
+ * Stop is a danger outline, and Kill sits in a menu under Stop so forcing a
+ * process down is never one stray click away from stopping it politely.
+ */
 export default ({ className }: PowerButtonProps) => {
-    const [open, setOpen] = useState(false);
-    const status = ServerContext.useStoreState((state) => state.status.value);
-    const instance = ServerContext.useStoreState((state) => state.socket.instance);
+    const [confirming, setConfirming] = useState(false);
+    const [menuOpen, setMenuOpen] = useState(false);
+    const group = useRef<HTMLDivElement>(null);
 
-    const killable = status === 'stopping';
-    const onButtonClick = (
-        action: PowerAction | 'kill-confirmed',
-        e: React.MouseEvent<HTMLButtonElement, MouseEvent>
-    ): void => {
-        e.preventDefault();
-        if (action === 'kill') {
-            return setOpen(true);
-        }
+    const status = ServerContext.useStoreState(state => state.status.value as string | null);
+    const instance = ServerContext.useStoreState(state => state.socket.instance);
 
+    const send = (action: PowerAction) => {
         if (instance) {
-            setOpen(false);
-            instance.send('set state', action === 'kill-confirmed' ? 'kill' : action);
+            instance.send('set state', action);
         }
     };
 
     useEffect(() => {
         if (status === 'offline') {
-            setOpen(false);
+            setConfirming(false);
+            setMenuOpen(false);
         }
     }, [status]);
 
+    useEffect(() => {
+        if (!menuOpen) {
+            return;
+        }
+
+        const listener = (event: MouseEvent) => {
+            if (group.current && !group.current.contains(event.target as Node)) {
+                setMenuOpen(false);
+            }
+        };
+
+        document.addEventListener('mousedown', listener);
+
+        return () => document.removeEventListener('mousedown', listener);
+    }, [menuOpen]);
+
     return (
-        <div className={className}>
-            <Dialog.Confirm
-                open={open}
-                hideCloseIcon
-                onClose={() => setOpen(false)}
+        <div className={classNames(styles.power, className)}>
+            <Dialog
+                open={confirming}
+                onClose={() => setConfirming(false)}
                 title={'Forcibly Stop Process'}
-                confirm={'Continue'}
-                onConfirmed={onButtonClick.bind(this, 'kill-confirmed')}
-            >
-                Forcibly stopping a server can lead to data corruption.
-            </Dialog.Confirm>
+                description={'Forcibly stopping a server can lead to data corruption.'}
+                icon={ExclamationIcon}
+                danger
+                footer={
+                    <>
+                        <Button variant={'text'} onClick={() => setConfirming(false)}>
+                            Cancel
+                        </Button>
+                        <Button
+                            variant={'danger'}
+                            onClick={() => {
+                                setConfirming(false);
+                                send('kill');
+                            }}
+                        >
+                            Continue
+                        </Button>
+                    </>
+                }
+            />
             <Can action={'control.start'}>
-                <Button
-                    className={'flex-1'}
-                    disabled={status !== 'offline'}
-                    onClick={onButtonClick.bind(this, 'start')}
-                >
+                <Button variant={'contained'} disabled={status !== 'offline'} onClick={() => send('start')}>
                     Start
                 </Button>
             </Can>
             <Can action={'control.restart'}>
-                <Button.Text className={'flex-1'} disabled={!status} onClick={onButtonClick.bind(this, 'restart')}>
+                <Button variant={'outline'} disabled={!status} onClick={() => send('restart')}>
                     Restart
-                </Button.Text>
+                </Button>
             </Can>
             <Can action={'control.stop'}>
-                <Button.Danger
-                    className={'flex-1'}
-                    disabled={status === 'offline'}
-                    onClick={onButtonClick.bind(this, killable ? 'kill' : 'stop')}
-                >
-                    {killable ? 'Kill' : 'Stop'}
-                </Button.Danger>
+                <div ref={group} className={styles.stopGroup}>
+                    <Button variant={'danger'} disabled={status === 'offline'} onClick={() => send('stop')}>
+                        Stop
+                    </Button>
+                    <Button
+                        variant={'danger'}
+                        iconOnly
+                        aria-label={'More power actions'}
+                        aria-expanded={menuOpen}
+                        onClick={() => setMenuOpen(open => !open)}
+                    >
+                        <ChevronDownIcon width={16} height={16} />
+                    </Button>
+                    {menuOpen && (
+                        <div className={styles.stopMenu}>
+                            <button
+                                type={'button'}
+                                className={styles.stopMenuItem}
+                                disabled={status === 'offline'}
+                                onClick={() => {
+                                    setMenuOpen(false);
+                                    setConfirming(true);
+                                }}
+                            >
+                                Kill
+                            </button>
+                        </div>
+                    )}
+                </div>
             </Can>
         </div>
     );

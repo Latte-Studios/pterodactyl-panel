@@ -1,0 +1,190 @@
+/*
+ * Console layout, option C: power in the top right, six readings above the
+ * terminal, the terminal taking whatever height is left, and the host on one
+ * line of bars underneath.
+ */
+.screen {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    min-height: 0;
+}
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 16px;
+}
+
+/* The address carries a chip rather than a number, so it gets two columns. */
+.address {
+    grid-column: span 2;
+}
+
+.muted {
+    color: var(--ls-ink-50);
+    font-size: 16px;
+    font-weight: 400;
+}
+
+.terminal {
+    flex: 1 1 auto;
+    min-height: 24rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.power {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Kill lives in a menu under Stop, so a destructive action is never one stray
+   click away from a normal one. */
+.stopGroup {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.stopMenu {
+    position: absolute;
+    top: calc(100% + 6px);
+    right: 0;
+    z-index: 30;
+    min-width: 160px;
+    padding: 6px;
+    background-color: var(--ls-paper);
+    border: 1px solid var(--ls-card-border);
+    border-radius: var(--ls-radius-card);
+    box-shadow: var(--ls-shadow-card);
+}
+
+.stopMenuItem {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    height: 32px;
+    padding: 0 10px;
+    border: none;
+    border-radius: var(--ls-radius-input);
+    background: none;
+    color: var(--ls-danger);
+    font-family: var(--ls-font);
+    font-size: 13px;
+    font-weight: 700;
+    text-align: left;
+    cursor: pointer;
+}
+
+.stopMenuItem:hover {
+    background-color: var(--ls-bad-bg);
+}
+
+.stopMenuItem:disabled {
+    color: var(--ls-ink-50);
+    cursor: not-allowed;
+    background: none;
+}
+
+.host {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.hostMeter {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.hostLabel {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ls-ink-50);
+}
+
+.hostValue {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--ls-ink);
+}
+
+.hostLimit {
+    font-size: 12px;
+    font-weight: 300;
+    color: var(--ls-ink-70);
+}
+
+.hostTrack {
+    height: 6px;
+    margin-top: 2px;
+    border-radius: var(--ls-radius-pill);
+    background-color: var(--ls-hairline);
+    overflow: hidden;
+}
+
+.hostBar {
+    height: 100%;
+    border-radius: var(--ls-radius-pill);
+    background-color: var(--ls-primary);
+    transition: width 250ms ease;
+}
+
+.hostBarWaiting {
+    background-color: var(--ls-waiting);
+}
+
+.hostBarBad {
+    background-color: var(--ls-bad);
+}
+
+.graphs {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+}
+
+@media (max-width: 1023px) {
+    .stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .address {
+        grid-column: span 2;
+    }
+
+    .host {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .graphs {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+@media (max-width: 640px) {
+    .stats {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .address {
+        grid-column: span 1;
+    }
+
+    .host {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .power {
+        width: 100%;
+    }
+
+    .power > * {
+        flex: 1 1 auto;
+    }
+}
