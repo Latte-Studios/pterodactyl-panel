@@ -1,6 +1,5 @@
-# Local panel for design work. There is no Wings daemon here, so the server
-# screens have no websocket and the daemon backed endpoints return errors;
-# auth, the dashboard, the account area and the admin area all work.
+# Local panel for design work, with a Wings daemon so the server screens have a
+# working websocket.
 #
 #   docker compose -f docker/dev.yml up -d
 #   docker compose -f docker/dev.yml exec panel composer install
@@ -8,6 +7,18 @@
 #   docker compose -f docker/dev.yml exec panel php artisan p:user:make
 #
 # The assets are built on the host: `yarn watch`.
+#
+# Wings reads docker/wings/config.yml, which is not in the repository because it
+# carries the node token. Generate it after creating a node, replacing the node
+# id and the address with your own:
+#
+#   docker compose -f docker/dev.yml exec panel \
+#       php artisan p:node:configuration 1 > docker/wings/config.yml
+#
+# Then set `remote` to http://panel:8000 so Wings reaches the panel over the
+# compose network. The node's FQDN has to be an address that both the browser
+# and the panel container can reach, which on Docker Desktop means the machine's
+# own LAN address rather than localhost.
 services:
   database:
     image: mariadb:11
@@ -67,6 +78,38 @@ services:
       RECAPTCHA_ENABLED: "false"
       HASHIDS_SALT: latte-dev
       HASHIDS_LENGTH: "8"
+
+  wings:
+    build:
+      context: ../../wings
+      dockerfile: Dockerfile
+      args:
+        VERSION: dev
+    restart: unless-stopped
+    depends_on:
+      - panel
+    tty: true
+    ports:
+      - "8080:8080"
+      - "2022:2022"
+      # Only the first handful of the node's allocations are published; add more
+      # here when a server needs a port outside this range.
+      - "1025-1035:1025-1035"
+      - "1025-1035:1025-1035/udp"
+    environment:
+      TZ: UTC
+    volumes:
+      - ./wings:/etc/pterodactyl
+      # Wings asks the host daemon to create the game containers, so the server
+      # data has to live at the same path on the host as it does in here.
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/lib/docker/containers:/var/lib/docker/containers
+      - /var/lib/pterodactyl:/var/lib/pterodactyl
+      - /var/log/pterodactyl:/var/log/pterodactyl
+      - /tmp/pterodactyl:/tmp/pterodactyl
+      # Wings writes a machine-id per server here and binds it into the game
+      # container, so the host daemon has to see the same path.
+      - /run/wings:/run/wings
 
 volumes:
   database:

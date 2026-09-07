@@ -39,3 +39,6 @@ result
 # Playwright
 /tests/.playwright
 /playwright-report
+
+# Wings picks up the node token from here; it is generated, never committed.
+/docker/wings/
