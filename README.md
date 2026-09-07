@@ -15,6 +15,30 @@ Stop settling for less. Make game servers a first class citizen on your platform
 
 ![Image](https://cdn.pterodactyl.io/site-assets/pterodactyl_v1_demo.gif)
 
+## Theme
+
+This fork ships the Latte Studios design system. Colour, spacing, radius and
+type all come from `--ls-*` custom properties; the light and dark palettes are
+declared once in `resources/scripts/assets/css/GlobalStylesheet.ts` and mirrored
+for the administration area in `public/themes/latte/admin.css`. No component
+writes a colour of its own.
+
+The panel follows the operating system by default. A toggle in the sidebar
+footer overrides it, stored per browser under `latte:theme` in local storage and
+mirrored into the `latte_theme` cookie so the Blade rendered administration
+area can stamp the same theme on the server, before the first paint.
+
+New code reaches the tokens through Tailwind (`bg-ls-paper`, `text-ls-ink-70`)
+or a CSS module. The primitives live in
+`resources/scripts/components/elements/latte/` and the shell in
+`resources/scripts/components/shell/`.
+
+`yarn screenshots` drives Playwright over the panel in both themes at 390 and
+1440 pixels and writes to `tests/screenshots/{theme}/{width}/`. It needs a
+running instance: point `PLAYWRIGHT_BASE_URL` at it and set
+`PLAYWRIGHT_USERNAME`, `PLAYWRIGHT_PASSWORD` and `PLAYWRIGHT_SERVER_ID` for the
+authenticated pages.
+
 ## Documentation
 
 * [Panel Documentation](https://pterodactyl.io/panel/1.0/getting_started.html)

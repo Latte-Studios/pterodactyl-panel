@@ -3,6 +3,40 @@ This file is a running track of new features and fixes to each version of the pa
 
 This project follows [Semantic Versioning](http://semver.org) guidelines.
 
+## Latte Studios fork
+Changes carried by this fork on top of upstream. They are listed separately
+because they do not correspond to an upstream release.
+
+### Added
+* The Latte Studios design system across the whole panel: tokens, Lato, a 240px
+  sidebar shell that replaces the top navigation bar and the tab strip, and a
+  single set of primitives for buttons, status chips, copyable values, cards,
+  page headers, toolbars, tables, stat cards, alerts, form fields, switches,
+  avatars and dialogs.
+* Light and dark themes. The panel follows the operating system by default; a
+  toggle in the sidebar footer overrides it and the choice is mirrored into a
+  cookie so the administration area renders under the same theme.
+* Phone layouts throughout. Data tables become lists instead of scrolling
+  sideways, the sidebar becomes a drawer, and sub navigation becomes a
+  scrollable tab strip. The administration area stacks its tables through a
+  `data-label` attribute, without any view being rewritten.
+* Playwright screenshots of the client and administration screens in both
+  themes at 390 and 1440 pixels, through `yarn screenshots`.
+* Host utilization on the node view and a host pressure alert on the console
+  for administrators.
+
+### Changed
+* The administration area keeps AdminLTE but drops the skin-blue theme for a
+  token based override in `public/themes/latte/admin.css`.
+* The console follows the layout the design system specifies: power controls in
+  the page header, six stat cards, the host alert, and the terminal filling the
+  remaining height.
+
+### Removed
+* The legacy component layer: the top navigation bar, the tab strip, the grey
+  row and titled box containers, the twin.macro button, the generated avatar
+  and the server row. Every screen renders through the design system instead.
+
 ## v1.12.3
 ### Fixed
 * Adds a rate limit when changing email addresses on an account to prevent account enumeration.
