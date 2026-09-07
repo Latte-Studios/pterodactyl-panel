@@ -14,6 +14,8 @@ export type ServerState =
     | 'installing'
     | 'transferring'
     | 'restoring_backup'
+    | 'install_failed'
+    | 'reinstall_failed'
     | 'node_maintenance';
 
 const serverTones: Record<ServerState, StatusTone> = {
@@ -25,6 +27,8 @@ const serverTones: Record<ServerState, StatusTone> = {
     installing: 'waiting',
     transferring: 'waiting',
     restoring_backup: 'waiting',
+    install_failed: 'bad',
+    reinstall_failed: 'bad',
     node_maintenance: 'waiting',
 };
 

@@ -1,33 +1,20 @@
 import React from 'react';
-import { NavLink, Route, Switch } from 'react-router-dom';
-import NavigationBar from '@/components/NavigationBar';
+import { Route, Switch } from 'react-router-dom';
 import DashboardContainer from '@/components/dashboard/DashboardContainer';
 import { NotFound } from '@/components/elements/ScreenBlock';
 import TransitionRouter from '@/TransitionRouter';
-import SubNavigation from '@/components/elements/SubNavigation';
 import { useLocation } from 'react-router';
 import Spinner from '@/components/elements/Spinner';
 import routes from '@/routers/routes';
+import Shell from '@/components/shell/Shell';
+import { useDashboardNavigation } from '@/components/shell/navigation';
 
 export default () => {
     const location = useLocation();
+    const { groups, subnav } = useDashboardNavigation();
 
     return (
-        <>
-            <NavigationBar />
-            {location.pathname.startsWith('/account') && (
-                <SubNavigation>
-                    <div>
-                        {routes.account
-                            .filter((route) => !!route.name)
-                            .map(({ path, name, exact = false }) => (
-                                <NavLink key={path} to={`/account/${path}`.replace('//', '/')} exact={exact}>
-                                    {name}
-                                </NavLink>
-                            ))}
-                    </div>
-                </SubNavigation>
-            )}
+        <Shell groups={groups} subnav={location.pathname.startsWith('/account') ? subnav : undefined}>
             <TransitionRouter>
                 <React.Suspense fallback={<Spinner centered />}>
                     <Switch location={location}>
@@ -45,6 +32,6 @@ export default () => {
                     </Switch>
                 </React.Suspense>
             </TransitionRouter>
-        </>
+        </Shell>
     );
 };

@@ -1,0 +1,9 @@
+.page {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+}
+
+.flash {
+    margin: 0;
+}

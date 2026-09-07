@@ -1,0 +1,400 @@
+/*
+ * One component covers the three widths the design system is specified at:
+ * the sidebar is fixed above 1024px, collapses to icons between 641 and
+ * 1023px, and becomes a drawer under a 56px topbar below 640px.
+ */
+.shell {
+    display: flex;
+    min-height: 100vh;
+    background-color: var(--ls-ground);
+}
+
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    width: var(--ls-sidebar-w);
+    flex: none;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    background-color: var(--ls-sidebar);
+    color: #ffffff;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-sizing: border-box;
+    height: 64px;
+    padding: 0 16px;
+    flex: none;
+    color: #ffffff;
+    font-size: 18px;
+    font-weight: 700;
+    text-decoration: none;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.brandMark {
+    width: 28px;
+    height: 28px;
+    flex: none;
+    border-radius: var(--ls-radius-pill);
+    background-color: var(--ls-accent);
+    color: var(--ls-sidebar);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.context {
+    margin: 0 12px 12px;
+    flex: none;
+}
+
+.nav {
+    flex: 1 1 auto;
+    overflow-y: auto;
+    padding: 4px 12px 12px;
+}
+
+.group + .group {
+    margin-top: 16px;
+}
+
+.groupLabel {
+    padding: 0 10px;
+    margin-bottom: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgb(255 255 255 / 0.5);
+}
+
+.item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-sizing: border-box;
+    height: 36px;
+    padding: 0 10px;
+    border-radius: var(--ls-radius-input);
+    color: rgb(255 255 255 / 0.7);
+    font-size: 14px;
+    font-weight: 400;
+    text-decoration: none;
+    white-space: nowrap;
+    overflow: hidden;
+    transition: background-color 100ms ease, color 100ms ease;
+}
+
+.item + .item {
+    margin-top: 2px;
+}
+
+.item:hover {
+    background-color: rgb(255 255 255 / 0.08);
+    color: #ffffff;
+}
+
+.item:focus-visible {
+    outline: none;
+    box-shadow: inset 0 0 0 2px var(--ls-accent);
+}
+
+.itemActive {
+    background-color: rgb(255 255 255 / 0.14);
+    color: #ffffff;
+    font-weight: 700;
+}
+
+.itemIcon {
+    width: 20px;
+    height: 20px;
+    flex: none;
+}
+
+.itemLabel {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.footer {
+    flex: none;
+    padding: 12px;
+    border-top: 1px solid rgb(255 255 255 / 0.08);
+}
+
+.footerRow {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.footerSpacer {
+    flex: 1 1 auto;
+}
+
+.iconButton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    flex: none;
+    padding: 0;
+    border: none;
+    border-radius: var(--ls-radius-pill);
+    background-color: transparent;
+    color: rgb(255 255 255 / 0.7);
+    cursor: pointer;
+    transition: background-color 100ms ease, color 100ms ease;
+}
+
+.iconButton:hover {
+    background-color: rgb(255 255 255 / 0.08);
+    color: #ffffff;
+}
+
+.iconButton:focus-visible {
+    outline: none;
+    box-shadow: inset 0 0 0 2px var(--ls-accent);
+}
+
+.iconButton svg {
+    width: 18px;
+    height: 18px;
+}
+
+.user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+    margin-bottom: 10px;
+    padding: 0 2px;
+    color: #ffffff;
+    text-decoration: none;
+}
+
+.userText {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.userName {
+    font-size: 13px;
+    font-weight: 700;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.userEmail {
+    font-size: 11px;
+    font-weight: 300;
+    color: rgb(255 255 255 / 0.5);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.credit {
+    margin-top: 10px;
+    font-size: 11px;
+    font-weight: 300;
+    color: rgb(255 255 255 / 0.5);
+}
+
+.credit a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.main {
+    flex: 1 1 auto;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.content {
+    flex: 1 1 auto;
+    padding: 28px 40px;
+}
+
+.topbar {
+    display: none;
+}
+
+.drawer {
+    display: none;
+}
+
+/* Tablet: icons only, the labels come back in a tooltip. */
+@media (max-width: 1023px) {
+    .sidebar {
+        width: 64px;
+    }
+
+    .brand {
+        justify-content: center;
+        padding: 0;
+    }
+
+    .brandName,
+    .itemLabel,
+    .groupLabel,
+    .userText,
+    .credit,
+    .context {
+        display: none;
+    }
+
+    .item {
+        justify-content: center;
+        padding: 0;
+    }
+
+    .nav {
+        padding: 4px 8px 12px;
+    }
+
+    .footerRow {
+        flex-direction: column;
+    }
+
+    .user {
+        justify-content: center;
+    }
+
+    .content {
+        padding: 24px 20px;
+    }
+}
+
+@media (max-width: 640px) {
+    .shell {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        z-index: 60;
+        width: 280px;
+        height: 100%;
+        transform: translateX(-100%);
+        transition: transform 150ms ease;
+    }
+
+    .sidebar .brand {
+        justify-content: flex-start;
+        padding: 0 16px;
+    }
+
+    .sidebar .brandName,
+    .sidebar .itemLabel,
+    .sidebar .groupLabel,
+    .sidebar .userText,
+    .sidebar .credit,
+    .sidebar .context {
+        display: block;
+    }
+
+    .sidebar .item {
+        justify-content: flex-start;
+        padding: 0 10px;
+    }
+
+    .sidebar .footerRow {
+        flex-direction: row;
+    }
+
+    .drawerOpen {
+        transform: translateX(0);
+    }
+
+    .drawer {
+        display: block;
+        position: fixed;
+        inset: 0;
+        z-index: 55;
+        background-color: rgb(var(--ls-ink-rgb) / 0.4);
+    }
+
+    .topbar {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        box-sizing: border-box;
+        height: 56px;
+        padding: 0 12px;
+        background-color: var(--ls-sidebar);
+        color: #ffffff;
+        position: sticky;
+        top: 0;
+        z-index: 30;
+    }
+
+    .topbarTitle {
+        font-size: 16px;
+        font-weight: 700;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .content {
+        padding: 20px 16px;
+    }
+}
+
+/* Sub-navigation. Only visible below 640px, where the sidebar is behind a
+   button and the section links need somewhere else to live. */
+.tabs {
+    display: none;
+}
+
+@media (max-width: 640px) {
+    .tabs {
+        display: flex;
+        gap: 4px;
+        padding: 8px 16px;
+        overflow-x: auto;
+        background-color: var(--ls-ground);
+        border-bottom: 1px solid var(--ls-hairline);
+        position: sticky;
+        top: 56px;
+        z-index: 20;
+    }
+
+    .tab {
+        flex: none;
+        box-sizing: border-box;
+        height: 32px;
+        padding: 0 14px;
+        display: inline-flex;
+        align-items: center;
+        border-radius: var(--ls-radius-pill);
+        color: var(--ls-ink-70);
+        font-size: 13px;
+        font-weight: 700;
+        text-decoration: none;
+        white-space: nowrap;
+    }
+
+    .tabActive {
+        background-color: var(--ls-tint);
+        color: var(--ls-primary);
+    }
+}

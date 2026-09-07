@@ -67,7 +67,7 @@ export default (): UseTheme => {
         applyPreference(preference);
         setTheme(resolveTheme(preference));
 
-        if (preference !== 'system') {
+        if (preference !== 'system' || !window.matchMedia) {
             return;
         }
 

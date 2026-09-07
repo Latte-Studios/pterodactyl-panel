@@ -1,16 +1,38 @@
 import React, { useEffect } from 'react';
-import ContentContainer from '@/components/elements/ContentContainer';
-import { CSSTransition } from 'react-transition-group';
-import tw from 'twin.macro';
+import classNames from 'classnames';
 import FlashMessageRender from '@/components/FlashMessageRender';
+import PageHeader from '@/components/elements/latte/PageHeader';
+import styles from './PageContentBlock.module.css';
 
 export interface PageContentBlockProps {
+    /** Sets the document title. */
     title?: string;
+    /** The area this screen belongs to, in caps above the heading. */
+    eyebrow?: React.ReactNode;
+    /** The page heading. A screen opts into the header by passing this. */
+    heading?: React.ReactNode;
+    subtitle?: React.ReactNode;
+    /** At most two buttons, at most one of them contained. */
+    actions?: React.ReactNode;
     className?: string;
     showFlashKey?: string;
+    children?: React.ReactNode;
 }
 
-const PageContentBlock: React.FC<PageContentBlockProps> = ({ title, showFlashKey, className, children }) => {
+/**
+ * The frame every client screen sits in. The page padding belongs to the shell;
+ * this only stacks the header, the flash messages and the screen itself.
+ */
+const PageContentBlock: React.FC<PageContentBlockProps> = ({
+    title,
+    eyebrow,
+    heading,
+    subtitle,
+    actions,
+    showFlashKey,
+    className,
+    children,
+}) => {
     useEffect(() => {
         if (title) {
             document.title = title;
@@ -18,27 +40,11 @@ const PageContentBlock: React.FC<PageContentBlockProps> = ({ title, showFlashKey
     }, [title]);
 
     return (
-        <CSSTransition timeout={150} classNames={'fade'} appear in>
-            <>
-                <ContentContainer css={tw`my-4 sm:my-10`} className={className}>
-                    {showFlashKey && <FlashMessageRender byKey={showFlashKey} css={tw`mb-4`} />}
-                    {children}
-                </ContentContainer>
-                <ContentContainer css={tw`mb-4`}>
-                    <p css={tw`text-center text-neutral-500 text-xs`}>
-                        <a
-                            rel={'noopener nofollow noreferrer'}
-                            href={'https://pterodactyl.io'}
-                            target={'_blank'}
-                            css={tw`no-underline text-neutral-500 hover:text-neutral-300`}
-                        >
-                            Pterodactyl&reg;
-                        </a>
-                        &nbsp;&copy; 2015 - {new Date().getFullYear()}
-                    </p>
-                </ContentContainer>
-            </>
-        </CSSTransition>
+        <div className={classNames(styles.page, className)}>
+            {heading && <PageHeader eyebrow={eyebrow} title={heading} subtitle={subtitle} actions={actions} />}
+            {showFlashKey && <FlashMessageRender byKey={showFlashKey} className={styles.flash} />}
+            {children}
+        </div>
     );
 };
 
