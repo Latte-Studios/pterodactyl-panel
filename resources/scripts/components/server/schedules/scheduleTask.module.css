@@ -1,0 +1,92 @@
+.task {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--ls-hairline);
+}
+
+.task:last-child {
+    border-bottom: none;
+}
+
+/* The number is the position in the real sequence, not the row order. */
+.index {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    flex: none;
+    margin-top: 2px;
+    border-radius: var(--ls-radius-pill);
+    background-color: var(--ls-tint);
+    color: var(--ls-primary);
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.main {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--ls-ink);
+}
+
+.icon {
+    width: 18px;
+    height: 18px;
+    flex: none;
+    color: var(--ls-ink-50);
+}
+
+.payloadWrapper {
+    margin-top: 8px;
+}
+
+.payloadLabel {
+    margin-bottom: 4px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ls-ink-50);
+}
+
+.payload {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: var(--ls-radius-input);
+    background-color: var(--ls-terminal);
+    color: var(--ls-terminal-ink);
+    font-family: var(--ls-mono);
+    font-size: 13px;
+    white-space: pre-wrap;
+    word-break: break-all;
+}
+
+.chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.chipIcon {
+    width: 12px;
+    height: 12px;
+}
+
+.actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: none;
+}

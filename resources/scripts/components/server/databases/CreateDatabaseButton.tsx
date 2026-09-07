@@ -8,7 +8,7 @@ import { ServerContext } from '@/state/server';
 import { httpErrorToHuman } from '@/api/http';
 import FlashMessageRender from '@/components/FlashMessageRender';
 import useFlash from '@/plugins/useFlash';
-import Button from '@/components/elements/Button';
+import Button from '@/components/elements/latte/Button';
 import tw from 'twin.macro';
 
 interface Values {
@@ -90,15 +90,10 @@ export default () => {
                                 />
                             </div>
                             <div css={tw`flex flex-wrap justify-end mt-6`}>
-                                <Button
-                                    type={'button'}
-                                    isSecondary
-                                    css={tw`w-full sm:w-auto sm:mr-2`}
-                                    onClick={() => setVisible(false)}
-                                >
+                                <Button variant={'text'} onClick={() => setVisible(false)}>
                                     Cancel
                                 </Button>
-                                <Button css={tw`w-full mt-4 sm:w-auto sm:mt-0`} type={'submit'}>
+                                <Button type={'submit'} variant={'contained'}>
                                     Create Database
                                 </Button>
                             </div>
@@ -106,7 +101,9 @@ export default () => {
                     </Modal>
                 )}
             </Formik>
-            <Button onClick={() => setVisible(true)}>New Database</Button>
+            <Button variant={'contained'} onClick={() => setVisible(true)}>
+                New Database
+            </Button>
         </>
     );
 };

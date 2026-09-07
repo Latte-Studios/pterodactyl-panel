@@ -1,0 +1,38 @@
+.cheatsheet {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.rows {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin: 0;
+}
+
+.row {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+}
+
+.expression {
+    width: 45%;
+    flex: none;
+    font-family: var(--ls-mono);
+    font-size: 13px;
+    color: var(--ls-ink);
+}
+
+.meaning {
+    margin: 0;
+    font-size: 13px;
+    color: var(--ls-ink-70);
+}
+
+@media (max-width: 640px) {
+    .cheatsheet {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}

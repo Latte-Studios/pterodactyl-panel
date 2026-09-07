@@ -1,0 +1,12 @@
+.notes {
+    min-height: 44px;
+    padding: 8px 10px;
+    font-size: 13px;
+}
+
+.actions {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+}

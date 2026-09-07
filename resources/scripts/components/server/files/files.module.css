@@ -1,0 +1,112 @@
+.file {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+    color: var(--ls-ink);
+}
+
+.icon {
+    width: 18px;
+    height: 18px;
+    flex: none;
+    color: var(--ls-ink-50);
+}
+
+.fileName {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Controls that live inside a clickable row and must not trigger it. */
+.standalone {
+    display: inline-flex;
+    align-items: center;
+}
+
+.selectionCount {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--ls-ink-70);
+}
+
+.breadcrumbs {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 2px;
+    font-size: 12px;
+    font-weight: 300;
+    color: var(--ls-ink-50);
+    min-width: 0;
+}
+
+.crumb {
+    padding: 0 2px;
+    color: var(--ls-primary);
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.crumb:hover {
+    text-decoration: underline;
+}
+
+.crumbCurrent {
+    padding: 0 2px;
+    color: var(--ls-ink-70);
+}
+
+.code {
+    padding: 1px 5px;
+    border-radius: 4px;
+    background-color: var(--ls-terminal);
+    color: var(--ls-terminal-ink);
+    font-family: var(--ls-mono);
+    font-size: 12px;
+}
+
+.editor {
+    position: relative;
+    border-radius: var(--ls-radius-card);
+    overflow: hidden;
+}
+
+.editorFooter {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+.mode {
+    width: 220px;
+    max-width: 100%;
+}
+
+/* CodeMirror sits on the same ground as the terminal, so a file reads the same
+   way in both themes. Only the surfaces are overridden; the syntax colours of
+   the ayu-mirage theme are left alone. */
+.editor :global(.CodeMirror) {
+    background-color: var(--ls-terminal);
+    color: var(--ls-terminal-ink);
+    font-family: var(--ls-mono);
+}
+
+.editor :global(.CodeMirror-gutters) {
+    background-color: var(--ls-terminal);
+    border-right: 1px solid rgb(var(--ls-terminal-ink-rgb) / 0.08);
+}
+
+.editor :global(.CodeMirror-cursor) {
+    border-left-color: var(--ls-accent);
+}
+
+.editor :global(.CodeMirror-selected) {
+    background-color: rgb(var(--ls-accent-rgb) / 0.25);
+}
+
+.editor :global(.CodeMirror-activeline-background) {
+    background-color: rgb(var(--ls-terminal-ink-rgb) / 0.04);
+}

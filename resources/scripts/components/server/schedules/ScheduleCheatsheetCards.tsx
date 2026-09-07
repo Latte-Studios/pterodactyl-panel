@@ -1,55 +1,40 @@
 import React from 'react';
-import tw from 'twin.macro';
+import Card from '@/components/elements/latte/Card';
+import styles from './cheatsheet.module.css';
 
-export default () => {
-    return (
-        <>
-            <div css={tw`md:w-1/2 h-full bg-neutral-600`}>
-                <div css={tw`flex flex-col`}>
-                    <h2 css={tw`py-4 px-6 font-bold`}>Examples</h2>
-                    <div css={tw`flex py-4 px-6 bg-neutral-500`}>
-                        <div css={tw`w-1/2`}>*/5 * * * *</div>
-                        <div css={tw`w-1/2`}>every 5 minutes</div>
-                    </div>
-                    <div css={tw`flex py-4 px-6`}>
-                        <div css={tw`w-1/2`}>0 */1 * * *</div>
-                        <div css={tw`w-1/2`}>every hour</div>
-                    </div>
-                    <div css={tw`flex py-4 px-6 bg-neutral-500`}>
-                        <div css={tw`w-1/2`}>0 8-12 * * *</div>
-                        <div css={tw`w-1/2`}>hour range</div>
-                    </div>
-                    <div css={tw`flex py-4 px-6`}>
-                        <div css={tw`w-1/2`}>0 0 * * *</div>
-                        <div css={tw`w-1/2`}>once a day</div>
-                    </div>
-                    <div css={tw`flex py-4 px-6 bg-neutral-500`}>
-                        <div css={tw`w-1/2`}>0 0 * * MON</div>
-                        <div css={tw`w-1/2`}>every Monday</div>
-                    </div>
-                </div>
+const examples: [string, string][] = [
+    ['*/5 * * * *', 'every 5 minutes'],
+    ['0 */1 * * *', 'every hour'],
+    ['0 8-12 * * *', 'hour range'],
+    ['0 0 * * *', 'once a day'],
+    ['0 0 * * MON', 'every Monday'],
+];
+
+const characters: [string, string][] = [
+    ['*', 'any value'],
+    [',', 'value list separator'],
+    ['-', 'range values'],
+    ['/', 'step values'],
+];
+
+const Rows = ({ rows }: { rows: [string, string][] }) => (
+    <dl className={styles.rows}>
+        {rows.map(([expression, meaning]) => (
+            <div key={expression} className={styles.row}>
+                <dt className={styles.expression}>{expression}</dt>
+                <dd className={styles.meaning}>{meaning}</dd>
             </div>
-            <div css={tw`md:w-1/2 h-full bg-neutral-600`}>
-                <h2 css={tw`py-4 px-6 font-bold`}>Special Characters</h2>
-                <div css={tw`flex flex-col`}>
-                    <div css={tw`flex py-4 px-6 bg-neutral-500`}>
-                        <div css={tw`w-1/2`}>*</div>
-                        <div css={tw`w-1/2`}>any value</div>
-                    </div>
-                    <div css={tw`flex py-4 px-6`}>
-                        <div css={tw`w-1/2`}>,</div>
-                        <div css={tw`w-1/2`}>value list separator</div>
-                    </div>
-                    <div css={tw`flex py-4 px-6 bg-neutral-500`}>
-                        <div css={tw`w-1/2`}>-</div>
-                        <div css={tw`w-1/2`}>range values</div>
-                    </div>
-                    <div css={tw`flex py-4 px-6`}>
-                        <div css={tw`w-1/2`}>/</div>
-                        <div css={tw`w-1/2`}>step values</div>
-                    </div>
-                </div>
-            </div>
-        </>
-    );
-};
+        ))}
+    </dl>
+);
+
+export default () => (
+    <div className={styles.cheatsheet}>
+        <Card title={'Examples'}>
+            <Rows rows={examples} />
+        </Card>
+        <Card title={'Special characters'}>
+            <Rows rows={characters} />
+        </Card>
+    </div>
+);

@@ -1,0 +1,32 @@
+.name {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 700;
+}
+
+.locked {
+    display: inline-flex;
+    align-items: center;
+    height: 20px;
+    padding: 0 8px;
+    border-radius: var(--ls-radius-pill);
+    background-color: var(--ls-waiting-bg);
+    color: var(--ls-waiting);
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.checksum {
+    margin-top: 2px;
+    font-family: var(--ls-mono);
+    font-size: 11px;
+    color: var(--ls-ink-50);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.muted {
+    color: var(--ls-ink-50);
+}

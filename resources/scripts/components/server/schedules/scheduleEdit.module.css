@@ -1,0 +1,31 @@
+.status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.cron {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.empty {
+    padding: 32px 20px;
+    text-align: center;
+    font-size: 14px;
+    color: var(--ls-ink-70);
+}
+
+.footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+@media (max-width: 640px) {
+    .cron {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}

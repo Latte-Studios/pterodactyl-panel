@@ -1,0 +1,47 @@
+.name {
+    font-weight: 700;
+}
+
+.lastRun {
+    margin-top: 2px;
+    font-size: 12px;
+    font-weight: 300;
+    color: var(--ls-ink-70);
+}
+
+.cron {
+    font-family: var(--ls-mono);
+    font-size: 13px;
+}
+
+.tasks {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.taskIndex {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    flex: none;
+    border-radius: var(--ls-radius-pill);
+    background-color: var(--ls-tint);
+    color: var(--ls-primary);
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.cheatsheet {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+}
+
+@media (max-width: 640px) {
+    .cheatsheet {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}

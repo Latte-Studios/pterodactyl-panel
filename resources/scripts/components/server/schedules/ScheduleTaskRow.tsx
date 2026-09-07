@@ -1,15 +1,6 @@
 import React, { useState } from 'react';
 import { Schedule, Task } from '@/api/server/schedules/getServerSchedules';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-    faArrowCircleDown,
-    faClock,
-    faCode,
-    faFileArchive,
-    faPencilAlt,
-    faToggleOn,
-    faTrashAlt,
-} from '@fortawesome/free-solid-svg-icons';
+import { ArchiveIcon, ClockIcon, CodeIcon, PencilIcon, SwitchHorizontalIcon, TrashIcon } from '@heroicons/react/outline';
 import deleteScheduleTask from '@/api/server/schedules/deleteScheduleTask';
 import { httpErrorToHuman } from '@/api/http';
 import SpinnerOverlay from '@/components/elements/SpinnerOverlay';
@@ -17,35 +8,40 @@ import TaskDetailsModal from '@/components/server/schedules/TaskDetailsModal';
 import Can from '@/components/elements/Can';
 import useFlash from '@/plugins/useFlash';
 import { ServerContext } from '@/state/server';
-import tw from 'twin.macro';
 import ConfirmationModal from '@/components/elements/ConfirmationModal';
-import Icon from '@/components/elements/Icon';
+import Button from '@/components/elements/latte/Button';
+import StatusChip from '@/components/elements/latte/StatusChip';
+import styles from './scheduleTask.module.css';
 
 interface Props {
     schedule: Schedule;
     task: Task;
+    /** Position in the real sequence, counted from one. */
+    index: number;
 }
 
-const getActionDetails = (action: string): [string, any] => {
+type IconComponent = React.ComponentType<{ className?: string }>;
+
+const getActionDetails = (action: string): [string, IconComponent] => {
     switch (action) {
         case 'command':
-            return ['Send Command', faCode];
+            return ['Send Command', CodeIcon];
         case 'power':
-            return ['Send Power Action', faToggleOn];
+            return ['Send Power Action', SwitchHorizontalIcon];
         case 'backup':
-            return ['Create Backup', faFileArchive];
+            return ['Create Backup', ArchiveIcon];
         default:
-            return ['Unknown Action', faCode];
+            return ['Unknown Action', CodeIcon];
     }
 };
 
-export default ({ schedule, task }: Props) => {
-    const uuid = ServerContext.useStoreState((state) => state.server.data!.uuid);
+export default ({ schedule, task, index }: Props) => {
+    const uuid = ServerContext.useStoreState(state => state.server.data!.uuid);
     const { clearFlashes, addError } = useFlash();
     const [visible, setVisible] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
-    const appendSchedule = ServerContext.useStoreActions((actions) => actions.schedules.appendSchedule);
+    const appendSchedule = ServerContext.useStoreActions(actions => actions.schedules.appendSchedule);
 
     const onConfirmDeletion = () => {
         setIsLoading(true);
@@ -54,20 +50,20 @@ export default ({ schedule, task }: Props) => {
             .then(() =>
                 appendSchedule({
                     ...schedule,
-                    tasks: schedule.tasks.filter((t) => t.id !== task.id),
-                })
+                    tasks: schedule.tasks.filter(t => t.id !== task.id),
+                }),
             )
-            .catch((error) => {
+            .catch(error => {
                 console.error(error);
                 setIsLoading(false);
                 addError({ message: httpErrorToHuman(error), key: 'schedules' });
             });
     };
 
-    const [title, icon] = getActionDetails(task.action);
+    const [title, Icon] = getActionDetails(task.action);
 
     return (
-        <div css={tw`sm:flex items-center p-3 sm:p-6 border-b border-neutral-800`}>
+        <div className={styles.task}>
             <SpinnerOverlay visible={isLoading} fixed size={'large'} />
             <TaskDetailsModal
                 schedule={schedule}
@@ -84,60 +80,51 @@ export default ({ schedule, task }: Props) => {
             >
                 Are you sure you want to delete this task? This action cannot be undone.
             </ConfirmationModal>
-            <FontAwesomeIcon icon={icon} css={tw`text-lg text-white hidden md:block`} />
-            <div css={tw`flex-none sm:flex-1 w-full sm:w-auto overflow-x-auto`}>
-                <p css={tw`md:ml-6 text-neutral-200 uppercase text-sm`}>{title}</p>
+            <span className={styles.index} aria-hidden>
+                {index}
+            </span>
+            <div className={styles.main}>
+                <p className={styles.title}>
+                    <Icon className={styles.icon} />
+                    {title}
+                </p>
                 {task.payload && (
-                    <div css={tw`md:ml-6 mt-2`}>
-                        {task.action === 'backup' && (
-                            <p css={tw`text-xs uppercase text-neutral-400 mb-1`}>Ignoring files & folders:</p>
-                        )}
-                        <div
-                            css={tw`font-mono bg-neutral-800 rounded py-1 px-2 text-sm w-auto inline-block whitespace-pre-wrap break-all`}
-                        >
-                            {task.payload}
-                        </div>
+                    <div className={styles.payloadWrapper}>
+                        {task.action === 'backup' && <p className={styles.payloadLabel}>Ignoring files & folders:</p>}
+                        <div className={styles.payload}>{task.payload}</div>
                     </div>
                 )}
-            </div>
-            <div css={tw`mt-3 sm:mt-0 flex items-center w-full sm:w-auto`}>
-                {task.continueOnFailure && (
-                    <div css={tw`mr-6`}>
-                        <div css={tw`flex items-center px-2 py-1 bg-yellow-500 text-yellow-800 text-sm rounded-full`}>
-                            <Icon icon={faArrowCircleDown} css={tw`w-3 h-3 mr-2`} />
-                            Continues on Failure
-                        </div>
-                    </div>
-                )}
-                {task.sequenceId > 1 && task.timeOffset > 0 && (
-                    <div css={tw`mr-6`}>
-                        <div css={tw`flex items-center px-2 py-1 bg-neutral-500 text-sm rounded-full`}>
-                            <Icon icon={faClock} css={tw`w-3 h-3 mr-2`} />
+                <div className={styles.chips}>
+                    {task.continueOnFailure && <StatusChip tone={'waiting'}>Continues on failure</StatusChip>}
+                    {index > 1 && task.timeOffset > 0 && (
+                        <StatusChip tone={'closed'}>
+                            <ClockIcon className={styles.chipIcon} />
                             {task.timeOffset}s later
-                        </div>
-                    </div>
-                )}
-                <Can action={'schedule.update'}>
-                    <button
-                        type={'button'}
+                        </StatusChip>
+                    )}
+                </div>
+            </div>
+            <Can action={'schedule.update'}>
+                <div className={styles.actions}>
+                    <Button
+                        size={'small'}
+                        iconOnly
                         aria-label={'Edit scheduled task'}
-                        css={tw`block text-sm p-2 text-neutral-500 hover:text-neutral-100 transition-colors duration-150 mr-4 ml-auto sm:ml-0`}
                         onClick={() => setIsEditing(true)}
                     >
-                        <FontAwesomeIcon icon={faPencilAlt} />
-                    </button>
-                </Can>
-                <Can action={'schedule.update'}>
-                    <button
-                        type={'button'}
+                        <PencilIcon width={16} height={16} />
+                    </Button>
+                    <Button
+                        size={'small'}
+                        variant={'danger'}
+                        iconOnly
                         aria-label={'Delete scheduled task'}
-                        css={tw`block text-sm p-2 text-neutral-500 hover:text-red-600 transition-colors duration-150`}
                         onClick={() => setVisible(true)}
                     >
-                        <FontAwesomeIcon icon={faTrashAlt} />
-                    </button>
-                </Can>
-            </div>
+                        <TrashIcon width={16} height={16} />
+                    </Button>
+                </div>
+            </Can>
         </div>
     );
 };

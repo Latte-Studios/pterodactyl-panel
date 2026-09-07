@@ -7,7 +7,7 @@ import FormikFieldWrapper from '@/components/elements/FormikFieldWrapper';
 import useFlash from '@/plugins/useFlash';
 import createServerBackup from '@/api/server/backups/createServerBackup';
 import FlashMessageRender from '@/components/FlashMessageRender';
-import Button from '@/components/elements/Button';
+import Button from '@/components/elements/latte/Button';
 import tw from 'twin.macro';
 import { Textarea } from '@/components/elements/Input';
 import getServerBackups from '@/api/swr/getServerBackups';
@@ -58,7 +58,7 @@ const ModalContent = ({ ...props }: RequiredModalProps) => {
                     </div>
                 </Can>
                 <div css={tw`flex justify-end mt-6`}>
-                    <Button type={'submit'} disabled={isSubmitting}>
+                    <Button type={'submit'} variant={'contained'} disabled={isSubmitting}>
                         Start backup
                     </Button>
                 </div>
@@ -108,7 +108,7 @@ export default () => {
                     <ModalContent appear visible={visible} onDismissed={() => setVisible(false)} />
                 </Formik>
             )}
-            <Button css={tw`w-full sm:w-auto`} onClick={() => setVisible(true)}>
+            <Button variant={'contained'} onClick={() => setVisible(true)}>
                 Create backup
             </Button>
         </>
