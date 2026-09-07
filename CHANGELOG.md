@@ -24,6 +24,12 @@ because they do not correspond to an upstream release.
   themes at 390 and 1440 pixels, through `yarn screenshots`.
 * Host utilization on the node view and a host pressure alert on the console
   for administrators.
+* Node Watcher: a settings tab where administrators register webhooks that
+  receive signed JSON deliveries when a node changes its pressure level, on a
+  periodic utilization heartbeat and when a node stops answering. Each webhook
+  can customize its body with a placeholder template, with Discord, Slack and
+  generic examples. Wings reports pressure changes through
+  `POST /api/remote/nodes/pressure`.
 
 ### Changed
 * The administration area keeps AdminLTE but drops the skin-blue theme for a
