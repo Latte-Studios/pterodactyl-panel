@@ -288,25 +288,38 @@
             $('[data-attr="host-disks"]').html(html);
         }
 
+        // The chart reads the design tokens instead of carrying its own palette,
+        // so it follows the light and dark themes like the rest of the panel.
+        function token(name) {
+            return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+        }
+
+        function series(label, color) {
+            return { label: label, data: [], borderColor: color, backgroundColor: 'transparent', borderWidth: 2, pointRadius: 0 };
+        }
+
         var chart = new Chart($('#host-utilization-chart'), {
             type: 'line',
             data: {
                 labels: [],
                 datasets: [
-                    { label: 'CPU', data: [], borderColor: '#00a65a', backgroundColor: 'rgba(0, 166, 90, 0.1)', borderWidth: 2, pointRadius: 0 },
-                    { label: 'Memory', data: [], borderColor: '#3c8dbc', backgroundColor: 'rgba(60, 141, 188, 0.1)', borderWidth: 2, pointRadius: 0 },
-                    { label: 'Load', data: [], borderColor: '#f39c12', backgroundColor: 'rgba(243, 156, 18, 0.1)', borderWidth: 2, pointRadius: 0 },
-                    { label: 'Swap', data: [], borderColor: '#605ca8', backgroundColor: 'rgba(96, 92, 168, 0.1)', borderWidth: 2, pointRadius: 0 },
+                    series('CPU', token('--ls-ok')),
+                    series('Memory', token('--ls-progress')),
+                    series('Load', token('--ls-waiting')),
+                    series('Swap', token('--ls-mocha')),
                 ],
             },
             options: {
                 animation: false,
                 responsive: true,
                 maintainAspectRatio: false,
-                legend: { position: 'bottom' },
+                legend: { position: 'bottom', labels: { fontColor: token('--ls-ink-70'), boxWidth: 12 } },
                 scales: {
                     xAxes: [{ display: false }],
-                    yAxes: [{ ticks: { beginAtZero: true, max: 100 } }],
+                    yAxes: [{
+                        ticks: { beginAtZero: true, max: 100, fontColor: token('--ls-ink-50') },
+                        gridLines: { color: token('--ls-hairline'), zeroLineColor: token('--ls-border') },
+                    }],
                 },
             },
         });

@@ -1,0 +1,1099 @@
+/*
+ * Latte Studios design system override for the AdminLTE administration area.
+ *
+ * This file is loaded after pterodactyl.css and replaces the skin-blue theme.
+ * It restyles AdminLTE in place: no upstream Blade view is rewritten, so those
+ * views keep merging cleanly against the upstream repository.
+ *
+ * Every colour here comes from a token. The token block is section 9.9 of the
+ * Latte Studios brand book and is kept identical to the one the React client
+ * declares in resources/scripts/assets/css/GlobalStylesheet.ts.
+ *
+ * Specificity is raised with `body.latte` rather than `!important` wherever
+ * AdminLTE allows it; `!important` appears only where AdminLTE already uses it.
+ */
+
+@font-face {
+    font-family: 'Lato';
+    font-style: normal;
+    font-display: swap;
+    font-weight: 300;
+    src: url('/themes/latte/fonts/lato-latin-300-normal.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: 'Lato';
+    font-style: normal;
+    font-display: swap;
+    font-weight: 400;
+    src: url('/themes/latte/fonts/lato-latin-400-normal.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: 'Lato';
+    font-style: normal;
+    font-display: swap;
+    font-weight: 700;
+    src: url('/themes/latte/fonts/lato-latin-700-normal.woff2') format('woff2');
+}
+
+:root {
+    --ls-font: "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    --ls-mono: ui-monospace, "Cascadia Mono", Consolas, monospace;
+    --ls-ground: #FAF8F5;    --ls-paper: #FFFFFF;     --ls-sidebar: #74502F;
+    --ls-primary: #74502F;   --ls-primary-hover: #5A3E24;   --ls-on-primary: #FFFFFF;
+    --ls-accent: #C28E5F;    --ls-secondary: #7F4108;       --ls-mocha: #8E6846;
+    --ls-ink: #1A1A1A;       --ls-ink-70: rgba(26,26,26,.70);   --ls-ink-50: rgba(26,26,26,.50);
+    --ls-border-strong: rgba(0,0,0,.23);   --ls-border: rgba(0,0,0,.12);   --ls-hairline: rgba(0,0,0,.06);
+    --ls-card-border: rgba(116,80,47,.12);   --ls-tint: rgba(116,80,47,.08);
+    --ls-focus: #A87548;     --ls-danger: #C62828;
+    --ls-shadow-card: 0 1px 2px rgba(0,0,0,.04);
+    --ls-open: #74502F;      --ls-open-bg: rgba(116,80,47,.10);
+    --ls-progress: #0097A7;  --ls-progress-bg: rgba(38,198,218,.14);
+    --ls-waiting: #B45309;   --ls-waiting-bg: rgba(255,167,38,.16);
+    --ls-closed: rgba(26,26,26,.70);   --ls-closed-bg: rgba(26,26,26,.07);
+    --ls-ok: #15803D;        --ls-ok-bg: rgba(34,197,94,.14);
+    --ls-bad: #C62828;       --ls-bad-bg: rgba(239,83,80,.14);
+    --ls-radius-pill: 999px;  --ls-radius-card: 12px;  --ls-radius-input: 8px;
+    --ls-sidebar-w: 240px;    --ls-topbar-h: 64px;     --ls-row-h: 52px;
+
+    --ls-terminal: #1E140C;
+    --ls-terminal-ink: #F3E9DF;
+
+    /* The sidebar keeps a single ink in both themes: it is Wolf Expresso in
+       light and the darkest brown in dark, so white always sits on top of it. */
+    --ls-sidebar-ink: rgba(255,255,255,.70);
+    --ls-sidebar-ink-strong: #FFFFFF;
+    --ls-sidebar-hover: rgba(255,255,255,.08);
+    --ls-sidebar-active: rgba(255,255,255,.14);
+    --ls-sidebar-section: rgba(255,255,255,.50);
+}
+
+[data-theme="dark"] {
+    --ls-ground: #241812;    --ls-paper: #2E1F16;     --ls-sidebar: #1E140C;
+    --ls-primary: #C28E5F;   --ls-primary-hover: #A87548;   --ls-on-primary: #1E140C;
+    --ls-ink: #FFFFFF;       --ls-ink-70: rgba(255,255,255,.70);   --ls-ink-50: rgba(255,255,255,.50);
+    --ls-border-strong: rgba(255,255,255,.23);   --ls-border: rgba(255,255,255,.08);
+    --ls-hairline: rgba(255,255,255,.06);   --ls-card-border: rgba(255,255,255,.08);
+    --ls-tint: rgba(194,142,95,.14);
+    --ls-focus: #C28E5F;     --ls-danger: #FF6659;    --ls-shadow-card: none;
+    --ls-open: #D4A87F;      --ls-open-bg: rgba(194,142,95,.18);
+    --ls-progress: #4DD0E1;  --ls-progress-bg: rgba(38,198,218,.18);
+    --ls-waiting: #FFB74D;   --ls-waiting-bg: rgba(255,167,38,.18);
+    --ls-closed: rgba(255,255,255,.70);   --ls-closed-bg: rgba(255,255,255,.08);
+    --ls-ok: #4ADE80;        --ls-ok-bg: rgba(34,197,94,.18);
+    --ls-bad: #FF6659;       --ls-bad-bg: rgba(239,83,80,.18);
+}
+
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+        --ls-ground: #241812;    --ls-paper: #2E1F16;     --ls-sidebar: #1E140C;
+        --ls-primary: #C28E5F;   --ls-primary-hover: #A87548;   --ls-on-primary: #1E140C;
+        --ls-ink: #FFFFFF;       --ls-ink-70: rgba(255,255,255,.70);   --ls-ink-50: rgba(255,255,255,.50);
+        --ls-border-strong: rgba(255,255,255,.23);   --ls-border: rgba(255,255,255,.08);
+        --ls-hairline: rgba(255,255,255,.06);   --ls-card-border: rgba(255,255,255,.08);
+        --ls-tint: rgba(194,142,95,.14);
+        --ls-focus: #C28E5F;     --ls-danger: #FF6659;    --ls-shadow-card: none;
+        --ls-open: #D4A87F;      --ls-open-bg: rgba(194,142,95,.18);
+        --ls-progress: #4DD0E1;  --ls-progress-bg: rgba(38,198,218,.18);
+        --ls-waiting: #FFB74D;   --ls-waiting-bg: rgba(255,167,38,.18);
+        --ls-closed: rgba(255,255,255,.70);   --ls-closed-bg: rgba(255,255,255,.08);
+        --ls-ok: #4ADE80;        --ls-ok-bg: rgba(34,197,94,.18);
+        --ls-bad: #FF6659;       --ls-bad-bg: rgba(239,83,80,.18);
+    }
+}
+
+html {
+    color-scheme: light dark;
+}
+
+:root[data-theme="light"] { color-scheme: light; }
+:root[data-theme="dark"] { color-scheme: dark; }
+
+/* ---------------------------------------------------------------- base ---- */
+
+body.latte {
+    font-family: var(--ls-font);
+    font-weight: 400;
+    font-size: 14px;
+    letter-spacing: 0.015em;
+    background-color: var(--ls-ground);
+    color: var(--ls-ink);
+}
+
+body.latte .wrapper {
+    background-color: var(--ls-ground);
+}
+
+body.latte h1, body.latte h2, body.latte h3,
+body.latte h4, body.latte h5, body.latte h6 {
+    font-family: var(--ls-font);
+    font-weight: 700;
+    letter-spacing: normal;
+}
+
+body.latte a {
+    color: var(--ls-primary);
+}
+
+body.latte a:hover,
+body.latte a:focus {
+    color: var(--ls-primary-hover);
+}
+
+body.latte code,
+body.latte kbd,
+body.latte pre,
+body.latte samp {
+    font-family: var(--ls-mono);
+}
+
+body.latte code {
+    background-color: var(--ls-tint);
+    color: var(--ls-secondary);
+    border-radius: 4px;
+}
+
+body.latte pre {
+    background-color: var(--ls-tint);
+    border: 1px solid var(--ls-border);
+    border-radius: var(--ls-radius-input);
+    color: var(--ls-ink);
+}
+
+body.latte .text-muted,
+body.latte .text-gray,
+body.latte p.small,
+body.latte .help-block {
+    color: var(--ls-ink-50);
+}
+
+body.latte ::selection {
+    background-color: var(--ls-tint);
+}
+
+body.latte hr {
+    border-top-color: var(--ls-hairline);
+}
+
+/* ------------------------------------------------------------- header ---- */
+
+body.latte .main-header .navbar,
+body.latte .main-header .logo {
+    background-color: var(--ls-sidebar);
+    color: var(--ls-sidebar-ink-strong);
+    height: var(--ls-topbar-h);
+    line-height: var(--ls-topbar-h);
+    border: 0;
+}
+
+body.latte .main-header .logo {
+    font-family: var(--ls-font);
+    font-weight: 700;
+    font-size: 18px;
+    letter-spacing: normal;
+    width: var(--ls-sidebar-w);
+}
+
+body.latte .main-header .logo:hover {
+    background-color: var(--ls-sidebar);
+}
+
+body.latte .main-header .navbar .nav > li > a,
+body.latte .main-header .navbar .sidebar-toggle {
+    color: var(--ls-sidebar-ink);
+    height: var(--ls-topbar-h);
+    padding-top: 0;
+    padding-bottom: 0;
+    line-height: var(--ls-topbar-h);
+}
+
+body.latte .main-header .navbar .nav > li > a:hover,
+body.latte .main-header .navbar .nav > li > a:focus,
+body.latte .main-header .navbar .nav .open > a,
+body.latte .main-header .navbar .sidebar-toggle:hover {
+    background-color: var(--ls-sidebar-hover);
+    color: var(--ls-sidebar-ink-strong);
+}
+
+body.latte .main-header .navbar .sidebar-toggle .icon-bar {
+    background-color: var(--ls-sidebar-ink);
+}
+
+body.latte .main-header .user-menu .user-image {
+    border-radius: var(--ls-radius-pill);
+    border: 1px solid rgba(255, 255, 255, .23);
+}
+
+/* ------------------------------------------------------------ sidebar ---- */
+
+body.latte .main-sidebar,
+body.latte .left-side {
+    width: var(--ls-sidebar-w);
+    background-color: var(--ls-sidebar);
+    padding-top: var(--ls-topbar-h);
+}
+
+body.latte .main-sidebar .sidebar {
+    padding: 12px 12px 24px;
+}
+
+body.latte .sidebar-menu > li.header {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ls-sidebar-section);
+    background: transparent;
+    padding: 18px 12px 8px;
+}
+
+body.latte .sidebar-menu > li > a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    height: 36px;
+    padding: 0 12px;
+    margin-bottom: 2px;
+    border-radius: var(--ls-radius-input);
+    border-left: 0;
+    font-size: 14px;
+    color: var(--ls-sidebar-ink);
+}
+
+body.latte .sidebar-menu > li > a > i {
+    width: 18px;
+    text-align: center;
+}
+
+body.latte .sidebar-menu > li > a:hover {
+    background-color: var(--ls-sidebar-hover);
+    color: var(--ls-sidebar-ink-strong);
+    border-left: 0;
+}
+
+body.latte .sidebar-menu > li.active > a,
+body.latte .sidebar-menu > li.active > a:hover {
+    background-color: var(--ls-sidebar-active);
+    color: var(--ls-sidebar-ink-strong);
+    font-weight: 700;
+    border-left: 0;
+}
+
+body.latte .sidebar-menu > li > a:focus-visible {
+    outline: none;
+    box-shadow: inset 0 0 0 2px var(--ls-accent);
+}
+
+body.latte .content-wrapper,
+body.latte .right-side,
+body.latte .main-footer {
+    margin-left: var(--ls-sidebar-w);
+}
+
+/* AdminLTE drives the collapsed sidebar with `!important`, so the mini mode
+   still wins over the widths above. Only the icon alignment needs a nudge. */
+body.latte.sidebar-collapse .sidebar-menu > li > a {
+    justify-content: center;
+}
+
+body.latte.sidebar-collapse .sidebar-menu > li:hover > a {
+    justify-content: flex-start;
+}
+
+/* ------------------------------------------------------------ content ---- */
+
+body.latte .content-wrapper {
+    background-color: var(--ls-ground);
+    color: var(--ls-ink);
+}
+
+body.latte .content-header {
+    padding: 28px 40px 0;
+    background: transparent;
+}
+
+body.latte .content-header > h1 {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--ls-ink);
+    margin: 0;
+}
+
+body.latte .content-header > h1 > small {
+    display: block;
+    margin-top: 6px;
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--ls-ink-70);
+    padding: 0;
+}
+
+body.latte .content {
+    padding: 22px 40px 28px;
+}
+
+body.latte .main-footer {
+    background-color: var(--ls-paper);
+    border-top: 1px solid var(--ls-hairline);
+    color: var(--ls-ink-50);
+    padding: 16px 40px;
+}
+
+body.latte .main-footer a {
+    color: var(--ls-primary);
+}
+
+/* --------------------------------------------------------------- card ---- */
+
+body.latte .box {
+    background-color: var(--ls-paper);
+    border: 1px solid var(--ls-card-border);
+    border-top: 1px solid var(--ls-card-border);
+    border-radius: var(--ls-radius-card);
+    box-shadow: var(--ls-shadow-card);
+    margin-bottom: 22px;
+}
+
+body.latte .box.box-primary,
+body.latte .box.box-info,
+body.latte .box.box-success,
+body.latte .box.box-warning,
+body.latte .box.box-danger,
+body.latte .box.box-default {
+    border-top-color: var(--ls-card-border);
+}
+
+body.latte .box-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--ls-hairline);
+    color: var(--ls-ink);
+}
+
+body.latte .box-header > .box-title {
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+body.latte .box-header > .box-tools {
+    position: static;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+body.latte .box-body {
+    padding: 20px;
+}
+
+body.latte .box-footer {
+    background-color: transparent;
+    border-top: 1px solid var(--ls-hairline);
+    border-radius: 0 0 var(--ls-radius-card) var(--ls-radius-card);
+    padding: 14px 20px;
+}
+
+body.latte .box.box-solid > .box-header {
+    background-color: transparent;
+    color: var(--ls-ink);
+}
+
+body.latte .nav-tabs-custom {
+    background-color: var(--ls-paper);
+    border: 1px solid var(--ls-card-border);
+    border-radius: var(--ls-radius-card);
+    box-shadow: var(--ls-shadow-card);
+}
+
+/* -------------------------------------------------------------- table ---- */
+
+body.latte .table {
+    color: var(--ls-ink);
+    margin-bottom: 0;
+}
+
+body.latte .box-body.table-responsive,
+body.latte .box-body.no-padding {
+    border-radius: 0 0 var(--ls-radius-card) var(--ls-radius-card);
+}
+
+body.latte .table > thead > tr > th {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--ls-ink-50);
+    border-bottom: 1px solid var(--ls-border);
+    padding: 12px 20px;
+    vertical-align: middle;
+}
+
+body.latte .table > tbody > tr > td {
+    height: var(--ls-row-h);
+    padding: 14px 20px;
+    vertical-align: middle;
+    border-top: 1px solid var(--ls-hairline);
+}
+
+body.latte .table > tbody > tr:first-child > td {
+    border-top: 0;
+}
+
+body.latte .table-hover > tbody > tr:hover {
+    background-color: var(--ls-tint);
+}
+
+body.latte .table-striped > tbody > tr:nth-of-type(odd) {
+    background-color: transparent;
+}
+
+/* ------------------------------------------------------------- button ---- */
+
+body.latte .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    height: 32px;
+    padding: 0 16px;
+    border-radius: var(--ls-radius-pill);
+    border: 2px solid transparent;
+    font-family: var(--ls-font);
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
+    box-shadow: none;
+    transition: background-color .15s ease, color .15s ease, border-color .15s ease;
+}
+
+body.latte .box-header .btn,
+body.latte .box-footer .btn {
+    height: 40px;
+    padding: 0 20px;
+}
+
+body.latte .btn-sm,
+body.latte .btn-xs {
+    height: 32px;
+    padding: 0 14px;
+    font-size: 13px;
+}
+
+body.latte .btn:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--ls-ground), 0 0 0 4px var(--ls-focus);
+}
+
+body.latte .btn-primary,
+body.latte .btn-success,
+body.latte .btn-info {
+    background-color: var(--ls-primary);
+    border-color: var(--ls-primary);
+    color: var(--ls-on-primary);
+}
+
+body.latte .btn-primary:hover,
+body.latte .btn-primary:focus,
+body.latte .btn-primary:active,
+body.latte .btn-success:hover,
+body.latte .btn-success:focus,
+body.latte .btn-success:active,
+body.latte .btn-info:hover,
+body.latte .btn-info:focus,
+body.latte .btn-info:active {
+    background-color: var(--ls-primary-hover);
+    border-color: var(--ls-primary-hover);
+    color: var(--ls-on-primary);
+}
+
+body.latte .btn-default,
+body.latte .btn-warning {
+    background-color: transparent;
+    border-color: var(--ls-primary);
+    color: var(--ls-primary);
+}
+
+body.latte .btn-default:hover,
+body.latte .btn-default:focus,
+body.latte .btn-default:active,
+body.latte .btn-warning:hover,
+body.latte .btn-warning:focus,
+body.latte .btn-warning:active {
+    background-color: var(--ls-tint);
+    border-color: var(--ls-primary-hover);
+    color: var(--ls-primary-hover);
+}
+
+body.latte .btn-danger {
+    background-color: transparent;
+    border-color: var(--ls-danger);
+    color: var(--ls-danger);
+}
+
+body.latte .btn-danger:hover,
+body.latte .btn-danger:focus,
+body.latte .btn-danger:active {
+    background-color: var(--ls-bad-bg);
+    border-color: var(--ls-danger);
+    color: var(--ls-danger);
+}
+
+body.latte .btn-link,
+body.latte .btn-clear {
+    background: transparent;
+    border-color: transparent;
+    color: var(--ls-primary);
+    text-decoration: none;
+}
+
+body.latte .btn-link:hover,
+body.latte .btn-clear:hover {
+    color: var(--ls-primary-hover);
+    text-decoration: underline;
+}
+
+body.latte .btn.disabled,
+body.latte .btn[disabled] {
+    opacity: .5;
+}
+
+body.latte .btn-group > .btn:not(:first-child):not(:last-child) {
+    border-radius: 0;
+}
+
+body.latte .btn-group > .btn:first-child:not(:last-child) {
+    border-radius: var(--ls-radius-pill) 0 0 var(--ls-radius-pill);
+}
+
+body.latte .btn-group > .btn:last-child:not(:first-child) {
+    border-radius: 0 var(--ls-radius-pill) var(--ls-radius-pill) 0;
+}
+
+/* --------------------------------------------------------------- chip ---- */
+
+body.latte .label,
+body.latte .badge {
+    display: inline-flex;
+    align-items: center;
+    height: 24px;
+    padding: 0 10px;
+    border-radius: var(--ls-radius-pill);
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1;
+}
+
+body.latte .label-primary,
+body.latte .label-default,
+body.latte .badge {
+    background-color: var(--ls-open-bg);
+    color: var(--ls-open);
+}
+
+body.latte .label-success {
+    background-color: var(--ls-ok-bg);
+    color: var(--ls-ok);
+}
+
+body.latte .label-info {
+    background-color: var(--ls-progress-bg);
+    color: var(--ls-progress);
+}
+
+body.latte .label-warning {
+    background-color: var(--ls-waiting-bg);
+    color: var(--ls-waiting);
+}
+
+body.latte .label-danger {
+    background-color: var(--ls-bad-bg);
+    color: var(--ls-danger);
+}
+
+/* --------------------------------------------------------------- form ---- */
+
+body.latte .control-label,
+body.latte label {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--ls-ink);
+}
+
+body.latte .form-control {
+    height: 40px;
+    padding: 0 12px;
+    border: 1px solid var(--ls-border-strong);
+    border-radius: var(--ls-radius-input);
+    background-color: var(--ls-paper);
+    color: var(--ls-ink);
+    font-family: var(--ls-font);
+    font-size: 14px;
+    box-shadow: none;
+}
+
+body.latte textarea.form-control {
+    height: auto;
+    padding: 10px 12px;
+    font-family: var(--ls-mono);
+}
+
+body.latte .form-control:focus {
+    border-color: var(--ls-focus);
+    box-shadow: 0 0 0 2px var(--ls-tint);
+}
+
+body.latte .form-control::placeholder {
+    color: var(--ls-ink-50);
+}
+
+body.latte .form-control[disabled],
+body.latte .form-control[readonly] {
+    background-color: var(--ls-tint);
+    color: var(--ls-ink-70);
+}
+
+body.latte .input-group-addon {
+    background-color: var(--ls-tint);
+    border: 1px solid var(--ls-border-strong);
+    color: var(--ls-ink-70);
+}
+
+body.latte .input-group .form-control:first-child,
+body.latte .input-group-addon:first-child {
+    border-radius: var(--ls-radius-input) 0 0 var(--ls-radius-input);
+}
+
+body.latte .input-group .form-control:last-child,
+body.latte .input-group-addon:last-child,
+body.latte .input-group-btn:last-child > .btn {
+    border-radius: 0 var(--ls-radius-input) var(--ls-radius-input) 0;
+}
+
+body.latte .has-error .form-control {
+    border-color: var(--ls-danger);
+}
+
+body.latte .has-error .control-label,
+body.latte .has-error .help-block {
+    color: var(--ls-danger);
+}
+
+body.latte .select2-container--default .select2-selection--single,
+body.latte .select2-container--default .select2-selection--multiple {
+    min-height: 40px;
+    border: 1px solid var(--ls-border-strong);
+    border-radius: var(--ls-radius-input);
+    background-color: var(--ls-paper);
+    color: var(--ls-ink);
+}
+
+body.latte .select2-container--default .select2-selection--single .select2-selection__rendered {
+    line-height: 38px;
+    color: var(--ls-ink);
+}
+
+body.latte .select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: 38px;
+}
+
+body.latte .select2-dropdown {
+    background-color: var(--ls-paper);
+    border: 1px solid var(--ls-border);
+    border-radius: var(--ls-radius-input);
+    color: var(--ls-ink);
+}
+
+body.latte .select2-container--default .select2-results__option--highlighted[aria-selected] {
+    background-color: var(--ls-tint);
+    color: var(--ls-ink);
+}
+
+body.latte .select2-container--default .select2-selection--multiple .select2-selection__choice {
+    background-color: var(--ls-tint);
+    border: 1px solid var(--ls-card-border);
+    border-radius: var(--ls-radius-pill);
+    color: var(--ls-ink);
+    padding: 2px 10px;
+}
+
+/* --------------------------------------------------------------- tabs ---- */
+
+body.latte .nav-tabs {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    border-bottom: 1px solid var(--ls-hairline);
+    background: transparent;
+}
+
+body.latte .nav-tabs > li {
+    float: none;
+    flex: 0 0 auto;
+}
+
+body.latte .nav-tabs > li > a {
+    border: 0;
+    border-bottom: 2px solid transparent;
+    border-radius: 0;
+    margin: 0;
+    padding: 12px 16px;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--ls-ink-70);
+    background: transparent;
+    white-space: nowrap;
+}
+
+body.latte .nav-tabs > li > a:hover {
+    color: var(--ls-ink);
+    background: transparent;
+    border-bottom-color: var(--ls-border);
+}
+
+body.latte .nav-tabs > li.active > a,
+body.latte .nav-tabs > li.active > a:hover,
+body.latte .nav-tabs > li.active > a:focus,
+body.latte .nav-tabs-custom > .nav-tabs > li.active > a,
+body.latte .nav-tabs-custom > .nav-tabs > li:hover > a {
+    color: var(--ls-primary);
+    background: transparent;
+    border: 0;
+    border-bottom: 2px solid var(--ls-primary);
+}
+
+body.latte .nav-tabs-custom > .nav-tabs > li.active,
+body.latte .nav-tabs-custom > .nav-tabs > li:hover {
+    border-top-color: transparent;
+}
+
+body.latte .nav-tabs-custom > .tab-content {
+    background-color: transparent;
+    padding: 20px;
+}
+
+body.latte .nav-tabs-custom > .nav-tabs > li.active.tab-danger,
+body.latte .nav-tabs-custom > .nav-tabs > li.tab-danger:hover {
+    border-top-color: transparent;
+}
+
+body.latte .nav-tabs-custom > .nav-tabs > li.active.tab-danger > a,
+body.latte .nav-tabs-custom > .nav-tabs > li.tab-danger:hover > a {
+    color: var(--ls-danger);
+    border-bottom-color: var(--ls-danger);
+}
+
+body.latte .nav-tabs-custom > .nav-tabs > li.active.tab-success > a,
+body.latte .nav-tabs-custom > .nav-tabs > li.tab-success:hover > a {
+    color: var(--ls-ok);
+    border-bottom-color: var(--ls-ok);
+}
+
+body.latte .nav-tabs-custom > .nav-tabs > li.active.tab-info > a,
+body.latte .nav-tabs-custom > .nav-tabs > li.tab-info:hover > a {
+    color: var(--ls-progress);
+    border-bottom-color: var(--ls-progress);
+}
+
+body.latte .nav-tabs-custom > .nav-tabs > li.active.tab-warning > a,
+body.latte .nav-tabs-custom > .nav-tabs > li.tab-warning:hover > a {
+    color: var(--ls-waiting);
+    border-bottom-color: var(--ls-waiting);
+}
+
+body.latte .pagination > li > a,
+body.latte .pagination > li > span {
+    border: 1px solid var(--ls-border);
+    background-color: var(--ls-paper);
+    color: var(--ls-ink-70);
+}
+
+body.latte .pagination > .active > a,
+body.latte .pagination > .active > span,
+body.latte .pagination > .active > a:hover,
+body.latte .pagination > .active > span:hover {
+    background-color: var(--ls-primary);
+    border-color: var(--ls-primary);
+    color: var(--ls-on-primary);
+}
+
+/* ------------------------------------------------------ alert, callout ---- */
+
+body.latte .alert,
+body.latte .callout {
+    border: 0;
+    border-radius: var(--ls-radius-input);
+    box-shadow: none;
+    padding: 14px 16px;
+    color: var(--ls-ink);
+}
+
+body.latte .alert a,
+body.latte .callout a {
+    color: inherit;
+    font-weight: 700;
+    text-decoration: underline;
+}
+
+body.latte .alert-success,
+body.latte .callout-success {
+    background-color: var(--ls-ok-bg);
+    color: var(--ls-ok);
+}
+
+body.latte .alert-info,
+body.latte .callout-info {
+    background-color: var(--ls-progress-bg);
+    color: var(--ls-progress);
+}
+
+body.latte .alert-warning,
+body.latte .callout-warning {
+    background-color: var(--ls-waiting-bg);
+    color: var(--ls-waiting);
+}
+
+body.latte .alert-danger,
+body.latte .callout-danger {
+    background-color: var(--ls-bad-bg);
+    color: var(--ls-danger);
+}
+
+body.latte .callout-default,
+body.latte .callout.callout-slim {
+    background-color: var(--ls-open-bg);
+    color: var(--ls-open);
+}
+
+body.latte .callout code {
+    background-color: transparent;
+    color: inherit;
+}
+
+/* ----------------------------------------------------------- progress ---- */
+
+body.latte .progress {
+    height: 8px;
+    border-radius: var(--ls-radius-pill);
+    background-color: var(--ls-tint);
+    box-shadow: none;
+    overflow: hidden;
+}
+
+body.latte .progress.sm,
+body.latte .progress-sm {
+    height: 8px;
+}
+
+body.latte .progress-bar {
+    background-color: var(--ls-primary);
+    box-shadow: none;
+    border-radius: var(--ls-radius-pill);
+    transition: width .3s ease;
+}
+
+body.latte .progress-bar-green,
+body.latte .progress-bar-success {
+    background-color: var(--ls-ok);
+}
+
+body.latte .progress-bar-aqua,
+body.latte .progress-bar-primary {
+    background-color: var(--ls-progress);
+}
+
+body.latte .progress-bar-yellow,
+body.latte .progress-bar-warning {
+    background-color: var(--ls-waiting);
+}
+
+body.latte .progress-bar-red,
+body.latte .progress-bar-danger {
+    background-color: var(--ls-bad);
+}
+
+/*
+ * The host utilization card on the node view uses AdminLTE's progress groups.
+ * They are restyled into the same stat card with a bar that the console shows,
+ * so both places read the host the same way.
+ */
+body.latte .progress-group {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: baseline;
+    gap: 4px 12px;
+    margin-bottom: 16px;
+}
+
+body.latte .progress-group > .progress-text {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--ls-ink-70);
+}
+
+body.latte .progress-group > .progress-text small {
+    font-weight: 400;
+}
+
+body.latte .progress-group > .progress-number {
+    font-family: var(--ls-mono);
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--ls-ink);
+    text-align: right;
+}
+
+body.latte .progress-group > .progress {
+    grid-column: 1 / -1;
+    margin: 0;
+}
+
+/* ------------------------------------------------------------- dialog ---- */
+
+body.latte .modal-content {
+    background-color: var(--ls-paper);
+    border: 1px solid var(--ls-card-border);
+    border-radius: var(--ls-radius-card);
+    box-shadow: none;
+    color: var(--ls-ink);
+}
+
+body.latte .modal-header,
+body.latte .modal-footer {
+    border-color: var(--ls-hairline);
+}
+
+body.latte .modal-backdrop.in {
+    background-color: rgba(26, 26, 26, .40);
+    opacity: 1;
+}
+
+body.latte .sweet-alert {
+    background-color: var(--ls-paper);
+    border-radius: var(--ls-radius-card);
+    color: var(--ls-ink);
+    font-family: var(--ls-font);
+}
+
+body.latte .sweet-alert h2 {
+    color: var(--ls-ink);
+}
+
+body.latte .sweet-alert p {
+    color: var(--ls-ink-70);
+}
+
+body.latte .sweet-alert button {
+    border-radius: var(--ls-radius-pill);
+    font-family: var(--ls-font);
+    font-weight: 700;
+    box-shadow: none !important;
+}
+
+body.latte .tooltip-inner {
+    background-color: var(--ls-sidebar);
+    color: #FFFFFF;
+    border-radius: var(--ls-radius-input);
+    font-family: var(--ls-font);
+}
+
+/* ------------------------------------------------------------- mobile ---- */
+
+@media (max-width: 767px) {
+    body.latte .content-header {
+        padding: 20px 16px 0;
+    }
+
+    body.latte .content {
+        padding: 16px;
+    }
+
+    body.latte .content-header > h1 {
+        font-size: 24px;
+    }
+
+    body.latte .main-footer {
+        padding: 16px;
+    }
+
+    body.latte .box-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    body.latte .box-header > .box-tools {
+        width: 100%;
+        flex-wrap: wrap;
+    }
+
+    body.latte .main-header .logo {
+        width: 100%;
+    }
+}
+
+/*
+ * Data tables stack instead of scrolling sideways. The `data-label` attribute
+ * is copied from the matching `<th>` by the script in layouts/admin.blade.php,
+ * so no upstream view has to be touched.
+ */
+@media (max-width: 640px) {
+    body.latte .table,
+    body.latte .table > tbody,
+    body.latte .table > tbody > tr,
+    body.latte .table > tbody > tr > td {
+        display: block;
+        width: 100%;
+    }
+
+    body.latte .table > thead {
+        display: none;
+    }
+
+    body.latte .table > tbody > tr {
+        padding: 8px 0;
+        border-top: 1px solid var(--ls-hairline);
+    }
+
+    body.latte .table > tbody > tr:first-child {
+        border-top: 0;
+    }
+
+    body.latte .table > tbody > tr > td {
+        height: auto;
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 6px 16px;
+        border-top: 0;
+        text-align: right;
+    }
+
+    body.latte .table > tbody > tr > td[data-label]::before {
+        content: attr(data-label);
+        flex: 0 0 auto;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--ls-ink-50);
+        text-align: left;
+    }
+
+    body.latte .table > tbody > tr > td[data-label=""]::before {
+        content: none;
+    }
+
+    body.latte .box-body.table-responsive {
+        border: 0;
+        overflow-x: visible;
+    }
+}

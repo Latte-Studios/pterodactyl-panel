@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html @if(in_array(request()->cookie('latte_theme'), ['light', 'dark'])) data-theme="{{ request()->cookie('latte_theme') }}" @endif>
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -14,7 +14,26 @@
         <link rel="mask-icon" href="/favicons/safari-pinned-tab.svg" color="#bc6e3c">
         <link rel="shortcut icon" href="/favicons/favicon.ico">
         <meta name="msapplication-config" content="/favicons/browserconfig.xml">
-        <meta name="theme-color" content="#0e4688">
+        <meta name="theme-color" content="#74502F">
+
+        {{-- The cookie above already stamped the theme on the server. This keeps
+             the stamp correct when the cookie is missing but the preference was
+             stored by the client, and still runs before the first paint. --}}
+        <script>
+            (function () {
+                try {
+                    var preference = window.localStorage.getItem('latte:theme');
+
+                    if (preference === 'light' || preference === 'dark') {
+                        document.documentElement.setAttribute('data-theme', preference);
+                    } else if (preference === 'system') {
+                        document.documentElement.removeAttribute('data-theme');
+                    }
+                } catch (e) {
+                    // Storage is unavailable; the cookie or the operating system applies.
+                }
+            })();
+        </script>
 
         @include('layouts.scripts')
 
@@ -22,10 +41,12 @@
             {!! Theme::css('vendor/select2/select2.min.css?t={cache-version}') !!}
             {!! Theme::css('vendor/bootstrap/bootstrap.min.css?t={cache-version}') !!}
             {!! Theme::css('vendor/adminlte/admin.min.css?t={cache-version}') !!}
-            {!! Theme::css('vendor/adminlte/colors/skin-blue.min.css?t={cache-version}') !!}
             {!! Theme::css('vendor/sweetalert/sweetalert.min.css?t={cache-version}') !!}
             {!! Theme::css('vendor/animate/animate.min.css?t={cache-version}') !!}
             {!! Theme::css('css/pterodactyl.css?t={cache-version}') !!}
+            {{-- Latte Studios design system. Loaded last so it wins over AdminLTE
+                 and pterodactyl.css; it replaces the skin-blue colour theme. --}}
+            <link media="all" type="text/css" rel="stylesheet" href="/themes/latte/admin.css?t={{ $appVersion }}"/>
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
 
@@ -35,7 +56,7 @@
             <![endif]-->
         @show
     </head>
-    <body class="hold-transition skin-blue fixed sidebar-mini">
+    <body class="hold-transition latte fixed sidebar-mini">
         <div class="wrapper">
             <header class="main-header">
                 <a href="{{ route('index') }}" class="logo">
@@ -208,6 +229,35 @@
                 $(function () {
                     $('[data-toggle="tooltip"]').tooltip();
                 })
+            </script>
+
+            {{-- Copies each header cell onto the matching body cells so tables can
+                 stack on narrow screens without rewriting any view. Cells that
+                 span several columns get an empty label and render without one. --}}
+            <script>
+                $(function () {
+                    $('table').each(function () {
+                        var labels = $(this).find('> thead > tr').last().find('th').map(function () {
+                            return $(this).text().trim();
+                        }).get();
+
+                        if (labels.length === 0) {
+                            return;
+                        }
+
+                        $(this).find('> tbody > tr').each(function () {
+                            $(this).find('> td').each(function (index) {
+                                if ($(this).is('[data-label]')) {
+                                    return;
+                                }
+
+                                var span = parseInt($(this).attr('colspan'), 10) || 1;
+
+                                $(this).attr('data-label', span > 1 ? '' : (labels[index] || ''));
+                            });
+                        });
+                    });
+                });
             </script>
         @show
     </body>
