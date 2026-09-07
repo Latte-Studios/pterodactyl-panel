@@ -3,12 +3,11 @@ import styled from 'styled-components/macro';
 import { useStoreActions, useStoreState } from 'easy-peasy';
 import { randomInt } from '@/helpers';
 import { CSSTransition } from 'react-transition-group';
-import tw from 'twin.macro';
 
 const BarFill = styled.div`
-    ${tw`h-full bg-cyan-400`};
+    height: 100%;
+    background-color: var(--ls-accent);
     transition: 250ms ease-in-out;
-    box-shadow: 0 -2px 10px 2px hsl(178, 78%, 57%);
 `;
 
 type Timer = ReturnType<typeof setTimeout>;
@@ -59,7 +58,7 @@ export default () => {
     }, [progress, continuous]);
 
     return (
-        <div css={tw`w-full fixed`} style={{ height: '2px' }}>
+        <div style={{ position: 'fixed', width: '100%', height: '2px', zIndex: 70 }}>
             <CSSTransition timeout={150} appear in={visible} unmountOnExit classNames={'fade'}>
                 <BarFill style={{ width: progress === undefined ? '100%' : `${progress}%` }} />
             </CSSTransition>

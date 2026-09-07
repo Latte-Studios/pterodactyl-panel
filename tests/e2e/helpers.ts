@@ -63,7 +63,11 @@ export const login = async (page: Page): Promise<boolean> => {
     await page.getByLabel(/username or email/i).fill(username);
     await page.getByLabel(/password/i).fill(password);
     await page.getByRole('button', { name: /login/i }).click();
-    await page.waitForURL(/\/(?!auth)/, { timeout: 30_000 });
+
+    // Wait on the path, not on a pattern over the whole URL: anything matched
+    // against the full string also matches the slashes in "http://", so the
+    // wait returns immediately and the screenshots are taken signed out.
+    await page.waitForURL(url => !url.pathname.startsWith('/auth'), { timeout: 30_000 });
 
     return true;
 };
