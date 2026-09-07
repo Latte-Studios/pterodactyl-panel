@@ -146,7 +146,11 @@ export default ({ className }: WithClassname) => {
                 }}
                 multiple
             />
-            <Button className={className} onClick={() => fileUploadInput.current && fileUploadInput.current.click()}>
+            <Button
+                variant={Button.Variants.Secondary}
+                className={className}
+                onClick={() => fileUploadInput.current && fileUploadInput.current.click()}
+            >
                 Upload
             </Button>
         </>

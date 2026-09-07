@@ -1,41 +1,47 @@
-import styled, { css } from 'styled-components/macro';
+import styled from 'styled-components/macro';
 import tw from 'twin.macro';
 
 interface Props {
     hideDropdownArrow?: boolean;
 }
 
+/**
+ * The native control is kept as it comes. Replacing the arrow with a background
+ * image meant hard coding its colour, and suppressing the appearance detaches
+ * the option list from `color-scheme`, which is what decides whether the popup
+ * the browser draws is a light one or a dark one.
+ */
 const Select = styled.select<Props>`
-    ${tw`shadow-none block p-3 pr-8 rounded border w-full text-sm transition-colors duration-150 ease-linear`};
+    ${tw`shadow-none block w-full rounded-input border text-sm transition-colors duration-150 ease-linear`};
+    height: 40px;
+    padding: 0 10px;
+    background-color: var(--ls-paper);
+    border-color: var(--ls-border-strong);
+    color: var(--ls-ink);
+    font-family: var(--ls-font);
+    color-scheme: inherit;
+    /* Tints the highlight the browser draws over the selected option. */
+    accent-color: var(--ls-primary);
 
-    &,
-    &:hover:not(:disabled),
+    &:hover:not(:disabled) {
+        border-color: var(--ls-focus);
+    }
+
     &:focus {
-        ${tw`outline-none`};
+        outline: none;
+        border-color: var(--ls-focus);
+        box-shadow: 0 0 0 2px var(--ls-tint);
     }
 
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    background-size: 1rem;
-    background-repeat: no-repeat;
-    background-position-x: calc(100% - 0.75rem);
-    background-position-y: center;
-
-    &::-ms-expand {
-        display: none;
+    &:disabled {
+        background-color: var(--ls-tint);
+        color: var(--ls-ink-70);
     }
 
-    ${(props) =>
-        !props.hideDropdownArrow &&
-        css`
-            ${tw`bg-neutral-600 border-neutral-500 text-neutral-200`};
-            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='%23C3D1DF' d='M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z'/%3e%3c/svg%3e ");
-
-            &:hover:not(:disabled),
-            &:focus {
-                ${tw`border-neutral-400`};
-            }
-        `};
+    & option {
+        background-color: var(--ls-paper);
+        color: var(--ls-ink);
+    }
 `;
 
 export default Select;

@@ -20,7 +20,9 @@ export default ({ name }: { name: string }) => {
     const removeSelectedFile = ServerContext.useStoreActions((actions) => actions.files.removeSelectedFile);
 
     return (
-        <label css={tw`flex-none px-4 py-2 absolute self-center z-30 cursor-pointer`}>
+        // The table cell already supplies the padding; anything extra here would
+        // push the row checkbox out of line with the one in the header.
+        <label css={tw`inline-flex items-center cursor-pointer`}>
             <FileActionCheckbox
                 name={'selectedFiles'}
                 value={name}

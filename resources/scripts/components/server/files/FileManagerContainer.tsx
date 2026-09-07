@@ -174,6 +174,7 @@ export default () => {
             actions={
                 <Can action={'file.create'}>
                     <NewDirectoryButton />
+                    <UploadButton />
                     <NavLink to={`/server/${id}/files/new${window.location.hash}`}>
                         <Button variant={'contained'}>New File</Button>
                     </NavLink>
@@ -187,7 +188,6 @@ export default () => {
                     <MassActionsBar />
                     <Can action={'file.create'}>
                         <FileManagerStatus />
-                        <UploadButton />
                     </Can>
                 </Toolbar>
             </ErrorBoundary>

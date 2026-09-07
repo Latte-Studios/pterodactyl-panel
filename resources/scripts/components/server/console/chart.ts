@@ -11,12 +11,26 @@ import {
 import { DeepPartial } from 'ts-essentials';
 import { useState } from 'react';
 import { deepmerge, deepmergeCustom } from 'deepmerge-ts';
-import { theme } from 'twin.macro';
 import { hexToRgba } from '@/lib/helpers';
 
 ChartJS.register(LineElement, PointElement, Filler, LinearScale);
 
-const options: ChartOptions<'line'> = {
+/**
+ * Chart.js paints on a canvas, which cannot resolve a CSS variable, so the
+ * tokens are read off the document instead of being handed over as `var()`.
+ */
+export const chartToken = (name: string): string =>
+    typeof window === 'undefined'
+        ? '#000000'
+        : getComputedStyle(document.documentElement).getPropertyValue(name).trim() || '#000000';
+
+/** The series colour, and the same colour faded for the area under it. */
+export const chartSeries = (token: string) => ({
+    borderColor: chartToken(token),
+    backgroundColor: hexToRgba(chartToken(token), 0.25),
+});
+
+const baseOptions = (): ChartOptions<'line'> => ({
     responsive: true,
     animation: false,
     plugins: {
@@ -45,15 +59,15 @@ const options: ChartOptions<'line'> = {
             type: 'linear',
             grid: {
                 display: true,
-                color: theme('colors.gray.700'),
+                color: chartToken('--ls-hairline'),
                 drawBorder: false,
             },
             ticks: {
                 display: true,
                 count: 3,
-                color: theme('colors.gray.200'),
+                color: chartToken('--ls-ink-50'),
                 font: {
-                    family: theme('fontFamily.sans'),
+                    family: 'Lato, "Helvetica Neue", Helvetica, Arial, sans-serif',
                     size: 11,
                     weight: '400',
                 },
@@ -68,10 +82,10 @@ const options: ChartOptions<'line'> = {
             tension: 0.15,
         },
     },
-};
+});
 
 function getOptions(opts?: DeepPartial<ChartOptions<'line'>> | undefined): ChartOptions<'line'> {
-    return deepmerge(options, opts || {});
+    return deepmerge(baseOptions(), opts || {});
 }
 
 type ChartDatasetCallback = (value: ChartDataset<'line'>, index: number) => ChartDataset<'line'>;
@@ -91,8 +105,7 @@ function getEmptyData(label: string, sets = 1, callback?: ChartDatasetCallback |
                         fill: true,
                         label,
                         data: Array(20).fill(-5),
-                        borderColor: theme('colors.cyan.400'),
-                        backgroundColor: hexToRgba(theme('colors.cyan.700'), 0.5),
+                        ...chartSeries('--ls-accent'),
                     },
                     index
                 )
