@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import classNames from 'classnames';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import loginCheckpoint from '@/api/auth/loginCheckpoint';
 import LoginFormContainer from '@/components/auth/LoginFormContainer';
@@ -7,9 +8,9 @@ import { StaticContext } from 'react-router';
 import { useFormikContext, withFormik } from 'formik';
 import useFlash from '@/plugins/useFlash';
 import { FlashStore } from '@/state/flashes';
-import Field from '@/components/elements/Field';
-import tw from 'twin.macro';
-import Button from '@/components/elements/Button';
+import FormField from '@/components/elements/latte/FormField';
+import Button from '@/components/elements/latte/Button';
+import styles from './auth.module.css';
 
 interface Values {
     code: string;
@@ -27,12 +28,11 @@ const LoginCheckpointContainer = () => {
     const [isMissingDevice, setIsMissingDevice] = useState(false);
 
     return (
-        <LoginFormContainer title={'Device Checkpoint'} css={tw`w-full flex`}>
-            <div css={tw`mt-6`}>
-                <Field
-                    light
+        <LoginFormContainer title={'Device Checkpoint'}>
+            <div className={classNames(styles.fields, styles.code)}>
+                <FormField
                     name={isMissingDevice ? 'recoveryCode' : 'code'}
-                    title={isMissingDevice ? 'Recovery Code' : 'Authentication Code'}
+                    label={isMissingDevice ? 'Recovery Code' : 'Authentication Code'}
                     description={
                         isMissingDevice
                             ? 'Enter one of the recovery codes generated when you setup 2-Factor authentication on this account in order to continue.'
@@ -43,28 +43,24 @@ const LoginCheckpointContainer = () => {
                     autoFocus
                 />
             </div>
-            <div css={tw`mt-6`}>
-                <Button size={'xlarge'} type={'submit'} disabled={isSubmitting} isLoading={isSubmitting}>
+            <div className={styles.action}>
+                <Button type={'submit'} variant={'contained'} size={'large'} block disabled={isSubmitting}>
                     Continue
                 </Button>
             </div>
-            <div css={tw`mt-6 text-center`}>
-                <span
+            <div className={styles.links}>
+                <button
+                    type={'button'}
                     onClick={() => {
                         setFieldValue('code', '');
                         setFieldValue('recoveryCode', '');
-                        setIsMissingDevice((s) => !s);
+                        setIsMissingDevice(s => !s);
                     }}
-                    css={tw`cursor-pointer text-xs text-neutral-500 tracking-wide uppercase no-underline hover:text-neutral-700`}
+                    className={styles.link}
                 >
                     {!isMissingDevice ? "I've Lost My Device" : 'I Have My Device'}
-                </span>
-            </div>
-            <div css={tw`mt-6 text-center`}>
-                <Link
-                    to={'/auth/login'}
-                    css={tw`text-xs text-neutral-500 tracking-wide uppercase no-underline hover:text-neutral-700`}
-                >
+                </button>
+                <Link to={'/auth/login'} className={styles.link}>
                     Return to Login
                 </Link>
             </div>

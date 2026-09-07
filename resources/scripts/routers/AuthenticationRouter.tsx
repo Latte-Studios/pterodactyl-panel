@@ -13,7 +13,7 @@ export default () => {
     const { path } = useRouteMatch();
 
     return (
-        <div className={'pt-8 xl:pt-32'}>
+        <>
             <Switch location={location}>
                 <Route path={`${path}/login`} component={LoginContainer} exact />
                 <Route path={`${path}/login/checkpoint`} component={LoginCheckpointContainer} />
@@ -24,6 +24,6 @@ export default () => {
                     <NotFound onBack={() => history.push('/auth/login')} />
                 </Route>
             </Switch>
-        </div>
+        </>
     );
 };

@@ -5,11 +5,11 @@ import requestPasswordResetEmail from '@/api/auth/requestPasswordResetEmail';
 import { httpErrorToHuman } from '@/api/http';
 import LoginFormContainer from '@/components/auth/LoginFormContainer';
 import { useStoreState } from 'easy-peasy';
-import Field from '@/components/elements/Field';
+import FormField from '@/components/elements/latte/FormField';
 import { Formik, FormikHelpers } from 'formik';
 import { object, string } from 'yup';
-import tw from 'twin.macro';
-import Button from '@/components/elements/Button';
+import Button from '@/components/elements/latte/Button';
+import styles from './auth.module.css';
 import Reaptcha from 'reaptcha';
 import useFlash from '@/plugins/useFlash';
 
@@ -72,18 +72,19 @@ export default () => {
             })}
         >
             {({ isSubmitting, setSubmitting, submitForm }) => (
-                <LoginFormContainer title={'Request Password Reset'} css={tw`w-full flex`}>
-                    <Field
-                        light
-                        label={'Email'}
-                        description={
-                            'Enter your account email address to receive instructions on resetting your password.'
-                        }
-                        name={'email'}
-                        type={'email'}
-                    />
-                    <div css={tw`mt-6`}>
-                        <Button type={'submit'} size={'xlarge'} disabled={isSubmitting} isLoading={isSubmitting}>
+                <LoginFormContainer title={'Request Password Reset'}>
+                    <div className={styles.fields}>
+                        <FormField
+                            label={'Email'}
+                            description={
+                                'Enter your account email address to receive instructions on resetting your password.'
+                            }
+                            name={'email'}
+                            type={'email'}
+                        />
+                    </div>
+                    <div className={styles.action}>
+                        <Button type={'submit'} variant={'contained'} size={'large'} block disabled={isSubmitting}>
                             Send Email
                         </Button>
                     </div>
@@ -102,11 +103,8 @@ export default () => {
                             }}
                         />
                     )}
-                    <div css={tw`mt-6 text-center`}>
-                        <Link
-                            to={'/auth/login'}
-                            css={tw`text-xs text-neutral-500 tracking-wide uppercase no-underline hover:text-neutral-700`}
-                        >
+                    <div className={styles.links}>
+                        <Link to={'/auth/login'} className={styles.link}>
                             Return to Login
                         </Link>
                     </div>

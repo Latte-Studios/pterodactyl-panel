@@ -1,0 +1,35 @@
+.name {
+    font-weight: 700;
+}
+
+.description {
+    margin-top: 2px;
+    font-size: 12px;
+    font-weight: 300;
+    color: var(--ls-ink-70);
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+.usage {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.limit {
+    font-size: 12px;
+    font-weight: 300;
+    color: var(--ls-ink-50);
+}
+
+.alarm {
+    color: var(--ls-bad);
+    font-weight: 700;
+}
+
+.muted {
+    color: var(--ls-ink-50);
+}

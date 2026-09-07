@@ -8,10 +8,10 @@ import { Actions, useStoreActions } from 'easy-peasy';
 import { ApplicationStore } from '@/state';
 import { Formik, FormikHelpers } from 'formik';
 import { object, ref, string } from 'yup';
-import Field from '@/components/elements/Field';
-import Input from '@/components/elements/Input';
-import tw from 'twin.macro';
-import Button from '@/components/elements/Button';
+import FormField from '@/components/elements/latte/FormField';
+import { Field, Input } from '@/components/elements/latte/Input';
+import Button from '@/components/elements/latte/Button';
+import styles from './auth.module.css';
 
 interface Values {
     password: string;
@@ -61,33 +61,26 @@ export default ({ match, location }: RouteComponentProps<{ token: string }>) => 
             })}
         >
             {({ isSubmitting }) => (
-                <LoginFormContainer title={'Reset Password'} css={tw`w-full flex`}>
-                    <div>
-                        <label>Email</label>
-                        <Input value={email} isLight disabled />
-                    </div>
-                    <div css={tw`mt-6`}>
-                        <Field
-                            light
+                <LoginFormContainer title={'Reset Password'}>
+                    <div className={styles.fields}>
+                        <Field label={'Email'} htmlFor={'email'}>
+                            <Input id={'email'} value={email} disabled readOnly />
+                        </Field>
+                        <FormField
                             label={'New Password'}
                             name={'password'}
                             type={'password'}
                             description={'Passwords must be at least 8 characters in length.'}
                         />
+                        <FormField label={'Confirm New Password'} name={'passwordConfirmation'} type={'password'} />
                     </div>
-                    <div css={tw`mt-6`}>
-                        <Field light label={'Confirm New Password'} name={'passwordConfirmation'} type={'password'} />
-                    </div>
-                    <div css={tw`mt-6`}>
-                        <Button size={'xlarge'} type={'submit'} disabled={isSubmitting} isLoading={isSubmitting}>
+                    <div className={styles.action}>
+                        <Button type={'submit'} variant={'contained'} size={'large'} block disabled={isSubmitting}>
                             Reset Password
                         </Button>
                     </div>
-                    <div css={tw`mt-6 text-center`}>
-                        <Link
-                            to={'/auth/login'}
-                            css={tw`text-xs text-neutral-500 tracking-wide no-underline uppercase hover:text-neutral-600`}
-                        >
+                    <div className={styles.links}>
+                        <Link to={'/auth/login'} className={styles.link}>
                             Return to Login
                         </Link>
                     </div>
