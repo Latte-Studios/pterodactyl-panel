@@ -68,12 +68,22 @@ Route::group(['prefix' => 'settings'], function () {
     Route::get('/', [Admin\Settings\IndexController::class, 'index'])->name('admin.settings');
     Route::get('/mail', [Admin\Settings\MailController::class, 'index'])->name('admin.settings.mail');
     Route::get('/advanced', [Admin\Settings\AdvancedController::class, 'index'])->name('admin.settings.advanced');
+    Route::get('/node-watcher', [Admin\Settings\NodeWatcherController::class, 'index'])->name('admin.settings.node-watcher');
+
+    Route::post('/node-watcher/webhooks', [Admin\Settings\NodeWatcherController::class, 'store'])->name('admin.settings.node-watcher.webhooks');
+    Route::post('/node-watcher/webhooks/{webhook}/rotate', [Admin\Settings\NodeWatcherController::class, 'rotate'])->name('admin.settings.node-watcher.webhooks.rotate');
+    Route::post('/node-watcher/webhooks/{webhook}/test', [Admin\Settings\NodeWatcherController::class, 'test'])->name('admin.settings.node-watcher.webhooks.test');
+    Route::post('/node-watcher/template/preview', [Admin\Settings\NodeWatcherController::class, 'preview'])->name('admin.settings.node-watcher.preview');
 
     Route::post('/mail/test', [Admin\Settings\MailController::class, 'test'])->name('admin.settings.mail.test');
 
     Route::patch('/', [Admin\Settings\IndexController::class, 'update']);
     Route::patch('/mail', [Admin\Settings\MailController::class, 'update']);
     Route::patch('/advanced', [Admin\Settings\AdvancedController::class, 'update']);
+    Route::patch('/node-watcher', [Admin\Settings\NodeWatcherController::class, 'update']);
+    Route::patch('/node-watcher/webhooks/{webhook}', [Admin\Settings\NodeWatcherController::class, 'updateWebhook'])->name('admin.settings.node-watcher.webhooks.update');
+
+    Route::delete('/node-watcher/webhooks/{webhook}', [Admin\Settings\NodeWatcherController::class, 'destroy'])->name('admin.settings.node-watcher.webhooks.delete');
 });
 
 /*

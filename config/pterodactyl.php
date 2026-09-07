@@ -193,4 +193,19 @@ return [
     'features' => [
         'new_server_identifiers' => (bool) env('PTERODACTYL_USE_SERVER_IDENTIFIERS', false),
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Node Watcher Settings
+    |--------------------------------------------------------------------------
+    |
+    | This section controls the webhooks that report the state of the nodes.
+    | The values can be overridden from the admin area.
+    */
+
+    'node_watcher' => [
+        // Minutes between two utilization heartbeats sent to the webhooks. Zero disables
+        // the heartbeat and the unreachable node detection that comes with it.
+        'heartbeat_interval' => (int) env('PTERODACTYL_NODE_WATCHER_HEARTBEAT_INTERVAL', 5),
+    ],
 ];
