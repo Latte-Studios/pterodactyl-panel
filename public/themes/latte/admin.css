@@ -59,6 +59,9 @@
 
     --ls-terminal: #1E140C;
     --ls-terminal-ink: #F3E9DF;
+    /* The terminal surface is the same dark in both themes, so anything drawn
+       on it keeps a light hairline of its own. */
+    --ls-terminal-border: rgba(255,255,255,.16);
 
     /* The sidebar keeps a single ink in both themes: it is Wolf Expresso in
        light and the darkest brown in dark, so white always sits on top of it. */
@@ -1391,6 +1394,7 @@ body.latte .sweet-alert .sa-icon.sa-info::after {
 body.latte .tooltip-inner {
     background-color: var(--ls-terminal);
     color: var(--ls-terminal-ink);
+    border: 1px solid var(--ls-terminal-border);
     border-radius: var(--ls-radius-input);
     font-family: var(--ls-font);
 }

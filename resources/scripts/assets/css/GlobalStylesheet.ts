@@ -70,6 +70,10 @@ export default createGlobalStyle`
 
         --ls-terminal: #1E140C;
         --ls-terminal-ink: #F3E9DF;
+        /* The terminal surface is the same dark in both themes, so anything
+           drawn on it keeps a light hairline of its own: without it a tooltip
+           over the sidebar of the dark theme has no edge at all. */
+        --ls-terminal-border: rgba(255,255,255,.16);
 
         /* The sidebar keeps one ink in both themes: it is Wolf Expresso in light
            and the darkest brown in dark, so white always sits on top of it. */

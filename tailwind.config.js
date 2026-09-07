@@ -36,6 +36,7 @@ const ls = {
     danger: 'rgb(var(--ls-danger-rgb) / <alpha-value>)',
     terminal: 'rgb(var(--ls-terminal-rgb) / <alpha-value>)',
     'terminal-ink': 'rgb(var(--ls-terminal-ink-rgb) / <alpha-value>)',
+    'terminal-border': 'var(--ls-terminal-border)',
     open: 'rgb(var(--ls-open-rgb) / <alpha-value>)',
     'open-bg': 'var(--ls-open-bg)',
     progress: 'rgb(var(--ls-progress-rgb) / <alpha-value>)',
