@@ -722,6 +722,88 @@ body.latte label {
     color: var(--ls-ink);
 }
 
+body.latte input[type='radio'],
+body.latte input[type='checkbox'] {
+    accent-color: var(--ls-primary);
+}
+
+body.latte input[type='radio']:focus-visible,
+body.latte input[type='checkbox']:focus-visible {
+    outline: 2px solid var(--ls-focus);
+    outline-offset: 2px;
+}
+
+/*
+ * checkbox.css hides the native control and draws its own out of pseudo
+ * elements, in the Bootstrap contextual colours. Selection is a brand colour in
+ * this design system, so every variant resolves to the same primary rather than
+ * to a green, an amber and a red.
+ */
+body.latte .checkbox label::before,
+body.latte .radio label::before {
+    background-color: var(--ls-paper);
+    border-color: var(--ls-border-strong);
+}
+
+body.latte .checkbox label::after {
+    color: var(--ls-primary);
+}
+
+body.latte .radio label::after {
+    background-color: var(--ls-primary);
+}
+
+body.latte .checkbox input[type='checkbox']:checked + label::before,
+body.latte .checkbox-primary input[type='checkbox']:checked + label::before,
+body.latte .checkbox-success input[type='checkbox']:checked + label::before,
+body.latte .checkbox-info input[type='checkbox']:checked + label::before,
+body.latte .checkbox-warning input[type='checkbox']:checked + label::before,
+body.latte .checkbox-danger input[type='checkbox']:checked + label::before {
+    background-color: var(--ls-primary);
+    border-color: var(--ls-primary);
+}
+
+body.latte .checkbox input[type='checkbox']:checked + label::after,
+body.latte .checkbox-primary input[type='checkbox']:checked + label::after,
+body.latte .checkbox-success input[type='checkbox']:checked + label::after,
+body.latte .checkbox-info input[type='checkbox']:checked + label::after,
+body.latte .checkbox-warning input[type='checkbox']:checked + label::after,
+body.latte .checkbox-danger input[type='checkbox']:checked + label::after {
+    color: var(--ls-on-primary);
+}
+
+body.latte .radio-primary input[type='radio'] + label::after,
+body.latte .radio-success input[type='radio'] + label::after,
+body.latte .radio-info input[type='radio'] + label::after,
+body.latte .radio-warning input[type='radio'] + label::after,
+body.latte .radio-danger input[type='radio'] + label::after,
+body.latte .radio-primary input[type='radio']:checked + label::after,
+body.latte .radio-success input[type='radio']:checked + label::after,
+body.latte .radio-info input[type='radio']:checked + label::after,
+body.latte .radio-warning input[type='radio']:checked + label::after,
+body.latte .radio-danger input[type='radio']:checked + label::after {
+    background-color: var(--ls-primary);
+}
+
+body.latte .radio-primary input[type='radio']:checked + label::before,
+body.latte .radio-success input[type='radio']:checked + label::before,
+body.latte .radio-info input[type='radio']:checked + label::before,
+body.latte .radio-warning input[type='radio']:checked + label::before,
+body.latte .radio-danger input[type='radio']:checked + label::before {
+    border-color: var(--ls-primary);
+}
+
+body.latte .checkbox input[type='checkbox']:focus + label::before,
+body.latte .radio input[type='radio']:focus + label::before {
+    outline: 2px solid var(--ls-focus);
+    outline-offset: 2px;
+}
+
+body.latte .checkbox input[type='checkbox']:disabled + label,
+body.latte .radio input[type='radio']:disabled + label {
+    opacity: 0.5;
+}
+
 body.latte .form-control {
     height: 40px;
     padding: 0 12px;
@@ -756,9 +838,19 @@ body.latte .form-control[readonly] {
 }
 
 body.latte .input-group-addon {
+    display: flex;
+    align-items: center;
+    /* Bootstrap sizes the addon at 1%, which shrinks it to a sliver and clips
+       its unit label once the group lays out as a flex row. */
+    flex: 0 0 auto;
+    width: auto;
+    height: 40px;
+    padding: 0 12px;
     background-color: var(--ls-tint);
     border: 1px solid var(--ls-border-strong);
     color: var(--ls-ink-70);
+    font-size: 14px;
+    white-space: nowrap;
 }
 
 body.latte .input-group .form-control:first-child,
