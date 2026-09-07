@@ -33,6 +33,9 @@
     & > .container {
         @apply p-1 sm:p-2 bg-ls-terminal min-h-[16rem] flex-1 font-mono text-sm;
         border-radius: var(--ls-radius-card) var(--ls-radius-card) 0 0;
+        /* A row mid-refit is wider than the card. It has to be clipped by the
+           card rather than painted over whatever sits next to it. */
+        overflow: hidden;
 
         & #terminal {
             @apply h-full;

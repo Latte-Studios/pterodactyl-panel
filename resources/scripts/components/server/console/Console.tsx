@@ -61,7 +61,10 @@ export default () => {
     const TERMINAL_PRELUDE = '\u001b[1m\u001b[33mcontainer@pterodactyl~ \u001b[0m';
     const ref = useRef<HTMLDivElement>(null);
     const terminal = useMemo(() => new Terminal({ ...terminalProps }), []);
-    const fitAddon = new FitAddon();
+    // Held across renders: the one that matters is the one loaded into the
+    // terminal, and a fresh instance every render leaves the resize handler
+    // fitting an addon that was never attached to anything.
+    const fitAddon = useMemo(() => new FitAddon(), []);
     const searchAddon = new SearchAddon();
     const searchBar = new SearchBarAddon({ searchAddon });
     const webLinksAddon = new WebLinksAddon();
@@ -170,6 +173,29 @@ export default () => {
             }
         }, 100)
     );
+
+    /*
+     * The window is not the only thing that resizes the terminal: the sidebar
+     * drawer, the host block appearing and the stat cards wrapping all change
+     * its width without a window event. Until it is refitted the rows keep the
+     * column count they were laid out with, and anything longer runs out of the
+     * card.
+     */
+    useEffect(() => {
+        if (!ref.current || typeof ResizeObserver === 'undefined') {
+            return;
+        }
+
+        const observer = new ResizeObserver(() => {
+            if (terminal.element) {
+                fitAddon.fit();
+            }
+        });
+
+        observer.observe(ref.current);
+
+        return () => observer.disconnect();
+    }, [terminal, fitAddon, connected]);
 
     useEffect(() => {
         const listeners: Record<string, (s: string) => void> = {
