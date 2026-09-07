@@ -10,6 +10,8 @@ use Illuminate\Support\Collection;
 use Illuminate\Http\RedirectResponse;
 use Prologue\Alerts\AlertsMessageBag;
 use Spatie\QueryBuilder\QueryBuilder;
+use Spatie\QueryBuilder\AllowedFilter;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\View\Factory as ViewFactory;
 use Pterodactyl\Exceptions\DisplayException;
 use Pterodactyl\Http\Controllers\Controller;
@@ -135,7 +137,25 @@ class UserController extends Controller
      */
     public function json(Request $request): Model|Collection
     {
-        $users = QueryBuilder::for(User::query())->allowedFilters(['email'])->paginate(25);
+        $users = QueryBuilder::for(User::query())
+            ->allowedFilters([
+                'email',
+                'username',
+                // The owner pickers search on whatever the administrator types,
+                // which is as often a username or a name as it is an email.
+                AllowedFilter::callback('q', function (Builder $builder, $value) {
+                    $value = '%' . $value . '%';
+
+                    $builder->where(function (Builder $builder) use ($value) {
+                        $builder->where('email', 'LIKE', $value)
+                            ->orWhere('username', 'LIKE', $value)
+                            ->orWhere('name_first', 'LIKE', $value)
+                            ->orWhere('name_last', 'LIKE', $value)
+                            ->orWhere('uuid', 'LIKE', $value);
+                    });
+                }),
+            ])
+            ->paginate(25);
 
         // Handle single user requests.
         if ($request->query('user_id')) {

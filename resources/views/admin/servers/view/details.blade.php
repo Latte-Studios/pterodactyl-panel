@@ -74,7 +74,7 @@
             delay: 250,
             data: function (params) {
                 return {
-                    filter: { email: params.term },
+                    filter: { q: params.term },
                     page: params.page,
                 };
             },

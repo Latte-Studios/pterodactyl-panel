@@ -961,6 +961,18 @@ body.latte .select2-dropdown {
     color: var(--ls-ink);
 }
 
+/* pterodactyl.css marks the search field border important. */
+body.latte .select2-container--default .select2-search--dropdown .select2-search__field {
+    height: 36px;
+    padding: 0 10px;
+    background-color: var(--ls-paper);
+    border: 1px solid var(--ls-border-strong) !important;
+    border-radius: var(--ls-radius-input);
+    color: var(--ls-ink);
+    font-family: var(--ls-font);
+    font-size: 14px;
+}
+
 body.latte .select2-container--default .select2-results__option--highlighted[aria-selected] {
     background-color: var(--ls-tint);
     color: var(--ls-ink);
