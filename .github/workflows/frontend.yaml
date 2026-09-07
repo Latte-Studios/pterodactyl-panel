@@ -1,0 +1,30 @@
+name: Frontend
+
+on:
+  pull_request:
+    branches:
+      - "latte-main"
+  push:
+    branches:
+      - "latte-main"
+
+jobs:
+  frontend:
+    name: Frontend
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: yarn
+      - run: yarn install --frozen-lockfile
+      - run: yarn tsc
+      - run: yarn lint
+      - run: yarn test
+      # The screenshots need a running panel, so CI only proves the suite is
+      # wired correctly. Visual comparison stays local until the design system
+      # stops moving.
+      - run: yarn screenshots --list

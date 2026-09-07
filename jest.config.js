@@ -28,5 +28,5 @@ module.exports = {
         '.*\\.tsx?$': 'ts-jest',
         '.*\\.jsx$': 'babel-jest',
     },
-    testPathIgnorePatterns: ['/node_modules/'],
+    testPathIgnorePatterns: ['/node_modules/', '/tests/e2e/'],
 };
