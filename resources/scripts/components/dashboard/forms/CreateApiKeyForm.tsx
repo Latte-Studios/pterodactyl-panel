@@ -76,7 +76,9 @@ export default ({ onKeyCreated }: { onKeyCreated: (key: ApiKey) => void }) => {
                             <Field name={'allowedIps'} as={CustomTextarea} />
                         </FormikFieldWrapper>
                         <div css={tw`flex justify-end mt-6`}>
-                            <Button variant={'contained'} type={'submit'}>Create</Button>
+                            <Button variant={'contained'} type={'submit'}>
+                                Create
+                            </Button>
                         </div>
                     </Form>
                 )}

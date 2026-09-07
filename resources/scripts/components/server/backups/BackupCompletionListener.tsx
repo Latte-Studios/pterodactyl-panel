@@ -18,9 +18,9 @@ const BackupCompletionListener = ({ backup }: { backup: ServerBackup }) => {
                 const parsed = JSON.parse(data);
 
                 mutate(
-                    current => ({
+                    (current) => ({
                         ...current,
-                        items: current.items.map(b =>
+                        items: current.items.map((b) =>
                             b.uuid !== backup.uuid
                                 ? b
                                 : {
@@ -29,16 +29,16 @@ const BackupCompletionListener = ({ backup }: { backup: ServerBackup }) => {
                                       checksum: (parsed.checksum_type || '') + ':' + (parsed.checksum || ''),
                                       bytes: parsed.file_size || 0,
                                       completedAt: new Date(),
-                                  },
+                                  }
                         ),
                     }),
-                    false,
+                    false
                 );
             } catch (e) {
                 console.warn(e);
             }
         },
-        [backup.uuid, mutate],
+        [backup.uuid, mutate]
     );
 
     useWebsocketEvent(`${SocketEvent.BACKUP_COMPLETED}:${backup.uuid}` as SocketEvent, handler);

@@ -22,10 +22,10 @@ const host = (allocation: Allocation): string => allocation.alias || ip(allocati
 
 const NetworkContainer = () => {
     const [loading, setLoading] = useState(false);
-    const uuid = ServerContext.useStoreState(state => state.server.data!.uuid);
-    const allocationLimit = ServerContext.useStoreState(state => state.server.data!.featureLimits.allocations);
-    const allocations = ServerContext.useStoreState(state => state.server.data!.allocations, isEqual);
-    const setServerFromState = ServerContext.useStoreActions(actions => actions.server.setServerFromState);
+    const uuid = ServerContext.useStoreState((state) => state.server.data!.uuid);
+    const allocationLimit = ServerContext.useStoreState((state) => state.server.data!.featureLimits.allocations);
+    const allocations = ServerContext.useStoreState((state) => state.server.data!.allocations, isEqual);
+    const setServerFromState = ServerContext.useStoreActions((actions) => actions.server.setServerFromState);
 
     const { clearFlashes, clearAndAddHttpError } = useFlashKey('server:network');
     const { data, error, mutate } = getServerAllocations();
@@ -41,7 +41,7 @@ const NetworkContainer = () => {
     useDeepCompareEffect(() => {
         if (!data) return;
 
-        setServerFromState(state => ({ ...state, allocations: data }));
+        setServerFromState((state) => ({ ...state, allocations: data }));
     }, [data]);
 
     const onCreateAllocation = () => {
@@ -49,11 +49,11 @@ const NetworkContainer = () => {
 
         setLoading(true);
         createServerAllocation(uuid)
-            .then(allocation => {
-                setServerFromState(s => ({ ...s, allocations: s.allocations.concat(allocation) }));
+            .then((allocation) => {
+                setServerFromState((s) => ({ ...s, allocations: s.allocations.concat(allocation) }));
                 return mutate(data?.concat(allocation), false);
             })
-            .catch(error => clearAndAddHttpError(error))
+            .catch((error) => clearAndAddHttpError(error))
             .then(() => setLoading(false));
     };
 
@@ -62,34 +62,34 @@ const NetworkContainer = () => {
             {
                 key: 'address',
                 header: 'Address',
-                render: allocation => <CopyChip value={`${host(allocation)}:${allocation.port}`} />,
+                render: (allocation) => <CopyChip value={`${host(allocation)}:${allocation.port}`} />,
             },
             {
                 key: 'host',
                 header: 'Hostname',
-                render: allocation => host(allocation),
+                render: (allocation) => host(allocation),
             },
             {
                 key: 'port',
                 header: 'Port',
                 align: 'right',
                 width: '96px',
-                render: allocation => allocation.port,
+                render: (allocation) => allocation.port,
             },
             {
                 key: 'notes',
                 header: 'Notes',
-                render: allocation => <AllocationNotes allocation={allocation} />,
+                render: (allocation) => <AllocationNotes allocation={allocation} />,
             },
             {
                 key: 'actions',
                 header: '',
                 align: 'right',
                 width: '220px',
-                render: allocation => <AllocationActions allocation={allocation} />,
+                render: (allocation) => <AllocationActions allocation={allocation} />,
             },
         ],
-        [],
+        []
     );
 
     const canCreate = allocationLimit > 0 && data !== undefined && allocationLimit > data.length;
@@ -102,7 +102,9 @@ const NetworkContainer = () => {
             heading={'Network'}
             subtitle={
                 allocationLimit > 0
-                    ? `You are currently using ${data?.length ?? 0} of ${allocationLimit} allowed allocations for this server.`
+                    ? `You are currently using ${
+                          data?.length ?? 0
+                      } of ${allocationLimit} allowed allocations for this server.`
                     : 'Allocations cannot be created for this server.'
             }
             actions={
@@ -123,12 +125,12 @@ const NetworkContainer = () => {
                     <DataTable
                         columns={columns}
                         rows={data}
-                        keyOf={allocation => String(allocation.id)}
+                        keyOf={(allocation) => String(allocation.id)}
                         empty={'There are no allocations assigned to this server.'}
                         mobile={{
-                            title: allocation => `${host(allocation)}:${allocation.port}`,
-                            subtitle: allocation => allocation.notes,
-                            status: allocation =>
+                            title: (allocation) => `${host(allocation)}:${allocation.port}`,
+                            subtitle: (allocation) => allocation.notes,
+                            status: (allocation) =>
                                 allocation.isDefault ? <StatusChip tone={'ok'}>Primary</StatusChip> : null,
                         }}
                     />

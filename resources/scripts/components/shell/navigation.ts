@@ -61,8 +61,8 @@ const order = [undefined, 'Manage', 'Configure'];
 
 const collect = (items: (ShellNavItem & { group?: string })[]): ShellNavGroup[] =>
     order
-        .map(label => ({ label, items: items.filter(item => item.group === label) }))
-        .filter(group => group.items.length > 0);
+        .map((label) => ({ label, items: items.filter((item) => item.group === label) }))
+        .filter((group) => group.items.length > 0);
 
 const join = (base: string, path: string): string => `${base}/${path}`.replace(/\/{2,}/g, '/').replace(/(.)\/$/, '$1');
 
@@ -72,17 +72,17 @@ const join = (base: string, path: string): string => `${base}/${path}`.replace(/
  * fixed no matter which routes are visible.
  */
 export const useServerNavigation = (basePath: string): { groups: ShellNavGroup[]; subnav: ShellNavItem[] } => {
-    const named = routes.server.filter(route => !!route.name);
-    const flattened = named.flatMap(route =>
-        route.permission === null ? [] : Array.isArray(route.permission) ? route.permission : [route.permission],
+    const named = routes.server.filter((route) => !!route.name);
+    const flattened = named.flatMap((route) =>
+        route.permission === null ? [] : Array.isArray(route.permission) ? route.permission : [route.permission]
     );
 
     const granted = usePermissions(flattened);
     const rootAdmin = useStoreState((state: ApplicationStore) => state.user.data!.rootAdmin);
-    const internalId = ServerContext.useStoreState(state => state.server.data?.internalId);
+    const internalId = ServerContext.useStoreState((state) => state.server.data?.internalId);
 
     let cursor = 0;
-    const allowed = named.filter(route => {
+    const allowed = named.filter((route) => {
         if (route.permission === null) {
             return true;
         }
@@ -96,7 +96,7 @@ export const useServerNavigation = (basePath: string): { groups: ShellNavGroup[]
         return slice.some(Boolean);
     });
 
-    const items = allowed.map(route => ({
+    const items = allowed.map((route) => ({
         to: join(basePath, route.path),
         label: route.name!,
         icon: icons[route.name!] ?? ServerIcon,
@@ -123,7 +123,9 @@ export const useServerNavigation = (basePath: string): { groups: ShellNavGroup[]
         groups.push({ items: [{ to: '/', label: 'Dashboard', icon: ViewGridIcon, exact: true }] });
     }
 
-    return { groups, subnav: items.map(({ group, ...item }) => item) };
+    // The group only decides which sidebar section an item lands in, so the
+    // sub navigation drops it.
+    return { groups, subnav: items.map(({ group: _group, ...item }) => item) };
 };
 
 /** Dashboard and account navigation. There are no per-server permissions here. */
@@ -131,8 +133,8 @@ export const useDashboardNavigation = (): { groups: ShellNavGroup[]; subnav: She
     const rootAdmin = useStoreState((state: ApplicationStore) => state.user.data!.rootAdmin);
 
     const account = routes.account
-        .filter(route => !!route.name)
-        .map(route => ({
+        .filter((route) => !!route.name)
+        .map((route) => ({
             to: join('/account', route.path),
             label: route.name!,
             icon: icons[route.name!] ?? UserCircleIcon,

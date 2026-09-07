@@ -31,7 +31,13 @@ const Meter = ({ label, value, limit, percent, tone }: MeterProps) => {
             <span className={styles.hostLabel}>{label}</span>
             <span className={styles.hostValue}>{value}</span>
             {limit && <span className={styles.hostLimit}>{limit}</span>}
-            <div className={styles.hostTrack} role={'progressbar'} aria-valuenow={width} aria-valuemin={0} aria-valuemax={100}>
+            <div
+                className={styles.hostTrack}
+                role={'progressbar'}
+                aria-valuenow={width}
+                aria-valuemin={0}
+                aria-valuemax={100}
+            >
                 <div
                     className={classNames(styles.hostBar, {
                         [styles.hostBarWaiting]: tone === 'waiting',
@@ -45,7 +51,7 @@ const Meter = ({ label, value, limit, percent, tone }: MeterProps) => {
 };
 
 const HostStatsBlock = ({ stats, className }: { stats: HostStats | null; className?: string }) => {
-    const node = ServerContext.useStoreState(state => state.server.data!.node);
+    const node = ServerContext.useStoreState((state) => state.server.data!.node);
 
     if (stats === null) {
         return null;

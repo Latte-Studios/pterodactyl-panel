@@ -10,10 +10,8 @@ import styles from './files.module.css';
 import { useHistory, useLocation, useParams } from 'react-router';
 import FileNameModal from '@/components/server/files/FileNameModal';
 import Can from '@/components/elements/Can';
-import FlashMessageRender from '@/components/FlashMessageRender';
 import PageContentBlock from '@/components/elements/PageContentBlock';
 import { ServerError } from '@/components/elements/ScreenBlock';
-import tw from 'twin.macro';
 import Button from '@/components/elements/latte/Button';
 import Select from '@/components/elements/Select';
 import modes from '@/modes';
@@ -168,8 +166,8 @@ export default () => {
                 />
             </div>
             <div className={styles.editorFooter}>
-                <Select value={mode} onChange={e => setMode(e.currentTarget.value)} className={styles.mode}>
-                    {modes.map(mode => (
+                <Select value={mode} onChange={(e) => setMode(e.currentTarget.value)} className={styles.mode}>
+                    {modes.map((mode) => (
                         <option key={`${mode.name}_${mode.mime}`} value={mode.mime}>
                             {mode.name}
                         </option>

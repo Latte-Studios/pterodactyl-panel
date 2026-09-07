@@ -30,7 +30,7 @@ beforeAll(() => {
 });
 
 const renderInThemes = (element: React.ReactElement, assert: (container: HTMLElement) => void) => {
-    themes.forEach(theme => {
+    themes.forEach((theme) => {
         const { container, unmount } = render(<ThemeWrapper theme={theme}>{element}</ThemeWrapper>);
 
         assert(container.firstElementChild as HTMLElement);
@@ -39,8 +39,8 @@ const renderInThemes = (element: React.ReactElement, assert: (container: HTMLEle
 };
 
 describe('Button', () => {
-    it.each(['contained', 'outline', 'text', 'danger'] as const)('renders the %s variant', variant => {
-        renderInThemes(<Button variant={variant}>Start</Button>, container => {
+    it.each(['contained', 'outline', 'text', 'danger'] as const)('renders the %s variant', (variant) => {
+        renderInThemes(<Button variant={variant}>Start</Button>, (container) => {
             expect(within(container).getByRole('button', { name: 'Start' })).toBeInTheDocument();
         });
     });
@@ -62,8 +62,8 @@ describe('Button', () => {
 });
 
 describe('StatusChip', () => {
-    it.each(['open', 'progress', 'waiting', 'closed', 'ok', 'bad'] as const)('renders the %s tone', tone => {
-        renderInThemes(<StatusChip tone={tone}>Running</StatusChip>, container => {
+    it.each(['open', 'progress', 'waiting', 'closed', 'ok', 'bad'] as const)('renders the %s tone', (tone) => {
+        renderInThemes(<StatusChip tone={tone}>Running</StatusChip>, (container) => {
             expect(within(container).getByText('Running')).toHaveAttribute('data-tone', tone);
         });
     });
@@ -109,7 +109,7 @@ describe('CopyChip', () => {
     it('renders in both themes and copies on click', () => {
         const copy = jest.requireMock('copy-to-clipboard');
 
-        renderInThemes(<CopyChip value={'node-01.latte.gg:25565'} />, container => {
+        renderInThemes(<CopyChip value={'node-01.latte.gg:25565'} />, (container) => {
             fireEvent.click(within(container).getByRole('button'));
         });
 
@@ -130,12 +130,12 @@ describe('Card', () => {
             <Card title={'Backups'} subtitle={'3 of 5 used'} footer={<Button>Create</Button>}>
                 Body
             </Card>,
-            container => {
+            (container) => {
                 expect(within(container).getByRole('heading', { name: 'Backups' })).toBeInTheDocument();
                 expect(within(container).getByText('3 of 5 used')).toBeInTheDocument();
                 expect(within(container).getByText('Body')).toBeInTheDocument();
                 expect(within(container).getByRole('button', { name: 'Create' })).toBeInTheDocument();
-            },
+            }
         );
     });
 });
@@ -144,11 +144,11 @@ describe('PageHeader', () => {
     it('renders one h1 with an eyebrow above it', () => {
         renderInThemes(
             <PageHeader eyebrow={'Server'} title={'Console'} subtitle={'Survival'} actions={<Button>Start</Button>} />,
-            container => {
-                expect(within(container).getAllByRole('heading', { level: 1 })).toHaveLength(1);
+            (container) => {
+                expect(within(container).getByRole('heading', { level: 1 })).toBeInTheDocument();
                 expect(within(container).getByRole('heading', { level: 1 })).toHaveTextContent('Console');
                 expect(within(container).getByText('Server')).toBeInTheDocument();
-            },
+            }
         );
     });
 });
@@ -162,17 +162,17 @@ describe('Toolbar', () => {
                     <Toolbar.Chip>All</Toolbar.Chip>
                 </Toolbar.Chips>
             </Toolbar>,
-            container => {
+            (container) => {
                 expect(within(container).getByRole('button', { name: 'Mine' })).toHaveAttribute('aria-pressed', 'true');
                 expect(within(container).getByRole('button', { name: 'All' })).toHaveAttribute('aria-pressed', 'false');
-            },
+            }
         );
     });
 });
 
 describe('StatCard', () => {
     it('renders a value with a bar clamped to the track', () => {
-        renderInThemes(<StatCard label={'CPU'} value={'42'} unit={'%'} percent={142} tone={'bad'} />, container => {
+        renderInThemes(<StatCard label={'CPU'} value={'42'} unit={'%'} percent={142} tone={'bad'} />, (container) => {
             const bar = within(container).getByRole('progressbar');
 
             expect(bar).toHaveAttribute('aria-valuenow', '100');
@@ -193,9 +193,9 @@ describe('Alert', () => {
             <Alert tone={'waiting'} title={'Host under pressure'}>
                 Memory is above 90 percent.
             </Alert>,
-            container => {
+            (container) => {
                 expect(within(container).getByRole('status')).toHaveAttribute('data-tone', 'waiting');
-            },
+            }
         );
     });
 });
@@ -219,10 +219,10 @@ describe('Switch', () => {
     it('reports its state and toggles in both themes', () => {
         const onChange = jest.fn();
 
-        renderInThemes(<Switch checked={false} onChange={onChange} label={'Enabled'} />, container => {
+        renderInThemes(<Switch checked={false} onChange={onChange} label={'Enabled'} />, (container) => {
             const control = within(container).getByRole('switch');
 
-            expect(control).toHaveAttribute('aria-checked', 'false');
+            expect(control).not.toBeChecked();
             fireEvent.click(control);
         });
 
@@ -235,7 +235,7 @@ describe('Field', () => {
         const { rerender } = render(
             <Field label={'Username'} htmlFor={'username'} description={'Used to sign in.'}>
                 <Input id={'username'} />
-            </Field>,
+            </Field>
         );
 
         expect(screen.getByText('Used to sign in.')).toBeInTheDocument();
@@ -243,7 +243,7 @@ describe('Field', () => {
         rerender(
             <Field label={'Username'} htmlFor={'username'} description={'Used to sign in.'} error={'Required.'}>
                 <Input id={'username'} />
-            </Field>,
+            </Field>
         );
 
         expect(screen.queryByText('Used to sign in.')).not.toBeInTheDocument();
@@ -256,7 +256,7 @@ describe('Dialog', () => {
         render(
             <Dialog open={false} onClose={jest.fn()} title={'Reinstall'}>
                 Body
-            </Dialog>,
+            </Dialog>
         );
 
         expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
@@ -267,7 +267,7 @@ describe('Dialog', () => {
         render(
             <Dialog open onClose={onClose} title={'Reinstall'} description={'This wipes the server files.'}>
                 Body
-            </Dialog>,
+            </Dialog>
         );
 
         expect(screen.getByRole('dialog')).toBeInTheDocument();
@@ -300,17 +300,17 @@ describe('DataTable', () => {
             <DataTable
                 columns={columns}
                 rows={rows}
-                keyOf={row => row.id}
+                keyOf={(row) => row.id}
                 mobile={{
-                    title: row => row.name,
-                    subtitle: row => row.node,
-                    kpis: row => [{ label: 'Node', value: row.node }],
+                    title: (row) => row.name,
+                    subtitle: (row) => row.node,
+                    kpis: (row) => [{ label: 'Node', value: row.node }],
                 }}
             />,
-            container => {
+            (container) => {
                 expect(within(container).getAllByRole('row')).toHaveLength(rows.length + 1);
                 expect(within(container).getAllByText('Survival')).toHaveLength(2);
-            },
+            }
         );
     });
 
@@ -319,10 +319,10 @@ describe('DataTable', () => {
             <DataTable
                 columns={columns}
                 rows={[]}
-                keyOf={row => row.id}
-                mobile={{ title: row => row.name }}
+                keyOf={(row) => row.id}
+                mobile={{ title: (row) => row.name }}
                 empty={'No servers yet.'}
-            />,
+            />
         );
 
         expect(screen.queryByRole('table')).not.toBeInTheDocument();
@@ -335,10 +335,10 @@ describe('DataTable', () => {
             <DataTable
                 columns={columns}
                 rows={rows}
-                keyOf={row => row.id}
-                mobile={{ title: row => row.name }}
+                keyOf={(row) => row.id}
+                mobile={{ title: (row) => row.name }}
                 onRowClick={onRowClick}
-            />,
+            />
         );
 
         fireEvent.click(screen.getAllByRole('row')[1]!);

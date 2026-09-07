@@ -22,14 +22,14 @@ export default () => {
     const match = useRouteMatch<{ id: string }>();
     const location = useLocation();
 
-    const rootAdmin = useStoreState(state => state.user.data!.rootAdmin);
+    const rootAdmin = useStoreState((state) => state.user.data!.rootAdmin);
     const [error, setError] = useState('');
 
-    const id = ServerContext.useStoreState(state => state.server.data?.id);
-    const uuid = ServerContext.useStoreState(state => state.server.data?.uuid);
-    const inConflictState = ServerContext.useStoreState(state => state.server.inConflictState);
-    const getServer = ServerContext.useStoreActions(actions => actions.server.getServer);
-    const clearServerState = ServerContext.useStoreActions(actions => actions.clearServerState);
+    const id = ServerContext.useStoreState((state) => state.server.data?.id);
+    const uuid = ServerContext.useStoreState((state) => state.server.data?.uuid);
+    const inConflictState = ServerContext.useStoreState((state) => state.server.inConflictState);
+    const getServer = ServerContext.useStoreActions((actions) => actions.server.getServer);
+    const clearServerState = ServerContext.useStoreActions((actions) => actions.clearServerState);
 
     const to = (value: string, url = false) => {
         if (value === '/') {
@@ -44,13 +44,13 @@ export default () => {
         () => () => {
             clearServerState();
         },
-        [],
+        []
     );
 
     useEffect(() => {
         setError('');
 
-        getServer(match.params.id).catch(error => {
+        getServer(match.params.id).catch((error) => {
             console.error(error);
             setError(httpErrorToHuman(error));
         });

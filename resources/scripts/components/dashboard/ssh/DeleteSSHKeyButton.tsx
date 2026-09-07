@@ -15,9 +15,9 @@ export default ({ name, fingerprint }: { name: string; fingerprint: string }) =>
         setVisible(false);
 
         Promise.all([
-            mutate(data => data?.filter(value => value.fingerprint !== fingerprint), false),
+            mutate((data) => data?.filter((value) => value.fingerprint !== fingerprint), false),
             deleteSSHKey(fingerprint),
-        ]).catch(error => {
+        ]).catch((error) => {
             mutate(undefined, true).catch(console.error);
             clearAndAddHttpError(error);
         });

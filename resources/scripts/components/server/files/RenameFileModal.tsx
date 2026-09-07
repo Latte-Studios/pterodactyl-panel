@@ -76,7 +76,9 @@ const RenameFileModal = ({ files, useMoveTerminology, ...props }: OwnProps) => {
                                 />
                             </div>
                             <div css={tw`w-full sm:w-auto mt-4 sm:mt-0`}>
-                                <Button variant={'contained'} type={'submit'} block>{useMoveTerminology ? 'Move' : 'Rename'}</Button>
+                                <Button variant={'contained'} type={'submit'} block>
+                                    {useMoveTerminology ? 'Move' : 'Rename'}
+                                </Button>
                             </div>
                         </div>
                         {useMoveTerminology && (

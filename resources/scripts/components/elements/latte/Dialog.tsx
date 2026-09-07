@@ -17,7 +17,17 @@ export interface DialogProps {
     children?: React.ReactNode;
 }
 
-const Dialog = ({ open, onClose, title, description, icon: Icon, danger, footer, className, children }: DialogProps) => {
+const Dialog = ({
+    open,
+    onClose,
+    title,
+    description,
+    icon: Icon,
+    danger,
+    footer,
+    className,
+    children,
+}: DialogProps) => {
     useEffect(() => {
         if (!open) {
             return;

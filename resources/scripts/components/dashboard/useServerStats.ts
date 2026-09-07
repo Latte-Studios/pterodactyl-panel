@@ -19,8 +19,8 @@ export const useServerStats = (servers: Server[]): ServerStatsMap => {
     const timer = useRef<ReturnType<typeof setInterval>>();
 
     const uuids = servers
-        .filter(server => server.status !== 'suspended' && !server.isNodeUnderMaintenance)
-        .map(server => server.uuid)
+        .filter((server) => server.status !== 'suspended' && !server.isNodeUnderMaintenance)
+        .map((server) => server.uuid)
         .join(',');
 
     useEffect(() => {
@@ -32,23 +32,21 @@ export const useServerStats = (servers: Server[]): ServerStatsMap => {
 
         const poll = () =>
             Promise.all(
-                uuids.split(',').map(uuid =>
+                uuids.split(',').map((uuid) =>
                     getServerResourceUsage(uuid)
-                        .then(data => [uuid, data] as const)
-                        .catch(error => {
+                        .then((data) => [uuid, data] as const)
+                        .catch((error) => {
                             console.error(error);
 
                             return null;
-                        }),
-                ),
-            ).then(results => {
+                        })
+                )
+            ).then((results) => {
                 if (cancelled) {
                     return;
                 }
 
-                setStats(
-                    Object.fromEntries(results.filter((entry): entry is [string, ServerStats] => entry !== null)),
-                );
+                setStats(Object.fromEntries(results.filter((entry): entry is [string, ServerStats] => entry !== null)));
             });
 
         poll();

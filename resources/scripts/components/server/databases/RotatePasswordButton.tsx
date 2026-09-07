@@ -6,7 +6,6 @@ import { ServerContext } from '@/state/server';
 import { ServerDatabase } from '@/api/server/databases/getServerDatabases';
 import { httpErrorToHuman } from '@/api/http';
 import Button from '@/components/elements/latte/Button';
-import tw from 'twin.macro';
 
 export default ({ databaseId, onUpdate }: { databaseId: string; onUpdate: (database: ServerDatabase) => void }) => {
     const [loading, setLoading] = useState(false);

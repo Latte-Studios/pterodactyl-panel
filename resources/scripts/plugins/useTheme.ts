@@ -95,7 +95,7 @@ export default (): UseTheme => {
 
     const toggle = useCallback(
         () => setPreference(resolveTheme(readPreference()) === 'dark' ? 'light' : 'dark'),
-        [setPreference],
+        [setPreference]
     );
 
     return { preference, theme, setPreference, toggle };

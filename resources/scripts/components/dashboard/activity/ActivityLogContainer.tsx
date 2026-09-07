@@ -42,7 +42,7 @@ export default () => {
                     <Button
                         size={'small'}
                         variant={'text'}
-                        onClick={() => setFilters(value => ({ ...value, filters: {} }))}
+                        onClick={() => setFilters((value) => ({ ...value, filters: {} }))}
                     >
                         Clear filters
                     </Button>
@@ -52,7 +52,7 @@ export default () => {
                 <Spinner centered />
             ) : (
                 <Card flush>
-                    {data?.items.map(activity => (
+                    {data?.items.map((activity) => (
                         <ActivityLogEntry key={activity.id} activity={activity}>
                             {typeof activity.properties.useragent === 'string' && (
                                 <Tooltip content={activity.properties.useragent} placement={'top'}>
@@ -68,7 +68,7 @@ export default () => {
             {data && (
                 <PaginationFooter
                     pagination={data.pagination}
-                    onPageSelect={page => setFilters(value => ({ ...value, page }))}
+                    onPageSelect={(page) => setFilters((value) => ({ ...value, page }))}
                 />
             )}
         </PageContentBlock>

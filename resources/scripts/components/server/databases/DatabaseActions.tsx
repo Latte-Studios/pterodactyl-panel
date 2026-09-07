@@ -23,13 +23,13 @@ import styles from './databases.module.css';
  * state that belongs to a single row.
  */
 const DatabaseActions = ({ database }: { database: ServerDatabase }) => {
-    const uuid = ServerContext.useStoreState(state => state.server.data!.uuid);
+    const uuid = ServerContext.useStoreState((state) => state.server.data!.uuid);
     const { addError, clearFlashes } = useFlash();
     const [deleting, setDeleting] = useState(false);
     const [details, setDetails] = useState(false);
 
-    const appendDatabase = ServerContext.useStoreActions(actions => actions.databases.appendDatabase);
-    const removeDatabase = ServerContext.useStoreActions(actions => actions.databases.removeDatabase);
+    const appendDatabase = ServerContext.useStoreActions((actions) => actions.databases.appendDatabase);
+    const removeDatabase = ServerContext.useStoreActions((actions) => actions.databases.removeDatabase);
 
     const jdbcConnectionString = `jdbc:mysql://${database.username}${
         database.password ? `:${encodeURIComponent(database.password)}` : ''
@@ -48,7 +48,7 @@ const DatabaseActions = ({ database }: { database: ServerDatabase }) => {
                 setDeleting(false);
                 setTimeout(() => removeDatabase(database.id), 150);
             })
-            .catch(error => {
+            .catch((error) => {
                 console.error(error);
                 setSubmitting(false);
                 addError({ key: 'database:delete', message: httpErrorToHuman(error) });

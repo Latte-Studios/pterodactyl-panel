@@ -22,8 +22,8 @@ export default ({ className }: PowerButtonProps) => {
     const [menuOpen, setMenuOpen] = useState(false);
     const group = useRef<HTMLDivElement>(null);
 
-    const status = ServerContext.useStoreState(state => state.status.value as string | null);
-    const instance = ServerContext.useStoreState(state => state.socket.instance);
+    const status = ServerContext.useStoreState((state) => state.status.value as string | null);
+    const instance = ServerContext.useStoreState((state) => state.socket.instance);
 
     const send = (action: PowerAction) => {
         if (instance) {
@@ -100,7 +100,7 @@ export default ({ className }: PowerButtonProps) => {
                         iconOnly
                         aria-label={'More power actions'}
                         aria-expanded={menuOpen}
-                        onClick={() => setMenuOpen(open => !open)}
+                        onClick={() => setMenuOpen((open) => !open)}
                     >
                         <ChevronDownIcon width={16} height={16} />
                     </Button>

@@ -16,22 +16,17 @@ import { Field } from '@/components/elements/latte/Input';
 import styles from './settings.module.css';
 
 export default () => {
-    const username = useStoreState(state => state.user.data!.username);
-    const id = ServerContext.useStoreState(state => state.server.data!.id);
-    const uuid = ServerContext.useStoreState(state => state.server.data!.uuid);
-    const node = ServerContext.useStoreState(state => state.server.data!.node);
-    const sftp = ServerContext.useStoreState(state => state.server.data!.sftpDetails, isEqual);
+    const username = useStoreState((state) => state.user.data!.username);
+    const id = ServerContext.useStoreState((state) => state.server.data!.id);
+    const uuid = ServerContext.useStoreState((state) => state.server.data!.uuid);
+    const node = ServerContext.useStoreState((state) => state.server.data!.node);
+    const sftp = ServerContext.useStoreState((state) => state.server.data!.sftpDetails, isEqual);
 
     const address = `sftp://${ip(sftp.ip)}:${sftp.port}`;
     const sftpUser = `${username}.${id}`;
 
     return (
-        <ServerContentBlock
-            title={'Settings'}
-            eyebrow={'Server'}
-            heading={'Settings'}
-            showFlashKey={'settings'}
-        >
+        <ServerContentBlock title={'Settings'} eyebrow={'Server'} heading={'Settings'} showFlashKey={'settings'}>
             <div className={styles.columns}>
                 <div className={styles.column}>
                     <Can action={'file.sftp'}>

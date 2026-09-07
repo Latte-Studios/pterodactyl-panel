@@ -59,7 +59,9 @@ export default () => {
                             <Field name={'publicKey'} as={CustomTextarea} />
                         </FormikFieldWrapper>
                         <div css={tw`flex justify-end mt-6`}>
-                            <Button variant={'contained'} type={'submit'}>Save</Button>
+                            <Button variant={'contained'} type={'submit'}>
+                                Save
+                            </Button>
                         </div>
                     </Form>
                 )}

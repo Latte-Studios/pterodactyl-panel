@@ -37,7 +37,7 @@ const CopyChip = ({ value, label, icon: Icon, size = 'default', className }: Cop
             className={classNames(
                 styles.chip,
                 { [styles.inline]: size === 'inline', [styles.copied]: copied },
-                className,
+                className
             )}
         >
             {Icon && <Icon className={styles.leading} />}

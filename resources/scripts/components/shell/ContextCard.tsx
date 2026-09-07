@@ -27,13 +27,13 @@ const labels: Record<string, string> = {
 const ContextCard = () => {
     const [searching, setSearching] = useState(false);
 
-    const name = ServerContext.useStoreState(state => state.server.data?.name);
+    const name = ServerContext.useStoreState((state) => state.server.data?.name);
     // The store types this as the lifecycle status, but the websocket handler
     // writes the power state into it, which is what the console reads too.
-    const power = ServerContext.useStoreState(state => state.status.value as string | null);
-    const lifecycle = ServerContext.useStoreState(state => state.server.data?.status);
-    const isTransferring = ServerContext.useStoreState(state => state.server.data?.isTransferring);
-    const underMaintenance = ServerContext.useStoreState(state => state.server.data?.isNodeUnderMaintenance);
+    const power = ServerContext.useStoreState((state) => state.status.value as string | null);
+    const lifecycle = ServerContext.useStoreState((state) => state.server.data?.status);
+    const isTransferring = ServerContext.useStoreState((state) => state.server.data?.isTransferring);
+    const underMaintenance = ServerContext.useStoreState((state) => state.server.data?.isNodeUnderMaintenance);
 
     if (!name) {
         return null;
@@ -42,10 +42,10 @@ const ContextCard = () => {
     const state = lifecycle
         ? lifecycle
         : isTransferring
-          ? 'transferring'
-          : underMaintenance
-            ? 'node_maintenance'
-            : (power ?? 'offline');
+        ? 'transferring'
+        : underMaintenance
+        ? 'node_maintenance'
+        : power ?? 'offline';
 
     return (
         <>

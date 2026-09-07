@@ -54,7 +54,7 @@ const LoginCheckpointContainer = () => {
                     onClick={() => {
                         setFieldValue('code', '');
                         setFieldValue('recoveryCode', '');
-                        setIsMissingDevice(s => !s);
+                        setIsMissingDevice((s) => !s);
                     }}
                     className={styles.link}
                 >

@@ -27,7 +27,14 @@ interface PropsWithBack extends BaseProps {
 
 export type ScreenBlockProps = PropsWithBack | PropsWithRetry;
 
-const ScreenBlock = ({ title, message, waves, icon: Icon = ExclamationCircleIcon, onBack, onRetry }: ScreenBlockProps) => (
+const ScreenBlock = ({
+    title,
+    message,
+    waves,
+    icon: Icon = ExclamationCircleIcon,
+    onBack,
+    onRetry,
+}: ScreenBlockProps) => (
     <PageContentBlock>
         <div className={styles.block}>
             {waves && <Waves className={styles.waves} opacity={0.14} />}
@@ -61,11 +68,7 @@ const ServerError = ({ title, ...props }: ServerErrorProps) => (
 );
 
 const NotFound = ({ title, message, onBack }: Partial<Pick<ScreenBlockProps, 'title' | 'message' | 'onBack'>>) => (
-    <ScreenBlock
-        title={title || '404'}
-        message={message || 'The requested resource was not found.'}
-        onBack={onBack}
-    />
+    <ScreenBlock title={title || '404'} message={message || 'The requested resource was not found.'} onBack={onBack} />
 );
 
 export { ServerError, NotFound };

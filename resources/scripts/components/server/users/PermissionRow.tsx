@@ -11,7 +11,7 @@ interface Props {
 
 const PermissionRow = ({ permission, disabled }: Props) => {
     const [key, pkey] = permission.split('.', 2);
-    const permissions = useStoreState(state => state.permissions.data);
+    const permissions = useStoreState((state) => state.permissions.data);
     const [{ value }, , { setValue }] = useField<string[]>('permissions');
 
     const description = permissions[key]!.keys[pkey!];
@@ -22,8 +22,8 @@ const PermissionRow = ({ permission, disabled }: Props) => {
                 name={'permissions'}
                 disabled={disabled}
                 checked={value.includes(permission)}
-                onChange={checked =>
-                    setValue(checked ? [...value, permission] : value.filter(p => p !== permission))
+                onChange={(checked) =>
+                    setValue(checked ? [...value, permission] : value.filter((p) => p !== permission))
                 }
                 label={pkey}
             />

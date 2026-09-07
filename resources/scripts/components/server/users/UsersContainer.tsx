@@ -17,14 +17,14 @@ import { Subuser } from '@/state/server/subusers';
 import styles from './users.module.css';
 
 const grantedPermissions = (subuser: Subuser): number =>
-    subuser.permissions.filter(permission => permission !== 'websocket.connect').length;
+    subuser.permissions.filter((permission) => permission !== 'websocket.connect').length;
 
 export default () => {
     const [loading, setLoading] = useState(true);
 
-    const uuid = ServerContext.useStoreState(state => state.server.data!.uuid);
-    const subusers = ServerContext.useStoreState(state => state.subusers.data);
-    const setSubusers = ServerContext.useStoreActions(actions => actions.subusers.setSubusers);
+    const uuid = ServerContext.useStoreState((state) => state.server.data!.uuid);
+    const subusers = ServerContext.useStoreState((state) => state.subusers.data);
+    const setSubusers = ServerContext.useStoreActions((actions) => actions.subusers.setSubusers);
 
     const self = useStoreState((state: ApplicationStore) => state.user.data!.uuid);
     const permissions = useStoreState((state: ApplicationStore) => state.permissions.data);
@@ -34,18 +34,18 @@ export default () => {
     useEffect(() => {
         clearFlashes('users');
         getServerSubusers(uuid)
-            .then(subusers => {
+            .then((subusers) => {
                 setSubusers(subusers);
                 setLoading(false);
             })
-            .catch(error => {
+            .catch((error) => {
                 console.error(error);
                 addError({ key: 'users', message: httpErrorToHuman(error) });
             });
     }, []);
 
     useEffect(() => {
-        getPermissions().catch(error => {
+        getPermissions().catch((error) => {
             addError({ key: 'users', message: httpErrorToHuman(error) });
             console.error(error);
         });
@@ -56,7 +56,7 @@ export default () => {
             {
                 key: 'user',
                 header: 'User',
-                render: subuser => (
+                render: (subuser) => (
                     <span className={styles.user}>
                         <Avatar name={subuser.email} identifier={subuser.uuid} size={'small'} />
                         <span className={styles.email}>{subuser.email}</span>
@@ -66,7 +66,7 @@ export default () => {
             {
                 key: 'twoFactor',
                 header: 'Two-factor',
-                render: subuser => (
+                render: (subuser) => (
                     <StatusChip tone={subuser.twoFactorEnabled ? 'ok' : 'bad'}>
                         {subuser.twoFactorEnabled ? 'Enabled' : 'Disabled'}
                     </StatusChip>
@@ -77,17 +77,17 @@ export default () => {
                 header: 'Permissions',
                 align: 'right',
                 width: '140px',
-                render: subuser => grantedPermissions(subuser),
+                render: (subuser) => grantedPermissions(subuser),
             },
             {
                 key: 'actions',
                 header: '',
                 align: 'right',
                 width: '96px',
-                render: subuser => <SubuserActions subuser={subuser} self={subuser.uuid === self} />,
+                render: (subuser) => <SubuserActions subuser={subuser} self={subuser.uuid === self} />,
             },
         ],
-        [self],
+        [self]
     );
 
     if (!subusers.length && (loading || !Object.keys(permissions).length)) {
@@ -111,12 +111,12 @@ export default () => {
                 <DataTable
                     columns={columns}
                     rows={subusers}
-                    keyOf={subuser => subuser.uuid}
+                    keyOf={(subuser) => subuser.uuid}
                     empty={"It looks like you don't have any subusers."}
                     mobile={{
-                        title: subuser => subuser.email,
-                        subtitle: subuser => `${grantedPermissions(subuser)} permissions`,
-                        status: subuser => (
+                        title: (subuser) => subuser.email,
+                        subtitle: (subuser) => `${grantedPermissions(subuser)} permissions`,
+                        status: (subuser) => (
                             <StatusChip tone={subuser.twoFactorEnabled ? 'ok' : 'bad'}>
                                 {subuser.twoFactorEnabled ? '2FA on' : '2FA off'}
                             </StatusChip>

@@ -39,7 +39,7 @@ const DataTable = <T,>({ columns, rows, keyOf, mobile, onRowClick, empty, classN
             <table className={styles.table}>
                 <thead className={styles.head}>
                     <tr>
-                        {columns.map(column => (
+                        {columns.map((column) => (
                             <th
                                 key={column.key}
                                 style={column.width ? { width: column.width } : undefined}
@@ -51,13 +51,13 @@ const DataTable = <T,>({ columns, rows, keyOf, mobile, onRowClick, empty, classN
                     </tr>
                 </thead>
                 <tbody>
-                    {rows.map(row => (
+                    {rows.map((row) => (
                         <tr
                             key={keyOf(row)}
                             onClick={onRowClick ? () => onRowClick(row) : undefined}
                             className={classNames(styles.row, { [styles.clickable]: !!onRowClick })}
                         >
-                            {columns.map(column => (
+                            {columns.map((column) => (
                                 <td
                                     key={column.key}
                                     className={classNames({ [styles.right]: column.align === 'right' })}
@@ -70,7 +70,7 @@ const DataTable = <T,>({ columns, rows, keyOf, mobile, onRowClick, empty, classN
                 </tbody>
             </table>
             <div className={styles.list}>
-                {rows.map(row => {
+                {rows.map((row) => {
                     const kpis = mobile.kpis?.(row) ?? [];
 
                     return (

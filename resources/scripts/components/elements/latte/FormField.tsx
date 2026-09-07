@@ -36,7 +36,7 @@ const FormField = forwardRef<HTMLInputElement, FormFieldProps>(
                 );
             }}
         </FormikField>
-    ),
+    )
 );
 FormField.displayName = 'FormField';
 

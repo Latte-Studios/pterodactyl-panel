@@ -54,7 +54,7 @@ const stateOf = (server: Server, stats: ServerStatsMap): string => {
 };
 
 const address = (server: Server): string => {
-    const allocation = server.allocations.find(alloc => alloc.isDefault);
+    const allocation = server.allocations.find((alloc) => alloc.isDefault);
 
     if (!allocation) {
         return '';
@@ -86,13 +86,13 @@ export default () => {
     const [page, setPage] = useState(!isNaN(defaultPage) && defaultPage > 0 ? defaultPage : 1);
     const [query, setQuery] = useState('');
     const { clearFlashes, clearAndAddHttpError } = useFlash();
-    const uuid = useStoreState(state => state.user.data!.uuid);
-    const rootAdmin = useStoreState(state => state.user.data!.rootAdmin);
+    const uuid = useStoreState((state) => state.user.data!.uuid);
+    const rootAdmin = useStoreState((state) => state.user.data!.rootAdmin);
     const [showOnlyAdmin, setShowOnlyAdmin] = usePersistedState(`${uuid}:show_all_servers`, false);
 
     const { data: servers, error } = useSWR<PaginatedResult<Server>>(
         ['/api/client/servers', showOnlyAdmin && rootAdmin, page],
-        () => getServers({ page, type: showOnlyAdmin && rootAdmin ? 'admin' : undefined }),
+        () => getServers({ page, type: showOnlyAdmin && rootAdmin ? 'admin' : undefined })
     );
 
     const stats = useServerStats(servers?.items ?? []);
@@ -125,7 +125,7 @@ export default () => {
             {
                 key: 'name',
                 header: 'Server',
-                render: server => (
+                render: (server) => (
                     <div>
                         <p className={styles.name}>{server.name}</p>
                         {!!server.description && <p className={styles.description}>{server.description}</p>}
@@ -135,7 +135,7 @@ export default () => {
             {
                 key: 'address',
                 header: 'Address',
-                render: server => {
+                render: (server) => {
                     const value = address(server);
 
                     return value ? <CopyChip value={value} /> : <span className={styles.muted}>None</span>;
@@ -144,7 +144,7 @@ export default () => {
             {
                 key: 'status',
                 header: 'Status',
-                render: server => {
+                render: (server) => {
                     const state = stateOf(server, stats);
 
                     return <StatusChip tone={serverTone(state)}>{labels[state] ?? state}</StatusChip>;
@@ -154,7 +154,7 @@ export default () => {
                 key: 'cpu',
                 header: 'CPU',
                 align: 'right',
-                render: server => {
+                render: (server) => {
                     const usage = stats[server.uuid];
 
                     if (!usage) {
@@ -174,7 +174,7 @@ export default () => {
                 key: 'memory',
                 header: 'Memory',
                 align: 'right',
-                render: server => {
+                render: (server) => {
                     const usage = stats[server.uuid];
 
                     if (!usage) {
@@ -198,7 +198,7 @@ export default () => {
                 key: 'disk',
                 header: 'Disk',
                 align: 'right',
-                render: server => {
+                render: (server) => {
                     const usage = stats[server.uuid];
 
                     if (!usage) {
@@ -217,7 +217,7 @@ export default () => {
                 },
             },
         ],
-        [stats],
+        [stats]
     );
 
     const matches = (server: Server): boolean => {
@@ -249,7 +249,7 @@ export default () => {
                         value={query}
                         placeholder={'Search servers'}
                         aria-label={'Search servers'}
-                        onChange={event => setQuery(event.currentTarget.value)}
+                        onChange={(event) => setQuery(event.currentTarget.value)}
                     />
                 </Toolbar.Search>
                 {rootAdmin && (
@@ -275,26 +275,26 @@ export default () => {
                             <DataTable
                                 columns={columns}
                                 rows={items.filter(matches)}
-                                keyOf={server => server.uuid}
-                                onRowClick={server => history.push(`/server/${server.id}`)}
+                                keyOf={(server) => server.uuid}
+                                onRowClick={(server) => history.push(`/server/${server.id}`)}
                                 empty={
                                     query.trim().length > 0
                                         ? 'No server matches that search.'
                                         : showOnlyAdmin
-                                          ? 'There are no other servers to display.'
-                                          : 'There are no servers associated with your account.'
+                                        ? 'There are no other servers to display.'
+                                        : 'There are no servers associated with your account.'
                                 }
                                 mobile={{
-                                    title: server => server.name,
-                                    subtitle: server => address(server) || server.description,
-                                    status: server => {
+                                    title: (server) => server.name,
+                                    subtitle: (server) => address(server) || server.description,
+                                    status: (server) => {
                                         const state = stateOf(server, stats);
 
                                         return (
                                             <StatusChip tone={serverTone(state)}>{labels[state] ?? state}</StatusChip>
                                         );
                                     },
-                                    kpis: server => {
+                                    kpis: (server) => {
                                         const usage = stats[server.uuid];
 
                                         if (!usage) {

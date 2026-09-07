@@ -106,7 +106,7 @@ const StartupContainer = () => {
                                     onChange={updateSelectedDockerImage}
                                     defaultValue={variables.dockerImage}
                                 >
-                                    {Object.keys(data.dockerImages).map(key => (
+                                    {Object.keys(data.dockerImages).map((key) => (
                                         <option key={data.dockerImages[key]} value={data.dockerImages[key]}>
                                             {key}
                                         </option>
@@ -129,7 +129,7 @@ const StartupContainer = () => {
             </div>
             <h2 className={styles.heading}>Variables</h2>
             <div className={styles.variables}>
-                {data.variables.map(variable => (
+                {data.variables.map((variable) => (
                     <VariableBox key={variable.envVariable} variable={variable} />
                 ))}
             </div>

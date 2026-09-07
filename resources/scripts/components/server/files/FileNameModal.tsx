@@ -49,7 +49,9 @@ export default ({ onFileNamed, onDismissed, ...props }: Props) => {
                             autoFocus
                         />
                         <div css={tw`mt-6 text-right`}>
-                            <Button variant={'contained'} type={'submit'}>Create File</Button>
+                            <Button variant={'contained'} type={'submit'}>
+                                Create File
+                            </Button>
                         </div>
                     </Form>
                 </Modal>

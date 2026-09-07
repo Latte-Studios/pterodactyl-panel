@@ -4,10 +4,10 @@ import { ServerContext } from '@/state/server';
 import ScreenBlock from '@/components/elements/ScreenBlock';
 
 export default () => {
-    const status = ServerContext.useStoreState(state => state.server.data?.status || null);
-    const isTransferring = ServerContext.useStoreState(state => state.server.data?.isTransferring || false);
+    const status = ServerContext.useStoreState((state) => state.server.data?.status || null);
+    const isTransferring = ServerContext.useStoreState((state) => state.server.data?.isTransferring || false);
     const isNodeUnderMaintenance = ServerContext.useStoreState(
-        state => state.server.data?.isNodeUnderMaintenance || false,
+        (state) => state.server.data?.isNodeUnderMaintenance || false
     );
 
     return status === 'installing' || status === 'install_failed' || status === 'reinstall_failed' ? (
@@ -18,7 +18,11 @@ export default () => {
             message={'Your server should be ready soon, please try again in a few minutes.'}
         />
     ) : status === 'suspended' ? (
-        <ScreenBlock title={'Server Suspended'} icon={BanIcon} message={'This server is suspended and cannot be accessed.'} />
+        <ScreenBlock
+            title={'Server Suspended'}
+            icon={BanIcon}
+            message={'This server is suspended and cannot be accessed.'}
+        />
     ) : isNodeUnderMaintenance ? (
         <ScreenBlock
             title={'Node under Maintenance'}

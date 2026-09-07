@@ -32,7 +32,7 @@ const renderShell = (theme: 'light' | 'dark') =>
                     </Shell>
                 </MemoryRouter>
             </StoreProvider>
-        </ThemeWrapper>,
+        </ThemeWrapper>
     );
 
 beforeAll(() => {
@@ -50,7 +50,7 @@ beforeAll(() => {
 });
 
 describe('Shell', () => {
-    it.each(themes)('renders the navigation and the screen under the %s theme', theme => {
+    it.each(themes)('renders the navigation and the screen under the %s theme', (theme) => {
         const { container, unmount } = renderShell(theme);
         const shell = container.firstElementChild as HTMLElement;
 

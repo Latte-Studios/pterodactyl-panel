@@ -26,8 +26,7 @@ const toneFor = (value: number, max: number | null): StatusTone | undefined => {
     return delta > 0.9 ? 'bad' : delta > 0.8 ? 'waiting' : undefined;
 };
 
-const percentFor = (value: number, max: number | null): number | undefined =>
-    max ? (value / max) * 100 : undefined;
+const percentFor = (value: number, max: number | null): number | undefined => (max ? (value / max) * 100 : undefined);
 
 /**
  * The row of six readings above the terminal. The address takes two of the
@@ -36,10 +35,10 @@ const percentFor = (value: number, max: number | null): number | undefined =>
 const ServerStatCards = () => {
     const [stats, setStats] = useState<Stats>({ memory: 0, cpu: 0, disk: 0, uptime: 0, tx: 0, rx: 0 });
 
-    const status = ServerContext.useStoreState(state => state.status.value as string | null);
-    const connected = ServerContext.useStoreState(state => state.socket.connected);
-    const instance = ServerContext.useStoreState(state => state.socket.instance);
-    const limits = ServerContext.useStoreState(state => state.server.data!.limits);
+    const status = ServerContext.useStoreState((state) => state.status.value as string | null);
+    const connected = ServerContext.useStoreState((state) => state.socket.connected);
+    const instance = ServerContext.useStoreState((state) => state.socket.instance);
+    const limits = ServerContext.useStoreState((state) => state.server.data!.limits);
 
     const ceilings = useMemo(
         () => ({
@@ -47,11 +46,11 @@ const ServerStatCards = () => {
             memory: limits?.memory ? mbToBytes(limits.memory) : null,
             disk: limits?.disk ? mbToBytes(limits.disk) : null,
         }),
-        [limits],
+        [limits]
     );
 
-    const allocation = ServerContext.useStoreState(state => {
-        const match = state.server.data!.allocations.find(allocation => allocation.isDefault);
+    const allocation = ServerContext.useStoreState((state) => {
+        const match = state.server.data!.allocations.find((allocation) => allocation.isDefault);
 
         return !match ? null : `${match.alias || ip(match.ip)}:${match.port}`;
     });
@@ -64,7 +63,7 @@ const ServerStatCards = () => {
         instance.send(SocketRequest.SEND_STATS);
     }, [instance, connected]);
 
-    useWebsocketEvent(SocketEvent.STATS, data => {
+    useWebsocketEvent(SocketEvent.STATS, (data) => {
         // The daemon sends the payload as a JSON string; there is no shape to
         // check against here beyond the fields read below.
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -111,7 +110,7 @@ const ServerStatCards = () => {
                     ) : stats.uptime > 0 ? (
                         <UptimeDuration uptime={stats.uptime / 1000} />
                     ) : (
-                        (status ?? 'Offline')
+                        status ?? 'Offline'
                     )
                 }
             />

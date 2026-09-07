@@ -17,7 +17,7 @@ import styles from './files.module.css';
  * floating over the listing, so it never covers a file it is about to act on.
  */
 const MassActionsBar = () => {
-    const uuid = ServerContext.useStoreState(state => state.server.data!.uuid);
+    const uuid = ServerContext.useStoreState((state) => state.server.data!.uuid);
 
     const { mutate } = useFileManagerSwr();
     const { clearFlashes, clearAndAddHttpError } = useFlash();
@@ -25,10 +25,10 @@ const MassActionsBar = () => {
     const [loadingMessage, setLoadingMessage] = useState('');
     const [showConfirm, setShowConfirm] = useState(false);
     const [showMove, setShowMove] = useState(false);
-    const directory = ServerContext.useStoreState(state => state.files.directory);
+    const directory = ServerContext.useStoreState((state) => state.files.directory);
 
-    const selectedFiles = ServerContext.useStoreState(state => state.files.selectedFiles);
-    const setSelectedFiles = ServerContext.useStoreActions(actions => actions.files.setSelectedFiles);
+    const selectedFiles = ServerContext.useStoreState((state) => state.files.selectedFiles);
+    const setSelectedFiles = ServerContext.useStoreActions((actions) => actions.files.setSelectedFiles);
 
     useEffect(() => {
         if (!loading) setLoadingMessage('');
@@ -42,7 +42,7 @@ const MassActionsBar = () => {
         compressFiles(uuid, directory, selectedFiles)
             .then(() => mutate())
             .then(() => setSelectedFiles([]))
-            .catch(error => clearAndAddHttpError({ key: 'files', error }))
+            .catch((error) => clearAndAddHttpError({ key: 'files', error }))
             .then(() => setLoading(false));
     };
 
@@ -54,10 +54,10 @@ const MassActionsBar = () => {
 
         deleteFiles(uuid, directory, selectedFiles)
             .then(() => {
-                mutate(files => files.filter(f => selectedFiles.indexOf(f.name) < 0), false);
+                mutate((files) => files.filter((f) => selectedFiles.indexOf(f.name) < 0), false);
                 setSelectedFiles([]);
             })
-            .catch(error => {
+            .catch((error) => {
                 mutate();
                 clearAndAddHttpError({ key: 'files', error });
             })
@@ -100,9 +100,7 @@ const MassActionsBar = () => {
                     </>
                 }
             />
-            <span className={styles.selectionCount}>
-                {selectedFiles.length} selected
-            </span>
+            <span className={styles.selectionCount}>{selectedFiles.length} selected</span>
             <Toolbar.Chips>
                 <Toolbar.Chip onClick={() => setShowMove(true)}>Move</Toolbar.Chip>
                 <Toolbar.Chip onClick={onClickCompress}>Archive</Toolbar.Chip>

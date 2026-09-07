@@ -28,7 +28,7 @@ export default () => {
             {
                 key: 'name',
                 header: 'Key',
-                render: key => (
+                render: (key) => (
                     <div>
                         <p className={styles.description}>{key.name}</p>
                         <p className={styles.lastUsed}>Added on: {format(key.createdAt, 'MMM do, yyyy HH:mm')}</p>
@@ -38,17 +38,17 @@ export default () => {
             {
                 key: 'fingerprint',
                 header: 'Fingerprint',
-                render: key => <CopyChip value={`SHA256:${key.fingerprint}`} />,
+                render: (key) => <CopyChip value={`SHA256:${key.fingerprint}`} />,
             },
             {
                 key: 'actions',
                 header: '',
                 align: 'right',
                 width: '56px',
-                render: key => <DeleteSSHKeyButton name={key.name} fingerprint={key.fingerprint} />,
+                render: (key) => <DeleteSSHKeyButton name={key.name} fingerprint={key.fingerprint} />,
             },
         ],
-        [],
+        []
     );
 
     return (
@@ -62,12 +62,12 @@ export default () => {
                     <DataTable
                         columns={columns}
                         rows={data ?? []}
-                        keyOf={key => key.fingerprint}
+                        keyOf={(key) => key.fingerprint}
                         empty={!data ? 'Loading...' : 'No SSH Keys exist for this account.'}
                         mobile={{
-                            title: key => key.name,
-                            subtitle: key => `SHA256:${key.fingerprint}`,
-                            kpis: key => [{ label: 'Added', value: format(key.createdAt, 'MMM do, yyyy') }],
+                            title: (key) => key.name,
+                            subtitle: (key) => `SHA256:${key.fingerprint}`,
+                            kpis: (key) => [{ label: 'Added', value: format(key.createdAt, 'MMM do, yyyy') }],
                         }}
                     />
                 </Card>

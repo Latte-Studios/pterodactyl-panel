@@ -34,7 +34,7 @@ const BackupContainer = () => {
     const { clearFlashes, clearAndAddHttpError } = useFlash();
     const { data: backups, error, isValidating } = getServerBackups();
 
-    const backupLimit = ServerContext.useStoreState(state => state.server.data!.featureLimits.backups);
+    const backupLimit = ServerContext.useStoreState((state) => state.server.data!.featureLimits.backups);
 
     useEffect(() => {
         if (!error) {
@@ -51,7 +51,7 @@ const BackupContainer = () => {
             {
                 key: 'name',
                 header: 'Backup',
-                render: backup => (
+                render: (backup) => (
                     <div>
                         <p className={styles.name}>
                             {backup.name}
@@ -64,7 +64,7 @@ const BackupContainer = () => {
             {
                 key: 'status',
                 header: 'Status',
-                render: backup => {
+                render: (backup) => {
                     const state = stateOf(backup);
 
                     return <StatusChip tone={backupTone(state)}>{labels[state]}</StatusChip>;
@@ -74,7 +74,7 @@ const BackupContainer = () => {
                 key: 'size',
                 header: 'Size',
                 align: 'right',
-                render: backup =>
+                render: (backup) =>
                     backup.completedAt !== null && backup.isSuccessful ? (
                         bytesToString(backup.bytes)
                     ) : (
@@ -85,7 +85,7 @@ const BackupContainer = () => {
                 key: 'created',
                 header: 'Created',
                 align: 'right',
-                render: backup => (
+                render: (backup) => (
                     <span title={format(backup.createdAt, 'ddd, MMMM do, yyyy HH:mm:ss')}>
                         {formatDistanceToNow(backup.createdAt, { includeSeconds: true, addSuffix: true })}
                     </span>
@@ -96,7 +96,7 @@ const BackupContainer = () => {
                 header: '',
                 align: 'right',
                 width: '56px',
-                render: backup =>
+                render: (backup) =>
                     backup.completedAt ? (
                         <Can action={['backup.download', 'backup.restore', 'backup.delete']} matchAny>
                             <BackupContextMenu backup={backup} />
@@ -106,7 +106,7 @@ const BackupContainer = () => {
                     ),
             },
         ],
-        [],
+        []
     );
 
     if (!backups || (error && isValidating)) {
@@ -134,7 +134,7 @@ const BackupContainer = () => {
                 ) : undefined
             }
         >
-            {backups.items.map(backup => (
+            {backups.items.map((backup) => (
                 <BackupCompletionListener key={backup.uuid} backup={backup} />
             ))}
             <Pagination data={backups} onPageSelect={setPage}>
@@ -143,22 +143,22 @@ const BackupContainer = () => {
                         <DataTable
                             columns={columns}
                             rows={items}
-                            keyOf={backup => backup.uuid}
+                            keyOf={(backup) => backup.uuid}
                             empty={
                                 page > 1
                                     ? "Looks like we've run out of backups to show you, try going back a page."
                                     : 'It looks like there are no backups currently stored for this server.'
                             }
                             mobile={{
-                                title: backup => backup.name,
-                                subtitle: backup =>
+                                title: (backup) => backup.name,
+                                subtitle: (backup) =>
                                     formatDistanceToNow(backup.createdAt, { includeSeconds: true, addSuffix: true }),
-                                status: backup => {
+                                status: (backup) => {
                                     const state = stateOf(backup);
 
                                     return <StatusChip tone={backupTone(state)}>{labels[state]}</StatusChip>;
                                 },
-                                kpis: backup =>
+                                kpis: (backup) =>
                                     backup.completedAt !== null && backup.isSuccessful
                                         ? [{ label: 'Size', value: bytesToString(backup.bytes) }]
                                         : [],

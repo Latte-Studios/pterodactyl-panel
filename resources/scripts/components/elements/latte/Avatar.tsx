@@ -16,7 +16,10 @@ const hash = (value: string): number => {
 };
 
 export const initials = (name: string): string => {
-    const parts = name.trim().split(/[\s._-]+/).filter(Boolean);
+    const parts = name
+        .trim()
+        .split(/[\s._-]+/)
+        .filter(Boolean);
 
     if (parts.length === 0) {
         return '?';
@@ -46,7 +49,7 @@ const Avatar = ({ name, identifier, size = 'medium', className }: AvatarProps) =
             styles.avatar,
             palette[hash(identifier ?? name) % palette.length],
             { [styles.small]: size === 'small', [styles.large]: size === 'large' },
-            className,
+            className
         )}
     >
         {initials(name)}

@@ -12,8 +12,8 @@ interface Props {
 /** The path reads as a caption above the listing, not as a heading. */
 export default ({ withinFileEditor, isNewFile }: Props) => {
     const [file, setFile] = useState<string | null>(null);
-    const id = ServerContext.useStoreState(state => state.server.data!.id);
-    const directory = ServerContext.useStoreState(state => state.files.directory);
+    const id = ServerContext.useStoreState((state) => state.server.data!.id);
+    const directory = ServerContext.useStoreState((state) => state.files.directory);
     const { hash } = useLocation();
 
     useEffect(() => {
@@ -28,7 +28,7 @@ export default ({ withinFileEditor, isNewFile }: Props) => {
     const breadcrumbs = (): { name: string; path?: string }[] =>
         directory
             .split('/')
-            .filter(directory => !!directory)
+            .filter((directory) => !!directory)
             .map((directory, index, dirs) => {
                 if (!withinFileEditor && index === dirs.length - 1) {
                     return { name: directory };
@@ -56,7 +56,7 @@ export default ({ withinFileEditor, isNewFile }: Props) => {
                     <span key={index} className={styles.crumbCurrent}>
                         {crumb.name}
                     </span>
-                ),
+                )
             )}
             {file && <span className={styles.crumbCurrent}>{file}</span>}
         </nav>

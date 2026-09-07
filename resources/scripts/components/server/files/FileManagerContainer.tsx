@@ -50,8 +50,8 @@ const FileName = ({ file }: { file: FileObject }) => {
         ? file.isSymlink
             ? LinkIcon
             : file.isArchiveType()
-              ? DocumentIcon
-              : DocumentTextIcon
+            ? DocumentIcon
+            : DocumentTextIcon
         : FolderIcon;
 
     return (
@@ -64,25 +64,25 @@ const FileName = ({ file }: { file: FileObject }) => {
 
 /** Keeps a control inside a row from also triggering the row itself. */
 const Standalone = ({ children }: { children: React.ReactNode }) => (
-    <span className={styles.standalone} onClick={event => event.stopPropagation()}>
+    <span className={styles.standalone} onClick={(event) => event.stopPropagation()}>
         {children}
     </span>
 );
 
 export default () => {
-    const id = ServerContext.useStoreState(state => state.server.data!.id);
+    const id = ServerContext.useStoreState((state) => state.server.data!.id);
     const history = useHistory();
     const match = useRouteMatch();
     const [canRead] = usePermissions(['file.read']);
     const [canReadContents] = usePermissions(['file.read-content']);
     const { hash } = useLocation();
     const { data: files, error, mutate } = useFileManagerSwr();
-    const directory = ServerContext.useStoreState(state => state.files.directory);
-    const clearFlashes = useStoreActions(actions => actions.flashes.clearFlashes);
-    const setDirectory = ServerContext.useStoreActions(actions => actions.files.setDirectory);
+    const directory = ServerContext.useStoreState((state) => state.files.directory);
+    const clearFlashes = useStoreActions((actions) => actions.flashes.clearFlashes);
+    const setDirectory = ServerContext.useStoreActions((actions) => actions.files.setDirectory);
 
-    const setSelectedFiles = ServerContext.useStoreActions(actions => actions.files.setSelectedFiles);
-    const selectedFilesLength = ServerContext.useStoreState(state => state.files.selectedFiles.length);
+    const setSelectedFiles = ServerContext.useStoreActions((actions) => actions.files.setSelectedFiles);
+    const selectedFilesLength = ServerContext.useStoreState((state) => state.files.selectedFiles.length);
 
     useEffect(() => {
         clearFlashes('files');
@@ -95,11 +95,10 @@ export default () => {
     }, [directory]);
 
     const onSelectAllClick = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setSelectedFiles(e.currentTarget.checked ? files?.map(file => file.name) || [] : []);
+        setSelectedFiles(e.currentTarget.checked ? files?.map((file) => file.name) || [] : []);
     };
 
-    const canOpen = (file: FileObject): boolean =>
-        file.isFile ? file.isEditable() && canReadContents : canRead;
+    const canOpen = (file: FileObject): boolean => (file.isFile ? file.isEditable() && canReadContents : canRead);
 
     const onRowClick = (file: FileObject) => {
         if (!canOpen(file)) {
@@ -122,7 +121,7 @@ export default () => {
                         onChange={onSelectAllClick}
                     />
                 ),
-                render: file => (
+                render: (file) => (
                     <Standalone>
                         <SelectFileCheckbox name={file.name} />
                     </Standalone>
@@ -131,35 +130,35 @@ export default () => {
             {
                 key: 'name',
                 header: 'Name',
-                render: file => <FileName file={file} />,
+                render: (file) => <FileName file={file} />,
             },
             {
                 key: 'size',
                 header: 'Size',
                 align: 'right',
                 width: '120px',
-                render: file => (file.isFile ? bytesToString(file.size) : ''),
+                render: (file) => (file.isFile ? bytesToString(file.size) : ''),
             },
             {
                 key: 'modified',
                 header: 'Modified',
                 align: 'right',
                 width: '200px',
-                render: file => <span title={file.modifiedAt.toString()}>{modified(file)}</span>,
+                render: (file) => <span title={file.modifiedAt.toString()}>{modified(file)}</span>,
             },
             {
                 key: 'actions',
                 header: '',
                 align: 'right',
                 width: '56px',
-                render: file => (
+                render: (file) => (
                     <Standalone>
                         <FileDropdownMenu file={file} />
                     </Standalone>
                 ),
             },
         ],
-        [files, selectedFilesLength],
+        [files, selectedFilesLength]
     );
 
     if (error) {
@@ -206,13 +205,14 @@ export default () => {
                         <DataTable
                             columns={columns}
                             rows={sortFiles(files.slice(0, LIMIT))}
-                            keyOf={file => file.key}
+                            keyOf={(file) => file.key}
                             onRowClick={onRowClick}
                             empty={'This directory seems to be empty.'}
                             mobile={{
-                                title: file => file.name,
-                                subtitle: file => modified(file),
-                                kpis: file => (file.isFile ? [{ label: 'Size', value: bytesToString(file.size) }] : []),
+                                title: (file) => file.name,
+                                subtitle: (file) => modified(file),
+                                kpis: (file) =>
+                                    file.isFile ? [{ label: 'Size', value: bytesToString(file.size) }] : [],
                             }}
                         />
                     </Card>

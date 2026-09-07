@@ -24,9 +24,9 @@ export default () => {
 
     useEffect(() => {
         getApiKeys()
-            .then(keys => setKeys(keys))
+            .then((keys) => setKeys(keys))
             .then(() => setLoading(false))
-            .catch(error => clearAndAddHttpError(error));
+            .catch((error) => clearAndAddHttpError(error));
     }, []);
 
     const doDeletion = (identifier: string) => {
@@ -34,8 +34,8 @@ export default () => {
 
         clearAndAddHttpError();
         deleteApiKey(identifier)
-            .then(() => setKeys(s => [...(s || []).filter(key => key.identifier !== identifier)]))
-            .catch(error => clearAndAddHttpError(error))
+            .then(() => setKeys((s) => [...(s || []).filter((key) => key.identifier !== identifier)]))
+            .catch((error) => clearAndAddHttpError(error))
             .then(() => {
                 setLoading(false);
                 setDeleteIdentifier('');
@@ -47,7 +47,7 @@ export default () => {
             {
                 key: 'description',
                 header: 'Key',
-                render: key => (
+                render: (key) => (
                     <div>
                         <p className={styles.description}>{key.description}</p>
                         <p className={styles.lastUsed}>Last used: {lastUsed(key)}</p>
@@ -57,14 +57,14 @@ export default () => {
             {
                 key: 'identifier',
                 header: 'Identifier',
-                render: key => <CopyChip value={key.identifier} />,
+                render: (key) => <CopyChip value={key.identifier} />,
             },
             {
                 key: 'actions',
                 header: '',
                 align: 'right',
                 width: '56px',
-                render: key => (
+                render: (key) => (
                     <Button
                         size={'small'}
                         variant={'danger'}
@@ -77,7 +77,7 @@ export default () => {
                 ),
             },
         ],
-        [],
+        []
     );
 
     return (
@@ -107,19 +107,19 @@ export default () => {
             />
             <div className={styles.split}>
                 <Card title={'Create API Key'}>
-                    <CreateApiKeyForm onKeyCreated={key => setKeys(s => [...s!, key])} />
+                    <CreateApiKeyForm onKeyCreated={(key) => setKeys((s) => [...s!, key])} />
                 </Card>
                 <Card title={'API Keys'} flush>
                     <SpinnerOverlay visible={loading} />
                     <DataTable
                         columns={columns}
                         rows={keys}
-                        keyOf={key => key.identifier}
+                        keyOf={(key) => key.identifier}
                         empty={loading ? 'Loading...' : 'No API keys exist for this account.'}
                         mobile={{
-                            title: key => key.description,
-                            subtitle: key => key.identifier,
-                            kpis: key => [{ label: 'Last used', value: lastUsed(key) }],
+                            title: (key) => key.description,
+                            subtitle: (key) => key.identifier,
+                            kpis: (key) => [{ label: 'Last used', value: lastUsed(key) }],
                         }}
                     />
                 </Card>

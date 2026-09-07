@@ -82,7 +82,11 @@ const EulaModalFeature = () => {
                 <Button variant={'text'} className={'w-full sm:w-auto'} onClick={() => setVisible(false)}>
                     Cancel
                 </Button>
-                <Button variant={'contained'} className={'mt-4 sm:mt-0 sm:ml-4 w-full sm:w-auto'} onClick={onAcceptEULA}>
+                <Button
+                    variant={'contained'}
+                    className={'mt-4 sm:mt-0 sm:ml-4 w-full sm:w-auto'}
+                    onClick={onAcceptEULA}
+                >
                     I Accept
                 </Button>
             </div>

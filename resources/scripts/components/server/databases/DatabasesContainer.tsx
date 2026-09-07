@@ -16,22 +16,22 @@ import { ServerDatabase } from '@/api/server/databases/getServerDatabases';
 import styles from './databases.module.css';
 
 export default () => {
-    const uuid = ServerContext.useStoreState(state => state.server.data!.uuid);
-    const databaseLimit = ServerContext.useStoreState(state => state.server.data!.featureLimits.databases);
+    const uuid = ServerContext.useStoreState((state) => state.server.data!.uuid);
+    const databaseLimit = ServerContext.useStoreState((state) => state.server.data!.featureLimits.databases);
 
     const { addError, clearFlashes } = useFlash();
     const [loading, setLoading] = useState(true);
 
-    const databases = useDeepMemoize(ServerContext.useStoreState(state => state.databases.data));
-    const setDatabases = ServerContext.useStoreActions(state => state.databases.setDatabases);
+    const databases = useDeepMemoize(ServerContext.useStoreState((state) => state.databases.data));
+    const setDatabases = ServerContext.useStoreActions((state) => state.databases.setDatabases);
 
     useEffect(() => {
         setLoading(!databases.length);
         clearFlashes('databases');
 
         getServerDatabases(uuid)
-            .then(databases => setDatabases(databases))
-            .catch(error => {
+            .then((databases) => setDatabases(databases))
+            .catch((error) => {
                 console.error(error);
                 addError({ key: 'databases', message: httpErrorToHuman(error) });
             })
@@ -43,32 +43,32 @@ export default () => {
             {
                 key: 'name',
                 header: 'Database',
-                render: database => <span className={styles.name}>{database.name}</span>,
+                render: (database) => <span className={styles.name}>{database.name}</span>,
             },
             {
                 key: 'endpoint',
                 header: 'Endpoint',
-                render: database => <CopyChip value={database.connectionString} />,
+                render: (database) => <CopyChip value={database.connectionString} />,
             },
             {
                 key: 'from',
                 header: 'Connections from',
-                render: database => database.allowConnectionsFrom,
+                render: (database) => database.allowConnectionsFrom,
             },
             {
                 key: 'username',
                 header: 'Username',
-                render: database => <CopyChip value={database.username} />,
+                render: (database) => <CopyChip value={database.username} />,
             },
             {
                 key: 'actions',
                 header: '',
                 align: 'right',
                 width: '96px',
-                render: database => <DatabaseActions database={database} />,
+                render: (database) => <DatabaseActions database={database} />,
             },
         ],
-        [],
+        []
     );
 
     const canCreate = databaseLimit > 0 && databaseLimit !== databases.length;
@@ -99,16 +99,16 @@ export default () => {
                     <DataTable
                         columns={columns}
                         rows={databases}
-                        keyOf={database => database.id}
+                        keyOf={(database) => database.id}
                         empty={
                             databaseLimit > 0
                                 ? 'It looks like you have no databases.'
                                 : 'Databases cannot be created for this server.'
                         }
                         mobile={{
-                            title: database => database.name,
-                            subtitle: database => database.connectionString,
-                            kpis: database => [{ label: 'Username', value: database.username }],
+                            title: (database) => database.name,
+                            subtitle: (database) => database.connectionString,
+                            kpis: (database) => [{ label: 'Username', value: database.username }],
                         }}
                     />
                 </Card>

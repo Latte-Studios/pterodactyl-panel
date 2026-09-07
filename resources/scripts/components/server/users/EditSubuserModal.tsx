@@ -11,7 +11,6 @@ import FlashMessageRender from '@/components/FlashMessageRender';
 import Can from '@/components/elements/Can';
 import { usePermissions } from '@/plugins/usePermissions';
 import { useDeepCompareMemo } from '@/plugins/useDeepCompareMemo';
-import tw from 'twin.macro';
 import Button from '@/components/elements/latte/Button';
 import PermissionTitleBox from '@/components/server/users/PermissionTitleBox';
 import asModal from '@/hoc/asModal';
@@ -131,16 +130,16 @@ const EditSubuserModal = ({ subuser }: Props) => {
                 )}
                 <div className={styles.permissions}>
                     {Object.keys(permissions)
-                        .filter(key => key !== 'websocket')
-                        .map(key => (
+                        .filter((key) => key !== 'websocket')
+                        .map((key) => (
                             <PermissionTitleBox
                                 key={`permission_${key}`}
                                 title={key}
                                 description={permissions[key]!.description}
                                 isEditable={canEditUser}
-                                permissions={Object.keys(permissions[key]!.keys).map(pkey => `${key}.${pkey}`)}
+                                permissions={Object.keys(permissions[key]!.keys).map((pkey) => `${key}.${pkey}`)}
                             >
-                                {Object.keys(permissions[key]!.keys).map(pkey => (
+                                {Object.keys(permissions[key]!.keys).map((pkey) => (
                                     <PermissionRow
                                         key={`permission_${key}.${pkey}`}
                                         permission={`${key}.${pkey}`}

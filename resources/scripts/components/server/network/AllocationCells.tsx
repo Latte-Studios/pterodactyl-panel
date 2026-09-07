@@ -18,11 +18,11 @@ import styles from './network.module.css';
 export const AllocationNotes = ({ allocation }: { allocation: Allocation }) => {
     const [loading, setLoading] = useState(false);
     const { clearFlashes, clearAndAddHttpError } = useFlashKey('server:network');
-    const uuid = ServerContext.useStoreState(state => state.server.data!.uuid);
+    const uuid = ServerContext.useStoreState((state) => state.server.data!.uuid);
     const { mutate } = getServerAllocations();
 
     const onNotesChanged = useCallback((id: number, notes: string) => {
-        mutate(data => data?.map(a => (a.id === id ? { ...a, notes } : a)), false);
+        mutate((data) => data?.map((a) => (a.id === id ? { ...a, notes } : a)), false);
     }, []);
 
     const save = debounce((notes: string) => {
@@ -31,7 +31,7 @@ export const AllocationNotes = ({ allocation }: { allocation: Allocation }) => {
 
         setServerAllocationNotes(uuid, allocation.id, notes)
             .then(() => onNotesChanged(allocation.id, notes))
-            .catch(error => clearAndAddHttpError(error))
+            .catch((error) => clearAndAddHttpError(error))
             .then(() => setLoading(false));
     }, 750);
 
@@ -43,7 +43,7 @@ export const AllocationNotes = ({ allocation }: { allocation: Allocation }) => {
                 placeholder={'Notes'}
                 aria-label={`Notes for ${allocation.ip}:${allocation.port}`}
                 defaultValue={allocation.notes || undefined}
-                onChange={e => save(e.currentTarget.value)}
+                onChange={(e) => save(e.currentTarget.value)}
             />
         </InputSpinner>
     );
@@ -51,14 +51,14 @@ export const AllocationNotes = ({ allocation }: { allocation: Allocation }) => {
 
 export const AllocationActions = ({ allocation }: { allocation: Allocation }) => {
     const { clearFlashes, clearAndAddHttpError } = useFlashKey('server:network');
-    const uuid = ServerContext.useStoreState(state => state.server.data!.uuid);
+    const uuid = ServerContext.useStoreState((state) => state.server.data!.uuid);
     const { mutate } = getServerAllocations();
 
     const setPrimary = () => {
         clearFlashes();
-        mutate(data => data?.map(a => ({ ...a, isDefault: a.id === allocation.id })), false);
+        mutate((data) => data?.map((a) => ({ ...a, isDefault: a.id === allocation.id })), false);
 
-        setPrimaryServerAllocation(uuid, allocation.id).catch(error => {
+        setPrimaryServerAllocation(uuid, allocation.id).catch((error) => {
             clearAndAddHttpError(error);
             mutate();
         });

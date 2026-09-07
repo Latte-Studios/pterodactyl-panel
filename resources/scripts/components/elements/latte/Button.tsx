@@ -28,13 +28,13 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
                     [styles.block]: block,
                     [styles.iconOnly]: iconOnly,
                 },
-                className,
+                className
             )}
             {...rest}
         >
             {children}
         </button>
-    ),
+    )
 );
 Button.displayName = 'Button';
 

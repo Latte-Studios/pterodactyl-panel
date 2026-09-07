@@ -21,12 +21,12 @@ const PermissionTitleBox: React.FC<Props> = memo(
         const onGroupToggled = useCallback(
             (checked: boolean) => {
                 if (checked) {
-                    setValue([...value, ...permissions.filter(p => !value.includes(p))]);
+                    setValue([...value, ...permissions.filter((p) => !value.includes(p))]);
                 } else {
-                    setValue(value.filter(p => !permissions.includes(p)));
+                    setValue(value.filter((p) => !permissions.includes(p)));
                 }
             },
-            [permissions, value],
+            [permissions, value]
         );
 
         return (
@@ -39,7 +39,7 @@ const PermissionTitleBox: React.FC<Props> = memo(
                         </div>
                         {isEditable && (
                             <Switch
-                                checked={permissions.every(p => value.includes(p))}
+                                checked={permissions.every((p) => value.includes(p))}
                                 onChange={onGroupToggled}
                                 label={'All'}
                             />
@@ -50,7 +50,7 @@ const PermissionTitleBox: React.FC<Props> = memo(
             </section>
         );
     },
-    isEqual,
+    isEqual
 );
 PermissionTitleBox.displayName = 'PermissionTitleBox';
 

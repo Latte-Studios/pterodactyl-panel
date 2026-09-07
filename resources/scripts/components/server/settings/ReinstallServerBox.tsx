@@ -11,8 +11,8 @@ import Dialog from '@/components/elements/latte/Dialog';
 import styles from './settings.module.css';
 
 export default () => {
-    const uuid = ServerContext.useStoreState(state => state.server.data!.uuid);
-    const skipScripts = ServerContext.useStoreState(state => state.server.data!.skipScripts);
+    const uuid = ServerContext.useStoreState((state) => state.server.data!.uuid);
+    const skipScripts = ServerContext.useStoreState((state) => state.server.data!.skipScripts);
     const [modalVisible, setModalVisible] = useState(false);
     const { addFlash, clearFlashes } = useStoreActions((actions: Actions<ApplicationStore>) => actions.flashes);
 
@@ -26,7 +26,7 @@ export default () => {
                     message: 'Your server has begun the reinstallation process.',
                 });
             })
-            .catch(error => {
+            .catch((error) => {
                 console.error(error);
 
                 addFlash({ key: 'settings', type: 'error', message: httpErrorToHuman(error) });

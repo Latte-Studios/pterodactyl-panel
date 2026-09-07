@@ -44,7 +44,7 @@ export default () => {
                     <Button
                         size={'small'}
                         variant={'text'}
-                        onClick={() => setFilters(value => ({ ...value, filters: {} }))}
+                        onClick={() => setFilters((value) => ({ ...value, filters: {} }))}
                     >
                         Clear filters
                     </Button>
@@ -61,7 +61,7 @@ export default () => {
                 />
             ) : (
                 <Card flush>
-                    {data?.items.map(activity => (
+                    {data?.items.map((activity) => (
                         <ActivityLogEntry key={activity.id} activity={activity}>
                             <span />
                         </ActivityLogEntry>
@@ -71,7 +71,7 @@ export default () => {
             {data && (
                 <PaginationFooter
                     pagination={data.pagination}
-                    onPageSelect={page => setFilters(value => ({ ...value, page }))}
+                    onPageSelect={(page) => setFilters((value) => ({ ...value, page }))}
                 />
             )}
         </ServerContentBlock>

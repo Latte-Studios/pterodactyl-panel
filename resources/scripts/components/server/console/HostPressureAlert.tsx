@@ -30,8 +30,8 @@ const HostPressureAlert = ({ stats }: { stats: HostStats | null }) => {
     }
 
     const strained = (Object.keys(stats.pressure.resources) as HostPressureResource[])
-        .filter(resource => stats.pressure.resources[resource] !== 'ok')
-        .map(resource => `${RESOURCE_LABELS[resource]} at ${percentFor(stats, resource).toFixed(1)}%`);
+        .filter((resource) => stats.pressure.resources[resource] !== 'ok')
+        .map((resource) => `${RESOURCE_LABELS[resource]} at ${percentFor(stats, resource).toFixed(1)}%`);
 
     return (
         <Alert tone={stats.pressure.level === 'critical' ? 'bad' : 'waiting'} icon={ExclamationIcon}>

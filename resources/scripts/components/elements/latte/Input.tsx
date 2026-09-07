@@ -22,21 +22,19 @@ export type TextareaProps = JSX.IntrinsicElements['textarea'] & {
     mono?: boolean;
 };
 
-export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
-    ({ invalid, mono, className, ...rest }, ref) => (
-        <textarea
-            ref={ref}
-            aria-invalid={invalid || undefined}
-            className={classNames(
-                styles.input,
-                styles.textarea,
-                { [styles.invalid]: invalid, [styles.mono]: mono },
-                className,
-            )}
-            {...rest}
-        />
-    ),
-);
+export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(({ invalid, mono, className, ...rest }, ref) => (
+    <textarea
+        ref={ref}
+        aria-invalid={invalid || undefined}
+        className={classNames(
+            styles.input,
+            styles.textarea,
+            { [styles.invalid]: invalid, [styles.mono]: mono },
+            className
+        )}
+        {...rest}
+    />
+));
 Textarea.displayName = 'Textarea';
 
 export type LabelProps = JSX.IntrinsicElements['label'] & {

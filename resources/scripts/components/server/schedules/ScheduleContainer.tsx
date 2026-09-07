@@ -37,19 +37,19 @@ export default () => {
     const match = useRouteMatch();
     const history = useHistory();
 
-    const uuid = ServerContext.useStoreState(state => state.server.data!.uuid);
+    const uuid = ServerContext.useStoreState((state) => state.server.data!.uuid);
     const { clearFlashes, addError } = useFlash();
     const [loading, setLoading] = useState(true);
     const [visible, setVisible] = useState(false);
 
-    const schedules = ServerContext.useStoreState(state => state.schedules.data);
-    const setSchedules = ServerContext.useStoreActions(actions => actions.schedules.setSchedules);
+    const schedules = ServerContext.useStoreState((state) => state.schedules.data);
+    const setSchedules = ServerContext.useStoreActions((actions) => actions.schedules.setSchedules);
 
     useEffect(() => {
         clearFlashes('schedules');
         getServerSchedules(uuid)
-            .then(schedules => setSchedules(schedules))
-            .catch(error => {
+            .then((schedules) => setSchedules(schedules))
+            .catch((error) => {
                 addError({ message: httpErrorToHuman(error), key: 'schedules' });
                 console.error(error);
             })
@@ -61,7 +61,7 @@ export default () => {
             {
                 key: 'name',
                 header: 'Schedule',
-                render: schedule => (
+                render: (schedule) => (
                     <div>
                         <p className={styles.name}>{schedule.name}</p>
                         <p className={styles.lastRun}>Last run at: {lastRun(schedule)}</p>
@@ -71,21 +71,21 @@ export default () => {
             {
                 key: 'cron',
                 header: 'Expression',
-                render: schedule => <span className={styles.cron}>{expression(schedule.cron)}</span>,
+                render: (schedule) => <span className={styles.cron}>{expression(schedule.cron)}</span>,
             },
             {
                 key: 'status',
                 header: 'Status',
                 align: 'right',
                 width: '140px',
-                render: schedule => {
+                render: (schedule) => {
                     const state = stateOf(schedule);
 
                     return <StatusChip tone={scheduleTone(state)}>{labels[state]}</StatusChip>;
                 },
             },
         ],
-        [],
+        []
     );
 
     return (
@@ -113,18 +113,18 @@ export default () => {
                     <DataTable
                         columns={columns}
                         rows={schedules}
-                        keyOf={schedule => String(schedule.id)}
-                        onRowClick={schedule => history.push(`${match.url}/${schedule.id}`)}
+                        keyOf={(schedule) => String(schedule.id)}
+                        onRowClick={(schedule) => history.push(`${match.url}/${schedule.id}`)}
                         empty={'There are no schedules configured for this server.'}
                         mobile={{
-                            title: schedule => schedule.name,
-                            subtitle: schedule => expression(schedule.cron),
-                            status: schedule => {
+                            title: (schedule) => schedule.name,
+                            subtitle: (schedule) => expression(schedule.cron),
+                            status: (schedule) => {
                                 const state = stateOf(schedule);
 
                                 return <StatusChip tone={scheduleTone(state)}>{labels[state]}</StatusChip>;
                             },
-                            kpis: schedule => [{ label: 'Last run', value: lastRun(schedule) }],
+                            kpis: (schedule) => [{ label: 'Last run', value: lastRun(schedule) }],
                         }}
                     />
                 </Card>

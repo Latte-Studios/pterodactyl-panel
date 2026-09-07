@@ -1,6 +1,13 @@
 import React, { useState } from 'react';
 import { Schedule, Task } from '@/api/server/schedules/getServerSchedules';
-import { ArchiveIcon, ClockIcon, CodeIcon, PencilIcon, SwitchHorizontalIcon, TrashIcon } from '@heroicons/react/outline';
+import {
+    ArchiveIcon,
+    ClockIcon,
+    CodeIcon,
+    PencilIcon,
+    SwitchHorizontalIcon,
+    TrashIcon,
+} from '@heroicons/react/outline';
 import deleteScheduleTask from '@/api/server/schedules/deleteScheduleTask';
 import { httpErrorToHuman } from '@/api/http';
 import SpinnerOverlay from '@/components/elements/SpinnerOverlay';
@@ -36,12 +43,12 @@ const getActionDetails = (action: string): [string, IconComponent] => {
 };
 
 export default ({ schedule, task, index }: Props) => {
-    const uuid = ServerContext.useStoreState(state => state.server.data!.uuid);
+    const uuid = ServerContext.useStoreState((state) => state.server.data!.uuid);
     const { clearFlashes, addError } = useFlash();
     const [visible, setVisible] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
-    const appendSchedule = ServerContext.useStoreActions(actions => actions.schedules.appendSchedule);
+    const appendSchedule = ServerContext.useStoreActions((actions) => actions.schedules.appendSchedule);
 
     const onConfirmDeletion = () => {
         setIsLoading(true);
@@ -50,10 +57,10 @@ export default ({ schedule, task, index }: Props) => {
             .then(() =>
                 appendSchedule({
                     ...schedule,
-                    tasks: schedule.tasks.filter(t => t.id !== task.id),
-                }),
+                    tasks: schedule.tasks.filter((t) => t.id !== task.id),
+                })
             )
-            .catch(error => {
+            .catch((error) => {
                 console.error(error);
                 setIsLoading(false);
                 addError({ message: httpErrorToHuman(error), key: 'schedules' });

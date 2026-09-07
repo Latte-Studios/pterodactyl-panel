@@ -85,7 +85,7 @@ const Shell = ({ groups, context, subnav, children }: ShellProps) => {
                     {groups.map((group, index) => (
                         <div key={group.label ?? index} className={styles.group}>
                             {group.label && <p className={styles.groupLabel}>{group.label}</p>}
-                            {group.items.map(item => (
+                            {group.items.map((item) => (
                                 <Item key={item.to} item={item} onNavigate={closeDrawer} />
                             ))}
                         </div>
@@ -146,7 +146,7 @@ const Shell = ({ groups, context, subnav, children }: ShellProps) => {
                 </header>
                 {subnav && subnav.length > 0 && (
                     <nav className={styles.tabs}>
-                        {subnav.map(item => (
+                        {subnav.map((item) => (
                             <NavLink
                                 key={item.to}
                                 to={item.to}
@@ -159,9 +159,7 @@ const Shell = ({ groups, context, subnav, children }: ShellProps) => {
                         ))}
                     </nav>
                 )}
-                <main className={styles.content}>
-                    {children}
-                </main>
+                <main className={styles.content}>{children}</main>
             </div>
         </div>
     );
