@@ -8,6 +8,7 @@ import { Button } from '@/components/elements/button/index';
 import Spinner from '@/components/elements/Spinner';
 import { Input } from '@/components/elements/inputs';
 import CopyOnClick from '@/components/elements/CopyOnClick';
+import { Label } from '@/components/elements/latte/Input';
 import Tooltip from '@/components/elements/tooltip/Tooltip';
 import enableAccountTwoFactor from '@/api/account/enableAccountTwoFactor';
 import FlashMessageRender from '@/components/FlashMessageRender';
@@ -89,10 +90,11 @@ const ConfigureTwoFactorForm = ({ onTokens }: Props) => {
                 autoComplete={'one-time-code'}
                 pattern={'\\d{6}'}
             />
-            <label htmlFor={'totp-password'} className={'block mt-3'}>
+            <Label htmlFor={'totp-password'} className={'block mt-3'}>
                 Account Password
-            </label>
+            </Label>
             <Input.Text
+                id={'totp-password'}
                 variant={Input.Text.Variants.Loose}
                 className={'mt-1'}
                 type={'password'}
