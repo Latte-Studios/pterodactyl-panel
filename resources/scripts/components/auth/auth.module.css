@@ -1,7 +1,12 @@
 /*
  * Section 9.7: the auth screens are where the brand shows up in full. Wolf
- * Expresso ground, waves passing behind the content, product name in Lato 400
- * at 52px, and a single contained action.
+ * Expresso ground, waves passing across it, product name in Lato 400 at 52px,
+ * and a single contained action.
+ *
+ * The panel is a plate of the ground rather than a card, so the waves stay
+ * visible through it. Everything on the plate is therefore light-on-dark, which
+ * is why the field, label and button rules below reach in by element: the
+ * primitives are written for paper and this is the one surface that is not.
  */
 .screen {
     position: relative;
@@ -11,8 +16,11 @@
     justify-content: center;
     min-height: 100vh;
     padding: 40px 20px;
-    background-color: var(--ls-sidebar);
+    background-color: var(--ls-expresso);
     overflow: hidden;
+    /* The waves invert what they cross, which only works if nothing between
+       them and the ground paints an opaque background of its own. */
+    isolation: isolate;
 }
 
 .waves {
@@ -39,23 +47,33 @@
     width: 100%;
     max-width: 420px;
     padding: 28px;
-    background-color: var(--ls-paper);
     border-radius: var(--ls-radius-card);
-    box-shadow: var(--ls-shadow-card);
+    background-color: rgb(var(--ls-expresso-rgb) / 0.32);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    transition: background-color 180ms ease, backdrop-filter 180ms ease;
+}
+
+/* A field has the caret: the plate closes over the waves so nothing moves
+   behind the letters being read back. */
+.cardClosed {
+    background-color: rgb(var(--ls-expresso-rgb) / 0.92);
+    backdrop-filter: blur(28px);
+    -webkit-backdrop-filter: blur(28px);
 }
 
 .title {
     font-size: 24px;
     font-weight: 700;
     line-height: 1.25;
-    color: var(--ls-ink);
+    color: var(--ls-sidebar-ink-strong);
 }
 
 .subtitle {
     margin-top: 4px;
     font-size: 14px;
     line-height: 1.4;
-    color: var(--ls-ink-70);
+    color: var(--ls-sidebar-ink);
 }
 
 .flash {
@@ -69,8 +87,61 @@
     margin-top: 20px;
 }
 
+.card label {
+    color: var(--ls-sidebar-ink);
+}
+
+.card input,
+.card select,
+.card textarea {
+    background-color: transparent;
+    border-color: rgb(255 255 255 / 0.6);
+    color: var(--ls-sidebar-ink-strong);
+}
+
+.card input::placeholder,
+.card textarea::placeholder {
+    color: rgb(255 255 255 / 0.5);
+}
+
+.card input:hover:not(:disabled),
+.card select:hover:not(:disabled),
+.card textarea:hover:not(:disabled) {
+    border-color: var(--ls-sidebar-ink-strong);
+}
+
+.card input:focus,
+.card select:focus,
+.card textarea:focus {
+    border-color: var(--ls-sidebar-ink-strong);
+    box-shadow: 0 0 0 2px rgb(255 255 255 / 0.18);
+}
+
 .action {
     margin-top: 20px;
+}
+
+/*
+ * The plate floats on the Expresso ground, so the one contained button
+ * inverts: a white fill with Expresso on it. Disabled is "not yet" rather than
+ * "greyed out" — a faint white plate keeps it in the same family as the
+ * enabled button, where a half-opaque white went to mud.
+ */
+.action button {
+    background-color: var(--ls-sidebar-ink-strong);
+    color: var(--ls-expresso);
+}
+
+.action button:hover:not(:disabled),
+.action button:active:not(:disabled) {
+    background-color: rgb(255 255 255 / 0.88);
+    color: var(--ls-expresso);
+}
+
+.action button:disabled {
+    opacity: 1;
+    background-color: rgb(255 255 255 / 0.18);
+    color: rgb(255 255 255 / 0.6);
 }
 
 /* The 2FA code is read back digit by digit, so it gets the mono face at 20px. */
@@ -93,7 +164,7 @@
     background: none;
     border: none;
     padding: 4px 8px;
-    color: var(--ls-primary);
+    color: var(--ls-sidebar-ink-strong);
     font-family: var(--ls-font);
     font-size: 13px;
     font-weight: 700;
@@ -110,7 +181,7 @@
     margin-top: 24px;
     font-size: 12px;
     font-weight: 300;
-    color: rgb(255 255 255 / 0.7);
+    color: var(--ls-sidebar-ink);
     text-align: center;
 }
 

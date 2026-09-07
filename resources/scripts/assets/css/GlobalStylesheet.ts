@@ -68,6 +68,12 @@ export default createGlobalStyle`
         --ls-radius-pill: 999px;  --ls-radius-card: 12px;  --ls-radius-input: 8px;
         --ls-sidebar-w: 240px;    --ls-topbar-h: 64px;     --ls-row-h: 52px;
 
+        /* Wolf Expresso, fixed. The auth screens are the brand at full strength
+           and wear it whatever the theme is, which is why they cannot reach for
+           --ls-sidebar: that one follows the theme. */
+        --ls-expresso: #74502F;
+        --ls-expresso-rgb: 116 80 47;
+
         --ls-terminal: #1E140C;
         --ls-terminal-ink: #F3E9DF;
         /* The terminal surface is the same dark in both themes, so anything
