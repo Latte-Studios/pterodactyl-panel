@@ -1,0 +1,17 @@
+# The repository stores text with LF and Prettier is configured for LF, so the
+# working tree has to use LF as well. Without this a checkout on Windows, where
+# core.autocrlf defaults to true, turns every file into a lint error.
+* text=auto eol=lf
+
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.eot binary
+*.pdf binary
+*.zip binary
+*.tar.gz binary

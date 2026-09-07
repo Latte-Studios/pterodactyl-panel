@@ -4,7 +4,7 @@ import { object, string } from 'yup';
 import FormikFieldWrapper from '@/components/elements/FormikFieldWrapper';
 import SpinnerOverlay from '@/components/elements/SpinnerOverlay';
 import tw from 'twin.macro';
-import Button from '@/components/elements/Button';
+import Button from '@/components/elements/latte/Button';
 import Input, { Textarea } from '@/components/elements/Input';
 import styled from 'styled-components/macro';
 import { useFlashKey } from '@/plugins/useFlash';
@@ -59,7 +59,7 @@ export default () => {
                             <Field name={'publicKey'} as={CustomTextarea} />
                         </FormikFieldWrapper>
                         <div css={tw`flex justify-end mt-6`}>
-                            <Button>Save</Button>
+                            <Button variant={'contained'} type={'submit'}>Save</Button>
                         </div>
                     </Form>
                 )}

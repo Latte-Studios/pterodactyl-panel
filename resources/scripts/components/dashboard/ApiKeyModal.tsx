@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import tw from 'twin.macro';
-import Button from '@/components/elements/Button';
+import Button from '@/components/elements/latte/Button';
 import asModal from '@/hoc/asModal';
 import ModalContext from '@/context/ModalContext';
 import CopyOnClick from '@/components/elements/CopyOnClick';
@@ -25,7 +25,7 @@ const ApiKeyModal = ({ apiKey }: Props) => {
                 </CopyOnClick>
             </pre>
             <div css={tw`flex justify-end mt-6`}>
-                <Button type={'button'} onClick={() => dismiss()}>
+                <Button variant={'contained'} onClick={() => dismiss()}>
                     Close
                 </Button>
             </div>

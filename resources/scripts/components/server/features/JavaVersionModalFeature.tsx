@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { ServerContext } from '@/state/server';
 import Modal from '@/components/elements/Modal';
 import tw from 'twin.macro';
-import Button from '@/components/elements/Button';
+import Button from '@/components/elements/latte/Button';
 import setSelectedDockerImage from '@/api/server/setSelectedDockerImage';
 import FlashMessageRender from '@/components/FlashMessageRender';
 import useFlash from '@/plugins/useFlash';
@@ -101,11 +101,11 @@ const JavaVersionModalFeature = () => {
                 </div>
             </Can>
             <div css={tw`mt-8 flex flex-col sm:flex-row justify-end sm:space-x-4 space-y-4 sm:space-y-0`}>
-                <Button isSecondary onClick={() => setVisible(false)} css={tw`w-full sm:w-auto`}>
+                <Button variant={'text'} className={'w-full sm:w-auto'} onClick={() => setVisible(false)}>
                     Cancel
                 </Button>
                 <Can action={'startup.docker-image'}>
-                    <Button onClick={updateJava} css={tw`w-full sm:w-auto`}>
+                    <Button variant={'contained'} className={'w-full sm:w-auto'} onClick={updateJava}>
                         Update Docker Image
                     </Button>
                 </Can>

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { ServerContext } from '@/state/server';
 import Modal from '@/components/elements/Modal';
 import tw from 'twin.macro';
-import Button from '@/components/elements/Button';
+import Button from '@/components/elements/latte/Button';
 import FlashMessageRender from '@/components/FlashMessageRender';
 import useFlash from '@/plugins/useFlash';
 import { SocketEvent, SocketRequest } from '@/components/server/events';
@@ -92,7 +92,7 @@ const GSLTokenModalFeature = () => {
                         />
                     </div>
                     <div css={tw`mt-8 sm:flex items-center justify-end`}>
-                        <Button type={'submit'} css={tw`mt-4 sm:mt-0 sm:ml-4 w-full sm:w-auto`}>
+                        <Button variant={'contained'} type={'submit'} className={'mt-4 sm:mt-0 sm:ml-4 w-full sm:w-auto'}>
                             Update GSL Token
                         </Button>
                     </div>

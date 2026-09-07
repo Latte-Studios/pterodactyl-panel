@@ -7,7 +7,7 @@ import Field from '@/components/elements/Field';
 import chmodFiles from '@/api/server/files/chmodFiles';
 import { ServerContext } from '@/state/server';
 import tw from 'twin.macro';
-import Button from '@/components/elements/Button';
+import Button from '@/components/elements/latte/Button';
 import useFlash from '@/plugins/useFlash';
 
 interface FormikValues {
@@ -62,7 +62,7 @@ const ChmodFileModal = ({ files, ...props }: OwnProps) => {
                                 <Field type={'string'} id={'file_mode'} name={'mode'} label={'File Mode'} autoFocus />
                             </div>
                             <div css={tw`w-full sm:w-auto mt-4 sm:mt-0`}>
-                                <Button css={tw`w-full`}>Update</Button>
+                                <Button variant={'contained'} type={'submit'} block>Update</Button>
                             </div>
                         </div>
                     </Form>

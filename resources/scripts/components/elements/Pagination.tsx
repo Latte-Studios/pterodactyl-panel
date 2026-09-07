@@ -1,10 +1,7 @@
 import React from 'react';
 import { PaginatedResult } from '@/api/http';
-import tw from 'twin.macro';
-import styled from 'styled-components/macro';
-import Button from '@/components/elements/Button';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faAngleDoubleLeft, faAngleDoubleRight } from '@fortawesome/free-solid-svg-icons';
+import Button from '@/components/elements/latte/Button';
+import { ChevronDoubleLeftIcon, ChevronDoubleRightIcon } from '@heroicons/react/outline';
 
 interface RenderFuncProps<T> {
     items: T[];
@@ -19,14 +16,6 @@ interface Props<T> {
     onPageSelect: (page: number) => void;
     children: (props: RenderFuncProps<T>) => React.ReactNode;
 }
-
-const Block = styled(Button)`
-    ${tw`p-0 w-10 h-10`}
-
-    &:not(:last-of-type) {
-        ${tw`mr-2`};
-    }
-`;
 
 function Pagination<T>({ data: { items, pagination }, onPageSelect, children }: Props<T>) {
     const isFirstPage = pagination.currentPage === 1;
@@ -47,26 +36,33 @@ function Pagination<T>({ data: { items, pagination }, onPageSelect, children }: 
         <>
             {children({ items, isFirstPage, isLastPage })}
             {pages.length > 1 && (
-                <div css={tw`mt-4 flex justify-center`}>
+                <div className={'mt-4 flex justify-center gap-2'}>
                     {pages[0] > 1 && !isFirstPage && (
-                        <Block isSecondary color={'primary'} onClick={() => onPageSelect(1)}>
-                            <FontAwesomeIcon icon={faAngleDoubleLeft} />
-                        </Block>
+                        <Button iconOnly size={'small'} aria-label={'First page'} onClick={() => onPageSelect(1)}>
+                            <ChevronDoubleLeftIcon className={'w-4 h-4'} />
+                        </Button>
                     )}
                     {pages.map((i) => (
-                        <Block
-                            isSecondary={pagination.currentPage !== i}
-                            color={'primary'}
+                        <Button
                             key={`block_page_${i}`}
+                            iconOnly
+                            size={'small'}
+                            variant={pagination.currentPage === i ? 'contained' : 'outline'}
+                            aria-current={pagination.currentPage === i ? 'page' : undefined}
                             onClick={() => onPageSelect(i)}
                         >
                             {i}
-                        </Block>
+                        </Button>
                     ))}
                     {pages[4] < pagination.totalPages && !isLastPage && (
-                        <Block isSecondary color={'primary'} onClick={() => onPageSelect(pagination.totalPages)}>
-                            <FontAwesomeIcon icon={faAngleDoubleRight} />
-                        </Block>
+                        <Button
+                            iconOnly
+                            size={'small'}
+                            aria-label={'Last page'}
+                            onClick={() => onPageSelect(pagination.totalPages)}
+                        >
+                            <ChevronDoubleRightIcon className={'w-4 h-4'} />
+                        </Button>
                     )}
                 </div>
             )}
