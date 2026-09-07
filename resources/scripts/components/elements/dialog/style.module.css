@@ -2,13 +2,18 @@
     @apply flex min-h-full items-center justify-center p-4 text-center;
 }
 
+/*
+ * The panel is a card on paper over the ink scrim the dialog renders behind it.
+ * It has to be opaque: the legacy grey it used resolved to a translucent tint,
+ * which left the page underneath readable through the dialog.
+ */
 .panel {
-    @apply relative bg-gray-600 rounded max-w-xl w-full mx-auto shadow-lg text-left;
-    @apply ring-4 ring-gray-800 ring-opacity-80;
+    @apply relative bg-ls-paper rounded-card max-w-xl w-full mx-auto text-left;
+    @apply border border-ls-card-border shadow-card;
 }
 
 .title {
-    @apply font-header text-xl font-medium mb-2 text-gray-50 pr-4;
+    @apply font-header text-xl font-bold mb-2 text-ls-ink pr-4;
 }
 
 .close_icon {
@@ -19,18 +24,18 @@
     @apply flex items-center justify-center w-10 h-10 rounded-full mr-4;
 
     &.danger {
-        @apply bg-red-500 text-red-50;
+        @apply bg-ls-bad-bg text-ls-bad;
     }
 
     &.warning {
-        @apply bg-yellow-600 text-yellow-50;
+        @apply bg-ls-waiting-bg text-ls-waiting;
     }
 
     &.success {
-        @apply bg-green-600 text-green-50;
+        @apply bg-ls-ok-bg text-ls-ok;
     }
 
     &.info {
-        @apply bg-primary-500 text-primary-50;
+        @apply bg-ls-tint text-ls-primary;
     }
 }

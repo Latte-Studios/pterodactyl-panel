@@ -2,15 +2,15 @@
   @apply relative inline-block text-left;
 
   & .button {
-    @apply inline-flex justify-center items-center w-full py-2 text-neutral-100 rounded-md;
-    @apply transition-all duration-100;
+    @apply inline-flex justify-center items-center w-full py-2 text-ls-ink-70 rounded-input;
+    @apply transition-colors duration-100;
 
     &:hover, &[aria-expanded="true"] {
-      @apply bg-neutral-600 text-white;
+      @apply bg-ls-tint text-ls-ink;
     }
 
-    &:focus, &:focus-within, &:active {
-      @apply ring-2 ring-opacity-50 ring-neutral-300 text-white;
+    &:focus-visible {
+      @apply outline-none ring-2 ring-ls-focus text-ls-ink;
     }
 
     & svg {
@@ -22,37 +22,39 @@
     }
   }
 
+  /* The menu floats over the page, so it needs the opaque paper surface. */
   & .items_container {
-    @apply absolute right-0 mt-2 origin-top-right bg-neutral-900 rounded z-10;
+    @apply absolute right-0 mt-2 origin-top-right z-10;
+    @apply bg-ls-paper border border-ls-card-border rounded-card shadow-card;
   }
 }
 
 .menu_item {
-  @apply flex items-center rounded w-full px-2 py-2;
+  @apply flex items-center rounded-input w-full px-2 py-2 text-ls-ink;
 
   & svg {
-    @apply w-4 h-4 mr-4 text-neutral-300;
+    @apply w-4 h-4 mr-4 text-ls-ink-50;
   }
 
   &:hover, &:focus {
-    @apply bg-blue-500 text-blue-50;
+    @apply bg-ls-tint text-ls-primary;
 
     & svg {
-      @apply text-blue-50;
+      @apply text-ls-primary;
     }
   }
 
   &.danger {
     &:hover, &:focus {
-      @apply bg-red-500 text-red-50;
+      @apply bg-ls-bad-bg text-ls-danger;
 
       & svg {
-        @apply text-red-50;
+        @apply text-ls-danger;
       }
     }
   }
 
   &.disabled {
-    @apply cursor-not-allowed hover:bg-neutral-800 opacity-30 focus:bg-transparent focus:hover:bg-neutral-800;
+    @apply cursor-not-allowed opacity-30 hover:bg-transparent focus:bg-transparent;
   }
 }

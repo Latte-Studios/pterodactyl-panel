@@ -39,7 +39,9 @@ export default () => {
                 {isEnabled ? (
                     <Button.Danger onClick={() => setVisible('disable')}>Disable Two-Step</Button.Danger>
                 ) : (
-                    <Button onClick={() => setVisible('enable')}>Enable Two-Step</Button>
+                    <Button variant={Button.Variants.Secondary} onClick={() => setVisible('enable')}>
+                        Enable Two-Step
+                    </Button>
                 )}
             </div>
         </div>
