@@ -136,6 +136,7 @@ class NodeWatcherControllerTest extends HttpTestCase
         $this->actingAs($this->admin)
             ->postJson(route('admin.settings.node-watcher.webhooks.test', ['webhook' => $webhook]))
             ->assertOk()
+            ->assertJsonPath('ok', true)
             ->assertJsonPath('status', 200)
             ->assertJsonPath('error', null);
 
@@ -144,8 +145,10 @@ class NodeWatcherControllerTest extends HttpTestCase
 
         $this->actingAs($this->admin)
             ->postJson(route('admin.settings.node-watcher.webhooks.test', ['webhook' => $webhook]))
-            ->assertStatus(502)
-            ->assertJsonPath('status', 500);
+            ->assertOk()
+            ->assertJsonPath('ok', false)
+            ->assertJsonPath('status', 500)
+            ->assertJsonPath('error', 'HTTP 500 Internal Server Error');
     }
 
     public function testWebhookIsDeleted(): void

@@ -344,17 +344,24 @@
                         url: url('test', uuid),
                         headers: { 'X-CSRF-Token': csrf }
                     }).done(function (data) {
-                        swal({
-                            type: 'success',
-                            title: 'Delivered',
-                            text: 'The receiver answered HTTP ' + data.status + ' in ' + data.duration_ms + ' ms.'
-                        }, function () { window.location.reload(); });
-                    }).fail(function (jqXHR) {
-                        var data = jqXHR.responseJSON || {};
+                        if (data.ok) {
+                            swal({
+                                type: 'success',
+                                title: 'Delivered',
+                                text: 'The receiver answered HTTP ' + data.status + ' in ' + data.duration_ms + ' ms.'
+                            }, function () { window.location.reload(); });
+                            return;
+                        }
                         swal({
                             type: 'error',
                             title: 'Delivery failed',
-                            text: data.error || errorText(jqXHR)
+                            text: data.error || 'The receiver did not accept the delivery.'
+                        }, function () { window.location.reload(); });
+                    }).fail(function (jqXHR) {
+                        swal({
+                            type: 'error',
+                            title: 'Delivery failed',
+                            text: errorText(jqXHR)
                         }, function () { window.location.reload(); });
                     });
                 });

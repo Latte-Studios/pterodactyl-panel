@@ -5,7 +5,6 @@ namespace Pterodactyl\Http\Controllers\Admin\Settings;
 use Illuminate\View\View;
 use Illuminate\Http\Request;
 use Pterodactyl\Models\Node;
-use Illuminate\Http\Response;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Prologue\Alerts\AlertsMessageBag;
@@ -123,13 +122,16 @@ class NodeWatcherController extends Controller
         $result = $this->deliverer->deliver($webhook, NodeWatcherWebhook::EVENT_PING, $payload['delivery'], $body);
         $webhook->recordDelivery($result);
 
-        $data = [
+        // Always 200: the outcome of the delivery is in the body. Answering with
+        // a 5xx would describe the receiver, not this endpoint, and a proxy in
+        // front of the Panel (Cloudflare does this) replaces the body of an
+        // origin 502 with its own error page, hiding the reason from the admin.
+        return new JsonResponse([
+            'ok' => $result->isSuccessful(),
             'status' => $result->status,
             'duration_ms' => $result->durationMs,
             'error' => $result->error,
-        ];
-
-        return new JsonResponse($data, $result->isSuccessful() ? Response::HTTP_OK : Response::HTTP_BAD_GATEWAY);
+        ]);
     }
 
     /**
