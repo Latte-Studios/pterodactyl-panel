@@ -1,0 +1,36 @@
+.overview {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 22px;
+    align-items: start;
+}
+
+/* Form on the left, the list of what it produced on the right. */
+.split {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+    gap: 22px;
+    align-items: start;
+}
+
+.description {
+    font-weight: 700;
+}
+
+.lastUsed {
+    margin-top: 2px;
+    font-size: 12px;
+    font-weight: 300;
+    color: var(--ls-ink-70);
+}
+
+.muted {
+    color: var(--ls-ink-50);
+}
+
+@media (max-width: 1023px) {
+    .overview,
+    .split {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}

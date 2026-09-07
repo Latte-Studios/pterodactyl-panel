@@ -1,19 +1,18 @@
 import React from 'react';
 import { ServerContext } from '@/state/server';
-import TitledGreyBox from '@/components/elements/TitledGreyBox';
 import { Field as FormikField, Form, Formik, FormikHelpers, useFormikContext } from 'formik';
 import { Actions, useStoreActions } from 'easy-peasy';
 import renameServer from '@/api/server/renameServer';
-import Field from '@/components/elements/Field';
 import { object, string } from 'yup';
 import SpinnerOverlay from '@/components/elements/SpinnerOverlay';
 import { ApplicationStore } from '@/state';
 import { httpErrorToHuman } from '@/api/http';
-import { Button } from '@/components/elements/button/index';
-import tw from 'twin.macro';
-import Label from '@/components/elements/Label';
 import FormikFieldWrapper from '@/components/elements/FormikFieldWrapper';
-import { Textarea } from '@/components/elements/Input';
+import Button from '@/components/elements/latte/Button';
+import Card from '@/components/elements/latte/Card';
+import FormField from '@/components/elements/latte/FormField';
+import { Field, Label, Textarea } from '@/components/elements/latte/Input';
+import styles from './settings.module.css';
 
 interface Values {
     name: string;
@@ -24,34 +23,39 @@ const RenameServerBox = () => {
     const { isSubmitting } = useFormikContext<Values>();
 
     return (
-        <TitledGreyBox title={'Change Server Details'} css={tw`relative`}>
-            <SpinnerOverlay visible={isSubmitting} />
-            <Form css={tw`mb-0`}>
-                <Field id={'name'} name={'name'} label={'Server Name'} type={'text'} />
-                <div css={tw`mt-6`}>
-                    <Label>Server Description</Label>
-                    <FormikFieldWrapper name={'description'}>
-                        <FormikField as={Textarea} name={'description'} rows={3} />
-                    </FormikFieldWrapper>
+        <Form>
+            <Card
+                title={'Change Server Details'}
+                footer={
+                    <Button type={'submit'} variant={'contained'}>
+                        Save
+                    </Button>
+                }
+            >
+                <SpinnerOverlay visible={isSubmitting} />
+                <div className={styles.fields}>
+                    <FormField id={'name'} name={'name'} label={'Server Name'} type={'text'} />
+                    <Field label={<Label htmlFor={'description'}>Server Description</Label>}>
+                        <FormikFieldWrapper name={'description'}>
+                            <FormikField as={Textarea} id={'description'} name={'description'} rows={3} />
+                        </FormikFieldWrapper>
+                    </Field>
                 </div>
-                <div css={tw`mt-6 text-right`}>
-                    <Button type={'submit'}>Save</Button>
-                </div>
-            </Form>
-        </TitledGreyBox>
+            </Card>
+        </Form>
     );
 };
 
 export default () => {
-    const server = ServerContext.useStoreState((state) => state.server.data!);
-    const setServer = ServerContext.useStoreActions((actions) => actions.server.setServer);
+    const server = ServerContext.useStoreState(state => state.server.data!);
+    const setServer = ServerContext.useStoreActions(actions => actions.server.setServer);
     const { addError, clearFlashes } = useStoreActions((actions: Actions<ApplicationStore>) => actions.flashes);
 
     const submit = ({ name, description }: Values, { setSubmitting }: FormikHelpers<Values>) => {
         clearFlashes('settings');
         renameServer(server.uuid, name, description)
             .then(() => setServer({ ...server, name, description }))
-            .catch((error) => {
+            .catch(error => {
                 console.error(error);
                 addError({ key: 'settings', message: httpErrorToHuman(error) });
             })

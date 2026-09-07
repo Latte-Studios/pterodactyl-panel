@@ -1,19 +1,20 @@
-import React, { useEffect, useState } from 'react';
-import ContentBox from '@/components/elements/ContentBox';
+import React, { useEffect, useMemo, useState } from 'react';
+import { ExclamationIcon, TrashIcon } from '@heroicons/react/outline';
 import CreateApiKeyForm from '@/components/dashboard/forms/CreateApiKeyForm';
 import getApiKeys, { ApiKey } from '@/api/account/getApiKeys';
 import SpinnerOverlay from '@/components/elements/SpinnerOverlay';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faKey, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import deleteApiKey from '@/api/account/deleteApiKey';
-import FlashMessageRender from '@/components/FlashMessageRender';
 import { format } from 'date-fns';
 import PageContentBlock from '@/components/elements/PageContentBlock';
-import tw from 'twin.macro';
-import GreyRowBox from '@/components/elements/GreyRowBox';
-import { Dialog } from '@/components/elements/dialog';
 import { useFlashKey } from '@/plugins/useFlash';
-import Code from '@/components/elements/Code';
+import Button from '@/components/elements/latte/Button';
+import Card from '@/components/elements/latte/Card';
+import CopyChip from '@/components/elements/latte/CopyChip';
+import DataTable, { DataTableColumn } from '@/components/elements/latte/DataTable';
+import Dialog from '@/components/elements/latte/Dialog';
+import styles from './account.module.css';
+
+const lastUsed = (key: ApiKey): string => (key.lastUsedAt ? format(key.lastUsedAt, 'MMM do, yyyy HH:mm') : 'Never');
 
 export default () => {
     const [deleteIdentifier, setDeleteIdentifier] = useState('');
@@ -23,9 +24,9 @@ export default () => {
 
     useEffect(() => {
         getApiKeys()
-            .then((keys) => setKeys(keys))
+            .then(keys => setKeys(keys))
             .then(() => setLoading(false))
-            .catch((error) => clearAndAddHttpError(error));
+            .catch(error => clearAndAddHttpError(error));
     }, []);
 
     const doDeletion = (identifier: string) => {
@@ -33,63 +34,95 @@ export default () => {
 
         clearAndAddHttpError();
         deleteApiKey(identifier)
-            .then(() => setKeys((s) => [...(s || []).filter((key) => key.identifier !== identifier)]))
-            .catch((error) => clearAndAddHttpError(error))
+            .then(() => setKeys(s => [...(s || []).filter(key => key.identifier !== identifier)]))
+            .catch(error => clearAndAddHttpError(error))
             .then(() => {
                 setLoading(false);
                 setDeleteIdentifier('');
             });
     };
 
-    return (
-        <PageContentBlock title={'Account API'}>
-            <FlashMessageRender byKey={'account'} />
-            <div css={tw`md:flex flex-nowrap my-10`}>
-                <ContentBox title={'Create API Key'} css={tw`flex-none w-full md:w-1/2`}>
-                    <CreateApiKeyForm onKeyCreated={(key) => setKeys((s) => [...s!, key])} />
-                </ContentBox>
-                <ContentBox title={'API Keys'} css={tw`flex-1 overflow-hidden mt-8 md:mt-0 md:ml-8`}>
-                    <SpinnerOverlay visible={loading} />
-                    <Dialog.Confirm
-                        title={'Delete API Key'}
-                        confirm={'Delete Key'}
-                        open={!!deleteIdentifier}
-                        onClose={() => setDeleteIdentifier('')}
-                        onConfirmed={() => doDeletion(deleteIdentifier)}
+    const columns: DataTableColumn<ApiKey>[] = useMemo(
+        () => [
+            {
+                key: 'description',
+                header: 'Key',
+                render: key => (
+                    <div>
+                        <p className={styles.description}>{key.description}</p>
+                        <p className={styles.lastUsed}>Last used: {lastUsed(key)}</p>
+                    </div>
+                ),
+            },
+            {
+                key: 'identifier',
+                header: 'Identifier',
+                render: key => <CopyChip value={key.identifier} />,
+            },
+            {
+                key: 'actions',
+                header: '',
+                align: 'right',
+                width: '56px',
+                render: key => (
+                    <Button
+                        size={'small'}
+                        variant={'danger'}
+                        iconOnly
+                        aria-label={'Delete API key'}
+                        onClick={() => setDeleteIdentifier(key.identifier)}
                     >
-                        All requests using the <Code>{deleteIdentifier}</Code> key will be invalidated.
-                    </Dialog.Confirm>
-                    {keys.length === 0 ? (
-                        <p css={tw`text-center text-sm`}>
-                            {loading ? 'Loading...' : 'No API keys exist for this account.'}
-                        </p>
-                    ) : (
-                        keys.map((key, index) => (
-                            <GreyRowBox
-                                key={key.identifier}
-                                css={[tw`bg-neutral-600 flex items-center`, index > 0 && tw`mt-2`]}
-                            >
-                                <FontAwesomeIcon icon={faKey} css={tw`text-neutral-300`} />
-                                <div css={tw`ml-4 flex-1 overflow-hidden`}>
-                                    <p css={tw`text-sm break-words`}>{key.description}</p>
-                                    <p css={tw`text-2xs text-neutral-300 uppercase`}>
-                                        Last used:&nbsp;
-                                        {key.lastUsedAt ? format(key.lastUsedAt, 'MMM do, yyyy HH:mm') : 'Never'}
-                                    </p>
-                                </div>
-                                <p css={tw`text-sm ml-4 hidden md:block`}>
-                                    <code css={tw`font-mono py-1 px-2 bg-neutral-900 rounded`}>{key.identifier}</code>
-                                </p>
-                                <button css={tw`ml-4 p-2 text-sm`} onClick={() => setDeleteIdentifier(key.identifier)}>
-                                    <FontAwesomeIcon
-                                        icon={faTrashAlt}
-                                        css={tw`text-neutral-400 hover:text-red-400 transition-colors duration-150`}
-                                    />
-                                </button>
-                            </GreyRowBox>
-                        ))
-                    )}
-                </ContentBox>
+                        <TrashIcon width={16} height={16} />
+                    </Button>
+                ),
+            },
+        ],
+        [],
+    );
+
+    return (
+        <PageContentBlock
+            title={'Account API'}
+            eyebrow={'Account'}
+            heading={'API Credentials'}
+            showFlashKey={'account'}
+        >
+            <Dialog
+                open={!!deleteIdentifier}
+                onClose={() => setDeleteIdentifier('')}
+                title={'Delete API Key'}
+                description={`All requests using the ${deleteIdentifier} key will be invalidated.`}
+                icon={ExclamationIcon}
+                danger
+                footer={
+                    <>
+                        <Button variant={'text'} onClick={() => setDeleteIdentifier('')}>
+                            Cancel
+                        </Button>
+                        <Button variant={'danger'} onClick={() => doDeletion(deleteIdentifier)}>
+                            Delete Key
+                        </Button>
+                    </>
+                }
+            />
+            <div className={styles.split}>
+                <Card title={'Create API Key'}>
+                    <CreateApiKeyForm onKeyCreated={key => setKeys(s => [...s!, key])} />
+                </Card>
+                <Card title={'API Keys'} flush>
+                    <SpinnerOverlay visible={loading} />
+                    <DataTable
+                        columns={columns}
+                        rows={keys}
+                        keyOf={key => key.identifier}
+                        empty={loading ? 'Loading...' : 'No API keys exist for this account.'}
+                        mobile={{
+                            title: key => key.description,
+                            subtitle: key => key.identifier,
+                            kpis: key => [{ label: 'Last used', value: lastUsed(key) }],
+                        }}
+                    />
+                </Card>
             </div>
         </PageContentBlock>
     );

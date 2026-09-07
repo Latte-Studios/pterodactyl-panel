@@ -1,0 +1,97 @@
+.user {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+}
+
+.email {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.actions {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+.permissions {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    margin: 24px 0;
+}
+
+.group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.groupHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.groupTitle {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--ls-ink);
+}
+
+.groupDescription {
+    margin-top: 2px;
+    font-size: 12px;
+    font-weight: 300;
+    color: var(--ls-ink-70);
+}
+
+.groupItems {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.permissionDescription {
+    margin-top: 2px;
+    font-size: 12px;
+    font-weight: 300;
+    color: var(--ls-ink-70);
+}
+
+@media (max-width: 640px) {
+    .groupItems {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+.modalTitle {
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1.3;
+    color: var(--ls-ink);
+}
+
+.modalFlash {
+    margin-top: 16px;
+}
+
+.modalAlert {
+    margin-top: 16px;
+}
+
+.modalField {
+    margin-top: 20px;
+}
+
+.modalActions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin-top: 20px;
+}

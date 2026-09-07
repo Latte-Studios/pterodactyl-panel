@@ -1,0 +1,59 @@
+.top {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 22px;
+    align-items: start;
+}
+
+.command {
+    padding: 10px 12px;
+    border-radius: var(--ls-radius-input);
+    background-color: var(--ls-terminal);
+    color: var(--ls-terminal-ink);
+    font-family: var(--ls-mono);
+    font-size: 13px;
+    white-space: pre-wrap;
+    word-break: break-all;
+}
+
+.heading {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--ls-ink);
+}
+
+/* Section 9 puts variables on a grid of three. */
+.variables {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+    align-items: start;
+}
+
+@media (max-width: 1023px) {
+    .top {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .variables {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 640px) {
+    .variables {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+.variableFlash {
+    margin-bottom: 12px;
+}
+
+.variableDescription {
+    margin-top: 8px;
+    font-size: 12px;
+    font-weight: 300;
+    line-height: 1.4;
+    color: var(--ls-ink-70);
+}

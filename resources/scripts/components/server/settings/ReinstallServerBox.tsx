@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from 'react';
+import { ExclamationIcon } from '@heroicons/react/outline';
 import { ServerContext } from '@/state/server';
-import TitledGreyBox from '@/components/elements/TitledGreyBox';
 import reinstallServer from '@/api/server/reinstallServer';
 import { Actions, useStoreActions } from 'easy-peasy';
 import { ApplicationStore } from '@/state';
 import { httpErrorToHuman } from '@/api/http';
-import tw from 'twin.macro';
-import { Button } from '@/components/elements/button/index';
-import { Dialog } from '@/components/elements/dialog';
+import Button from '@/components/elements/latte/Button';
+import Card from '@/components/elements/latte/Card';
+import Dialog from '@/components/elements/latte/Dialog';
+import styles from './settings.module.css';
 
 export default () => {
-    const uuid = ServerContext.useStoreState((state) => state.server.data!.uuid);
-    const skipScripts = ServerContext.useStoreState((state) => state.server.data!.skipScripts);
+    const uuid = ServerContext.useStoreState(state => state.server.data!.uuid);
+    const skipScripts = ServerContext.useStoreState(state => state.server.data!.skipScripts);
     const [modalVisible, setModalVisible] = useState(false);
     const { addFlash, clearFlashes } = useStoreActions((actions: Actions<ApplicationStore>) => actions.flashes);
 
@@ -25,7 +26,7 @@ export default () => {
                     message: 'Your server has begun the reinstallation process.',
                 });
             })
-            .catch((error) => {
+            .catch(error => {
                 console.error(error);
 
                 addFlash({ key: 'settings', type: 'error', message: httpErrorToHuman(error) });
@@ -39,40 +40,52 @@ export default () => {
 
     if (skipScripts) {
         return (
-            <TitledGreyBox title={'Reinstall Server'}>
-                <p css={tw`text-sm`}>
+            <Card title={'Reinstall Server'}>
+                <p className={styles.value}>
                     Reinstalling this server has been disabled because it is configured to skip its egg&apos;s install
                     script. If you would like to reinstall this server, contact a server administrator.
                 </p>
-            </TitledGreyBox>
+            </Card>
         );
     }
 
     return (
-        <TitledGreyBox title={'Reinstall Server'} css={tw`relative`}>
-            <Dialog.Confirm
+        <Card
+            title={'Reinstall Server'}
+            footer={
+                <Button variant={'danger'} onClick={() => setModalVisible(true)}>
+                    Reinstall Server
+                </Button>
+            }
+        >
+            <Dialog
                 open={modalVisible}
-                title={'Confirm server reinstallation'}
-                confirm={'Yes, reinstall server'}
                 onClose={() => setModalVisible(false)}
-                onConfirmed={reinstall}
-            >
-                Your server will be stopped and some files may be deleted or modified during this process, are you sure
-                you wish to continue?
-            </Dialog.Confirm>
-            <p css={tw`text-sm`}>
+                title={'Confirm server reinstallation'}
+                description={
+                    'Your server will be stopped and some files may be deleted or modified during this process, are you sure you wish to continue?'
+                }
+                icon={ExclamationIcon}
+                danger
+                footer={
+                    <>
+                        <Button variant={'text'} onClick={() => setModalVisible(false)}>
+                            Cancel
+                        </Button>
+                        <Button variant={'danger'} onClick={reinstall}>
+                            Yes, reinstall server
+                        </Button>
+                    </>
+                }
+            />
+            <p className={styles.value}>
                 Reinstalling your server will stop it, and then re-run the installation script that initially set it
                 up.&nbsp;
-                <strong css={tw`font-medium`}>
+                <strong>
                     Some files may be deleted or modified during this process, please back up your data before
                     continuing.
                 </strong>
             </p>
-            <div css={tw`mt-6 text-right`}>
-                <Button.Danger variant={Button.Variants.Secondary} onClick={() => setModalVisible(true)}>
-                    Reinstall Server
-                </Button.Danger>
-            </div>
-        </TitledGreyBox>
+        </Card>
     );
 };

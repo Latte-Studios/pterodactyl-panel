@@ -1,0 +1,29 @@
+.columns {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 22px;
+    align-items: start;
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+}
+
+.fields {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.value {
+    font-size: 14px;
+    color: var(--ls-ink);
+}
+
+@media (max-width: 1023px) {
+    .columns {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}

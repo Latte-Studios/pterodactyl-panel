@@ -2,15 +2,15 @@ import React, { useEffect, useState } from 'react';
 import { useActivityLogs } from '@/api/server/activity';
 import ServerContentBlock from '@/components/elements/ServerContentBlock';
 import { useFlashKey } from '@/plugins/useFlash';
-import FlashMessageRender from '@/components/FlashMessageRender';
 import Spinner from '@/components/elements/Spinner';
 import ActivityLogEntry from '@/components/elements/activity/ActivityLogEntry';
 import PaginationFooter from '@/components/elements/table/PaginationFooter';
 import { ActivityLogFilters } from '@/api/account/activity';
-import { Link } from 'react-router-dom';
-import classNames from 'classnames';
-import { styles as btnStyles } from '@/components/elements/button/index';
-import { XCircleIcon } from '@heroicons/react/solid';
+import { ClipboardListIcon } from '@heroicons/react/outline';
+import Button from '@/components/elements/latte/Button';
+import Card from '@/components/elements/latte/Card';
+import Toolbar from '@/components/elements/latte/Toolbar';
+import ScreenBlock from '@/components/elements/ScreenBlock';
 import useLocationHash from '@/plugins/useLocationHash';
 
 export default () => {
@@ -32,36 +32,46 @@ export default () => {
     }, [error]);
 
     return (
-        <ServerContentBlock title={'Activity Log'}>
-            <FlashMessageRender byKey={'server:activity'} />
+        <ServerContentBlock
+            title={'Activity Log'}
+            eyebrow={'Server'}
+            heading={'Activity'}
+            showFlashKey={'server:activity'}
+        >
             {(filters.filters?.event || filters.filters?.ip) && (
-                <div className={'flex justify-end mb-2'}>
-                    <Link
-                        to={'#'}
-                        className={classNames(btnStyles.button, btnStyles.text, 'w-full sm:w-auto')}
-                        onClick={() => setFilters((value) => ({ ...value, filters: {} }))}
+                <Toolbar>
+                    <Toolbar.Spacer />
+                    <Button
+                        size={'small'}
+                        variant={'text'}
+                        onClick={() => setFilters(value => ({ ...value, filters: {} }))}
                     >
-                        Clear Filters <XCircleIcon className={'w-4 h-4 ml-2'} />
-                    </Link>
-                </div>
+                        Clear filters
+                    </Button>
+                </Toolbar>
             )}
             {!data && isValidating ? (
                 <Spinner centered />
             ) : !data?.items.length ? (
-                <p className={'text-sm text-center text-gray-400'}>No activity logs available for this server.</p>
+                <ScreenBlock
+                    title={'No activity yet'}
+                    message={'No activity logs available for this server.'}
+                    waves
+                    icon={ClipboardListIcon}
+                />
             ) : (
-                <div className={'bg-gray-700'}>
-                    {data?.items.map((activity) => (
+                <Card flush>
+                    {data?.items.map(activity => (
                         <ActivityLogEntry key={activity.id} activity={activity}>
                             <span />
                         </ActivityLogEntry>
                     ))}
-                </div>
+                </Card>
             )}
             {data && (
                 <PaginationFooter
                     pagination={data.pagination}
-                    onPageSelect={(page) => setFilters((value) => ({ ...value, page }))}
+                    onPageSelect={page => setFilters(value => ({ ...value, page }))}
                 />
             )}
         </ServerContentBlock>

@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useRef } from 'react';
 import { Subuser } from '@/state/server/subusers';
 import { Form, Formik } from 'formik';
 import { array, object, string } from 'yup';
-import Field from '@/components/elements/Field';
+import FormField from '@/components/elements/latte/FormField';
 import { Actions, useStoreActions, useStoreState } from 'easy-peasy';
 import { ApplicationStore } from '@/state';
 import createOrUpdateSubuser from '@/api/server/users/createOrUpdateSubuser';
@@ -12,10 +12,13 @@ import Can from '@/components/elements/Can';
 import { usePermissions } from '@/plugins/usePermissions';
 import { useDeepCompareMemo } from '@/plugins/useDeepCompareMemo';
 import tw from 'twin.macro';
-import Button from '@/components/elements/Button';
+import Button from '@/components/elements/latte/Button';
 import PermissionTitleBox from '@/components/server/users/PermissionTitleBox';
 import asModal from '@/hoc/asModal';
 import PermissionRow from '@/components/server/users/PermissionRow';
+import Alert from '@/components/elements/latte/Alert';
+import { InformationCircleIcon } from '@heroicons/react/outline';
+import styles from './users.module.css';
 import ModalContext from '@/context/ModalContext';
 
 type Props = {
@@ -103,30 +106,21 @@ const EditSubuserModal = ({ subuser }: Props) => {
             })}
         >
             <Form>
-                <div css={tw`flex justify-between`}>
-                    <h2 css={tw`text-2xl`} ref={ref}>
-                        {subuser
-                            ? `${canEditUser ? 'Modify' : 'View'} permissions for ${subuser.email}`
-                            : 'Create new subuser'}
-                    </h2>
-                    <div>
-                        <Button type={'submit'} css={tw`w-full sm:w-auto`}>
-                            {subuser ? 'Save' : 'Invite User'}
-                        </Button>
-                    </div>
-                </div>
-                <FlashMessageRender byKey={'user:edit'} css={tw`mt-4`} />
+                <h2 className={styles.modalTitle} ref={ref}>
+                    {subuser
+                        ? `${canEditUser ? 'Modify' : 'View'} permissions for ${subuser.email}`
+                        : 'Create new subuser'}
+                </h2>
+                <FlashMessageRender byKey={'user:edit'} className={styles.modalFlash} />
                 {!isRootAdmin && loggedInPermissions[0] !== '*' && (
-                    <div css={tw`mt-4 pl-4 py-2 border-l-4 border-cyan-400`}>
-                        <p css={tw`text-sm text-neutral-300`}>
-                            Only permissions which your account is currently assigned may be selected when creating or
-                            modifying other users.
-                        </p>
-                    </div>
+                    <Alert tone={'progress'} icon={InformationCircleIcon} className={styles.modalAlert}>
+                        Only permissions which your account is currently assigned may be selected when creating or
+                        modifying other users.
+                    </Alert>
                 )}
                 {!subuser && (
-                    <div css={tw`mt-6`}>
-                        <Field
+                    <div className={styles.modalField}>
+                        <FormField
                             name={'email'}
                             label={'User Email'}
                             description={
@@ -135,19 +129,18 @@ const EditSubuserModal = ({ subuser }: Props) => {
                         />
                     </div>
                 )}
-                <div css={tw`my-6`}>
+                <div className={styles.permissions}>
                     {Object.keys(permissions)
-                        .filter((key) => key !== 'websocket')
-                        .map((key, index) => (
+                        .filter(key => key !== 'websocket')
+                        .map(key => (
                             <PermissionTitleBox
                                 key={`permission_${key}`}
                                 title={key}
+                                description={permissions[key]!.description}
                                 isEditable={canEditUser}
-                                permissions={Object.keys(permissions[key].keys).map((pkey) => `${key}.${pkey}`)}
-                                css={index > 0 ? tw`mt-4` : undefined}
+                                permissions={Object.keys(permissions[key]!.keys).map(pkey => `${key}.${pkey}`)}
                             >
-                                <p css={tw`text-sm text-neutral-400 mb-4`}>{permissions[key].description}</p>
-                                {Object.keys(permissions[key].keys).map((pkey) => (
+                                {Object.keys(permissions[key]!.keys).map(pkey => (
                                     <PermissionRow
                                         key={`permission_${key}.${pkey}`}
                                         permission={`${key}.${pkey}`}
@@ -158,8 +151,8 @@ const EditSubuserModal = ({ subuser }: Props) => {
                         ))}
                 </div>
                 <Can action={subuser ? 'user.update' : 'user.create'}>
-                    <div css={tw`pb-6 flex justify-end`}>
-                        <Button type={'submit'} css={tw`w-full sm:w-auto`}>
+                    <div className={styles.modalActions}>
+                        <Button type={'submit'} variant={'contained'}>
                             {subuser ? 'Save' : 'Invite User'}
                         </Button>
                     </div>

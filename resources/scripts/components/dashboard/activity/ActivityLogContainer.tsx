@@ -2,13 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { ActivityLogFilters, useActivityLogs } from '@/api/account/activity';
 import { useFlashKey } from '@/plugins/useFlash';
 import PageContentBlock from '@/components/elements/PageContentBlock';
-import FlashMessageRender from '@/components/FlashMessageRender';
-import { Link } from 'react-router-dom';
 import PaginationFooter from '@/components/elements/table/PaginationFooter';
-import { DesktopComputerIcon, XCircleIcon } from '@heroicons/react/solid';
+import { DesktopComputerIcon } from '@heroicons/react/solid';
 import Spinner from '@/components/elements/Spinner';
-import { styles as btnStyles } from '@/components/elements/button/index';
-import classNames from 'classnames';
+import Button from '@/components/elements/latte/Button';
+import Card from '@/components/elements/latte/Card';
+import Toolbar from '@/components/elements/latte/Toolbar';
 import ActivityLogEntry from '@/components/elements/activity/ActivityLogEntry';
 import Tooltip from '@/components/elements/tooltip/Tooltip';
 import useLocationHash from '@/plugins/useLocationHash';
@@ -31,24 +30,29 @@ export default () => {
     }, [error]);
 
     return (
-        <PageContentBlock title={'Account Activity Log'}>
-            <FlashMessageRender byKey={'account'} />
+        <PageContentBlock
+            title={'Account Activity Log'}
+            eyebrow={'Account'}
+            heading={'Activity'}
+            showFlashKey={'account'}
+        >
             {(filters.filters?.event || filters.filters?.ip) && (
-                <div className={'flex justify-end mb-2'}>
-                    <Link
-                        to={'#'}
-                        className={classNames(btnStyles.button, btnStyles.text, 'w-full sm:w-auto')}
-                        onClick={() => setFilters((value) => ({ ...value, filters: {} }))}
+                <Toolbar>
+                    <Toolbar.Spacer />
+                    <Button
+                        size={'small'}
+                        variant={'text'}
+                        onClick={() => setFilters(value => ({ ...value, filters: {} }))}
                     >
-                        Clear Filters <XCircleIcon className={'w-4 h-4 ml-2'} />
-                    </Link>
-                </div>
+                        Clear filters
+                    </Button>
+                </Toolbar>
             )}
             {!data && isValidating ? (
                 <Spinner centered />
             ) : (
-                <div className={'bg-gray-700'}>
-                    {data?.items.map((activity) => (
+                <Card flush>
+                    {data?.items.map(activity => (
                         <ActivityLogEntry key={activity.id} activity={activity}>
                             {typeof activity.properties.useragent === 'string' && (
                                 <Tooltip content={activity.properties.useragent} placement={'top'}>
@@ -59,12 +63,12 @@ export default () => {
                             )}
                         </ActivityLogEntry>
                     ))}
-                </div>
+                </Card>
             )}
             {data && (
                 <PaginationFooter
                     pagination={data.pagination}
-                    onPageSelect={(page) => setFilters((value) => ({ ...value, page }))}
+                    onPageSelect={page => setFilters(value => ({ ...value, page }))}
                 />
             )}
         </PageContentBlock>

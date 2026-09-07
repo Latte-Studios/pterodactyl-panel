@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
 import ConfirmationModal from '@/components/elements/ConfirmationModal';
 import { ServerContext } from '@/state/server';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { TrashIcon } from '@heroicons/react/outline';
 import { Subuser } from '@/state/server/subusers';
 import deleteSubuser from '@/api/server/users/deleteSubuser';
 import { Actions, useStoreActions } from 'easy-peasy';
 import { ApplicationStore } from '@/state';
 import { httpErrorToHuman } from '@/api/http';
-import tw from 'twin.macro';
+import Button from '@/components/elements/latte/Button';
 
 export default ({ subuser }: { subuser: Subuser }) => {
     const [loading, setLoading] = useState(false);
@@ -46,14 +45,15 @@ export default ({ subuser }: { subuser: Subuser }) => {
                 Are you sure you wish to remove this subuser? They will have all access to this server revoked
                 immediately.
             </ConfirmationModal>
-            <button
-                type={'button'}
+            <Button
+                size={'small'}
+                variant={'danger'}
+                iconOnly
                 aria-label={'Delete subuser'}
-                css={tw`block text-sm p-2 text-neutral-500 hover:text-red-600 transition-colors duration-150`}
                 onClick={() => setShowConfirmation(true)}
             >
-                <FontAwesomeIcon icon={faTrashAlt} />
-            </button>
+                <TrashIcon width={16} height={16} />
+            </Button>
         </>
     );
 };
