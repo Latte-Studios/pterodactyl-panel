@@ -168,12 +168,10 @@
                             <div class="form-group col-md-6">
                                 <label class="control-label">Events</label>
                                 @foreach(\Pterodactyl\Models\NodeWatcherWebhook::EVENT_DESCRIPTIONS as $event => $description)
-                                    <div class="checkbox no-margin-bottom">
-                                        <label>
-                                            <input type="checkbox" name="events[]" value="{{ $event }}" class="pWebhookEvent" @if(in_array($event, old('events', []))) checked @endif />
-                                            <code>{{ $event }}</code>
-                                            <p class="text-muted small no-margin">{{ $description }}</p>
-                                        </label>
+                                    <div class="checkbox checkbox-primary no-margin-bottom">
+                                        <input type="checkbox" id="pWebhookEvent-{{ $loop->index }}" name="events[]" value="{{ $event }}" class="pWebhookEvent" @if(in_array($event, old('events', []))) checked @endif />
+                                        <label for="pWebhookEvent-{{ $loop->index }}"><code>{{ $event }}</code></label>
+                                        <p class="text-muted small no-margin">{{ $description }}</p>
                                     </div>
                                 @endforeach
                             </div>
@@ -185,11 +183,9 @@
                                     @endforeach
                                 </select>
                                 <p class="text-muted small">Leave empty to watch every node.</p>
-                                <div class="checkbox">
-                                    <label>
-                                        <input type="checkbox" name="enabled" value="1" id="pWebhookEnabled" @if(old('enabled', '1')) checked @endif />
-                                        Enabled
-                                    </label>
+                                <div class="checkbox checkbox-primary">
+                                    <input type="checkbox" name="enabled" value="1" id="pWebhookEnabled" @if(old('enabled', '1')) checked @endif />
+                                    <label for="pWebhookEnabled" class="strong">Enabled</label>
                                 </div>
                             </div>
                         </div>
