@@ -167,6 +167,35 @@ export default createGlobalStyle`
         }
     }
 
+    /*
+     * The sidebar is a dark surface in both themes, so the semantic tones inside
+     * it are the dark theme's. The light theme's are tuned for paper and lose
+     * their contrast over Wolf Expresso: the green of a running server was very
+     * nearly unreadable there.
+     */
+    [data-surface="sidebar"] {
+        --ls-open: #D4A87F;      --ls-progress: #4DD0E1;
+        --ls-waiting: #FFB74D;   --ls-closed: rgba(255,255,255,.70);
+        --ls-ok: #4ADE80;        --ls-bad: #FF6659;
+
+        /* A tinted background is transparent, so over Wolf Expresso it would
+           carry the brown up into the chip and eat the contrast again. These
+           are the same tints already flattened onto the darkest brown: opaque,
+           so the light theme cannot bleed through, and still light enough to
+           read as a chip against the sidebar of the dark theme. Every tone
+           clears 4.5:1 on its own background. */
+        --ls-open-bg: #3C2A1B;      --ls-progress-bg: #1F3431;
+        --ls-waiting-bg: #472E11;   --ls-closed-bg: #352C24;
+        --ls-ok-bg: #1F341B;        --ls-bad-bg: #441F18;
+
+        --ls-open-rgb: 212 168 127;
+        --ls-progress-rgb: 77 208 225;
+        --ls-waiting-rgb: 255 183 77;
+        --ls-closed-rgb: 255 255 255;
+        --ls-ok-rgb: 74 222 128;
+        --ls-bad-rgb: 255 102 89;
+    }
+
     html {
         color-scheme: light dark;
     }

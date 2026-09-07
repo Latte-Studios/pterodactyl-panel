@@ -73,7 +73,7 @@ const Shell = ({ groups, context, subnav, children }: ShellProps) => {
             <SpinnerOverlay visible={loggingOut} />
             {searching && <SearchModal appear visible onDismissed={() => setSearching(false)} />}
             {drawerOpen && <div className={styles.drawer} onClick={closeDrawer} />}
-            <aside className={classNames(styles.sidebar, { [styles.drawerOpen]: drawerOpen })}>
+            <aside data-surface={'sidebar'} className={classNames(styles.sidebar, { [styles.drawerOpen]: drawerOpen })}>
                 <Link to={'/'} onClick={closeDrawer} className={styles.brand}>
                     <span className={styles.brandMark} aria-hidden>
                         {name.slice(0, 1)}

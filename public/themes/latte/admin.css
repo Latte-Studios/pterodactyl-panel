@@ -1389,10 +1389,26 @@ body.latte .sweet-alert .sa-icon.sa-info::after {
 }
 
 body.latte .tooltip-inner {
-    background-color: var(--ls-sidebar);
-    color: #FFFFFF;
+    background-color: var(--ls-terminal);
+    color: var(--ls-terminal-ink);
     border-radius: var(--ls-radius-input);
     font-family: var(--ls-font);
+}
+
+body.latte .tooltip.top .tooltip-arrow {
+    border-top-color: var(--ls-terminal);
+}
+
+body.latte .tooltip.bottom .tooltip-arrow {
+    border-bottom-color: var(--ls-terminal);
+}
+
+body.latte .tooltip.left .tooltip-arrow {
+    border-left-color: var(--ls-terminal);
+}
+
+body.latte .tooltip.right .tooltip-arrow {
+    border-right-color: var(--ls-terminal);
 }
 
 /* ------------------------------------------- pterodactyl.css skin ---- */
