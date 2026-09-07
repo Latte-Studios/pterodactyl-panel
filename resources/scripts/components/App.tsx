@@ -14,6 +14,7 @@ import AuthenticatedRoute from '@/components/elements/AuthenticatedRoute';
 import { ServerContext } from '@/state/server';
 import '@/assets/tailwind.css';
 import Spinner from '@/components/elements/Spinner';
+import useTheme from '@/plugins/useTheme';
 
 const DashboardRouter = lazy(() => import(/* webpackChunkName: "dashboard" */ '@/routers/DashboardRouter'));
 const ServerRouter = lazy(() => import(/* webpackChunkName: "server" */ '@/routers/ServerRouter'));
@@ -38,6 +39,10 @@ interface ExtendedWindow extends Window {
 setupInterceptors(history);
 
 const App = () => {
+    // Keeps the html attribute, the stored preference and the cookie the admin
+    // area reads in sync for as long as the client is mounted.
+    useTheme();
+
     const { PterodactylUser, SiteConfiguration } = window as ExtendedWindow;
     if (PterodactylUser && !store.getState().user.data) {
         store.getActions().user.setUserData({

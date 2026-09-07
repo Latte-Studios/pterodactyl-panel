@@ -42,7 +42,7 @@
     }
 
     &:disabled {
-        @apply bg-blue-500/75 text-blue-200/75;
+        @apply bg-ls-primary/75 text-ls-on-primary/75;
     }
 }
 
@@ -55,7 +55,7 @@
     }
 
     &:disabled {
-        @apply bg-gray-500/75 text-gray-200/75;
+        @apply bg-ls-border-strong text-ls-ink-50;
     }
 }
 

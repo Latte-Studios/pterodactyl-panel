@@ -1,7 +1,25 @@
 <!DOCTYPE html>
-<html>
+<html @if(in_array(request()->cookie('latte_theme'), ['light', 'dark'])) data-theme="{{ request()->cookie('latte_theme') }}" @endif>
     <head>
         <title>{{ config('app.name', 'Pterodactyl') }}</title>
+
+        {{-- Applies the stored theme before the first paint so the panel never
+             renders a frame under the wrong one. --}}
+        <script>
+            (function () {
+                try {
+                    var preference = window.localStorage.getItem('latte:theme');
+
+                    if (preference === 'light' || preference === 'dark') {
+                        document.documentElement.setAttribute('data-theme', preference);
+                    } else {
+                        document.documentElement.removeAttribute('data-theme');
+                    }
+                } catch (e) {
+                    // Storage is unavailable; the operating system preference applies.
+                }
+            })();
+        </script>
 
         @section('meta')
             <meta charset="utf-8">

@@ -95,7 +95,14 @@ const MassActionsBar = () => {
                 <Portal>
                     <div className={'pointer-events-none fixed bottom-0 mb-6 flex justify-center w-full z-50'}>
                         <Fade timeout={75} in={selectedFiles.length > 0} unmountOnExit>
-                            <div css={tw`flex items-center space-x-4 pointer-events-auto rounded p-4 bg-black/50`}>
+                            <div
+                                css={[
+                                    tw`flex items-center space-x-4 pointer-events-auto rounded p-4`,
+                                    // twin.macro drops opacity modifiers on the token colours, so the
+                                    // scrim is written out by hand until this bar moves to a Toolbar.
+                                    { backgroundColor: 'rgb(var(--ls-ink-rgb) / 0.4)' },
+                                ]}
+                            >
                                 <Button onClick={() => setShowMove(true)}>Move</Button>
                                 <Button onClick={onClickCompress}>Archive</Button>
                                 <Button.Danger variant={Button.Variants.Secondary} onClick={() => setShowConfirm(true)}>
