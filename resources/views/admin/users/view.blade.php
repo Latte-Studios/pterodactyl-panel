@@ -103,6 +103,29 @@
         </div>
     </form>
     <div class="col-xs-12">
+        <div class="box">
+            <div class="box-header with-border">
+                <h3 class="box-title">Google SSO</h3>
+            </div>
+            <div class="box-body">
+                @if($user->google_subject)
+                    <p class="no-margin">Linked to <code>{{ $user->google_email }}</code> since {{ $user->google_linked_at?->toDayDateTimeString() }}. This account can sign in with Google, and the link counts as two-factor authentication.</p>
+                @else
+                    <p class="no-margin">Not linked to a Google account. The user can link one from their account page; a first Google sign-in with a matching e-mail links it as well.</p>
+                @endif
+            </div>
+            @if($user->google_subject)
+                <div class="box-footer">
+                    <form action="{{ route('admin.users.view.sso.google.unlink', $user->id) }}" method="POST">
+                        {!! csrf_field() !!}
+                        {!! method_field('DELETE') !!}
+                        <input type="submit" class="btn btn-sm btn-default pull-right" value="Unlink Google Account" />
+                    </form>
+                </div>
+            @endif
+        </div>
+    </div>
+    <div class="col-xs-12">
         <div class="box box-danger">
             <div class="box-header with-border">
                 <h3 class="box-title">Delete User</h3>

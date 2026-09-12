@@ -7,6 +7,8 @@ use Illuminate\Http\RedirectResponse;
 use Prologue\Alerts\AlertsMessageBag;
 use Illuminate\Contracts\Console\Kernel;
 use Pterodactyl\Http\Controllers\Controller;
+use Illuminate\Contracts\Encryption\Encrypter;
+use Pterodactyl\Providers\SettingsServiceProvider;
 use Illuminate\Contracts\Config\Repository as ConfigRepository;
 use Pterodactyl\Contracts\Repository\SettingsRepositoryInterface;
 use Pterodactyl\Http\Requests\Admin\Settings\AdvancedSettingsFormRequest;
@@ -19,6 +21,7 @@ class AdvancedController extends Controller
     public function __construct(
         private AlertsMessageBag $alert,
         private ConfigRepository $config,
+        private Encrypter $encrypter,
         private Kernel $kernel,
         private SettingsRepositoryInterface $settings,
     ) {
@@ -39,6 +42,8 @@ class AdvancedController extends Controller
 
         return view('admin.settings.advanced', [
             'showRecaptchaWarning' => $showRecaptchaWarning,
+            'googleCallbackUrl' => route('auth.sso.google.callback'),
+            'googleSecretStored' => !empty($this->config->get('services.google.client_secret')),
         ]);
     }
 
@@ -49,6 +54,10 @@ class AdvancedController extends Controller
     public function update(AdvancedSettingsFormRequest $request): RedirectResponse
     {
         foreach ($request->normalize() as $key => $value) {
+            if (in_array($key, SettingsServiceProvider::getEncryptedKeys()) && !empty($value)) {
+                $value = $this->encrypter->encrypt($value);
+            }
+
             $this->settings->set('settings::' . $key, $value);
         }
 

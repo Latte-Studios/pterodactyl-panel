@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\View\Factory as ViewFactory;
 use Pterodactyl\Exceptions\DisplayException;
 use Pterodactyl\Http\Controllers\Controller;
+use Pterodactyl\Services\Sso\GoogleSsoService;
 use Illuminate\Contracts\Translation\Translator;
 use Pterodactyl\Services\Users\UserUpdateService;
 use Pterodactyl\Traits\Helpers\AvailableLanguages;
@@ -99,6 +100,19 @@ class UserController extends Controller
         $this->deletionService->handle($user);
 
         return redirect()->route('admin.users');
+    }
+
+    /**
+     * Remove the Google account linked to a user.
+     *
+     * @throws \Throwable
+     */
+    public function unlinkGoogle(User $user, GoogleSsoService $sso): RedirectResponse
+    {
+        $sso->unlink($user);
+        $this->alert->success('The Google account has been unlinked from this user.')->flash();
+
+        return redirect()->route('admin.users.view', $user->id);
     }
 
     /**

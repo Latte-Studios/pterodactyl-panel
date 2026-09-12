@@ -59,6 +59,7 @@
                         @endif
                     </div>
                 </div>
+                @include('admin.settings.partials.google-sso')
                 <div class="box">
                     <div class="box-header with-border">
                         <h3 class="box-title">HTTP Connections</h3>

@@ -104,6 +104,7 @@ Route::group(['prefix' => 'users'], function () {
 
     Route::patch('/view/{user:id}', [Admin\UserController::class, 'update']);
     Route::delete('/view/{user:id}', [Admin\UserController::class, 'delete'])->name('admin.users.delete');
+    Route::delete('/view/{user:id}/sso/google', [Admin\UserController::class, 'unlinkGoogle'])->name('admin.users.view.sso.google.unlink');
 });
 
 /*
