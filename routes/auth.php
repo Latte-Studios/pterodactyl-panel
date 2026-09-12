@@ -39,6 +39,15 @@ Route::middleware(['throttle:authentication'])->group(function () {
 // is created).
 Route::post('/password/reset', Auth\ResetPasswordController::class)->name('auth.reset-password');
 
+// Google Workspace SSO. The same two endpoints sign a guest in and link a Google
+// account to somebody already signed in, so the guest middleware is dropped here.
+// Both are throttled like the password endpoints; the callback is a GET because
+// that is how Google returns the browser.
+Route::middleware(['throttle:authentication'])->withoutMiddleware('guest')->group(function () {
+    Route::get('/sso/google', [Auth\GoogleSsoController::class, 'redirect'])->name('auth.sso.google');
+    Route::get('/sso/google/callback', [Auth\GoogleSsoController::class, 'callback'])->name('auth.sso.google.callback');
+});
+
 // Remove the guest middleware and apply the authenticated middleware to this endpoint,
 // so it cannot be used unless you're already logged in.
 Route::post('/logout', [Auth\LoginController::class, 'logout'])

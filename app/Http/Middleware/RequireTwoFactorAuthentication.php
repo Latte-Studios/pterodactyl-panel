@@ -45,10 +45,11 @@ class RequireTwoFactorAuthentication
 
         $level = (int) config('pterodactyl.auth.2fa_required');
         // If this setting is not configured, or the user is already using 2FA then we can just
-        // send them right through, nothing else needs to be checked.
+        // send them right through, nothing else needs to be checked. A linked Google Workspace
+        // account counts as 2FA: the second step is enforced by Google before the callback.
         //
         // If the level is set as admin and the user is not an admin, pass them through as well.
-        if ($level === self::LEVEL_NONE || $user->use_totp) {
+        if ($level === self::LEVEL_NONE || $user->use_totp || !empty($user->google_subject)) {
             return $next($request);
         } elseif ($level === self::LEVEL_ADMIN && !$user->root_admin) {
             return $next($request);

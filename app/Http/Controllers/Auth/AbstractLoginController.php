@@ -72,14 +72,7 @@ abstract class AbstractLoginController extends Controller
      */
     protected function sendLoginResponse(User $user, Request $request): JsonResponse
     {
-        $request->session()->remove('auth_confirmation_token');
-        $request->session()->regenerate();
-
-        $this->clearLoginAttempts($request);
-
-        $this->auth->guard()->login($user, true);
-
-        Event::dispatch(new DirectLogin($user, true));
+        $this->authenticate($user, $request);
 
         return new JsonResponse([
             'data' => [
@@ -88,6 +81,22 @@ abstract class AbstractLoginController extends Controller
                 'user' => $user->toVueObject(),
             ],
         ]);
+    }
+
+    /**
+     * Sign the user into the session. Shared by the password flow (which then
+     * answers with JSON) and the Google SSO callback (which redirects).
+     */
+    protected function authenticate(User $user, Request $request): void
+    {
+        $request->session()->remove('auth_confirmation_token');
+        $request->session()->regenerate();
+
+        $this->clearLoginAttempts($request);
+
+        $this->auth->guard()->login($user, true);
+
+        Event::dispatch(new DirectLogin($user, true));
     }
 
     /**
