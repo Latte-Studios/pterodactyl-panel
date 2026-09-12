@@ -26,6 +26,9 @@ Route::prefix('/account')->middleware(AccountSubject::class)->group(function () 
         Route::get('/two-factor', [Client\TwoFactorController::class, 'index']);
         Route::post('/two-factor', [Client\TwoFactorController::class, 'store']);
         Route::post('/two-factor/disable', [Client\TwoFactorController::class, 'delete']);
+        Route::post('/sso/google', [Client\GoogleSsoController::class, 'store'])
+            ->middleware('throttle:authentication')
+            ->name('api:client.account.sso.google.confirm');
         Route::delete('/sso/google', [Client\GoogleSsoController::class, 'delete'])->name('api:client.account.sso.google.unlink');
     });
 
