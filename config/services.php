@@ -27,6 +27,27 @@ return [
         'key' => env('RESEND_KEY'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Google Workspace SSO
+    |--------------------------------------------------------------------------
+    |
+    | These values are the defaults; the Admin > Settings > Advanced page
+    | stores the real ones in the settings table and they override whatever
+    | is here at boot (see SettingsServiceProvider). The redirect URL is not
+    | configurable: it is always /auth/sso/google/callback on the panel.
+    |
+    */
+
+    'google' => [
+        'enabled' => env('GOOGLE_SSO_ENABLED', false),
+        'client_id' => env('GOOGLE_SSO_CLIENT_ID'),
+        'client_secret' => env('GOOGLE_SSO_CLIENT_SECRET'),
+        'redirect' => '/auth/sso/google/callback',
+        'allowed_domains' => env('GOOGLE_SSO_ALLOWED_DOMAINS', 'lattestudio.net'),
+        'auto_create' => env('GOOGLE_SSO_AUTO_CREATE', true),
+    ],
+
     'slack' => [
         'notifications' => [
             'bot_user_oauth_token' => env('SLACK_BOT_USER_OAUTH_TOKEN'),

@@ -40,6 +40,9 @@ use Pterodactyl\Notifications\SendPasswordReset as ResetPasswordNotification;
  * @property bool $use_totp
  * @property string|null $totp_secret
  * @property \Illuminate\Support\Carbon|null $totp_authenticated_at
+ * @property string|null $google_subject
+ * @property string|null $google_email
+ * @property \Illuminate\Support\Carbon|null $google_linked_at
  * @property bool $gravatar
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
@@ -132,6 +135,9 @@ class User extends Model implements
         'use_totp',
         'totp_secret',
         'totp_authenticated_at',
+        'google_subject',
+        'google_email',
+        'google_linked_at',
         'gravatar',
         'root_admin',
     ];
@@ -144,12 +150,13 @@ class User extends Model implements
         'use_totp' => 'boolean',
         'gravatar' => 'boolean',
         'totp_authenticated_at' => 'datetime',
+        'google_linked_at' => 'datetime',
     ];
 
     /**
      * The attributes excluded from the model's JSON form.
      */
-    protected $hidden = ['password', 'remember_token', 'totp_secret', 'totp_authenticated_at'];
+    protected $hidden = ['password', 'remember_token', 'totp_secret', 'totp_authenticated_at', 'google_subject'];
 
     /**
      * Default values for specific fields in the database.
@@ -177,6 +184,8 @@ class User extends Model implements
         'language' => 'string',
         'use_totp' => 'boolean',
         'totp_secret' => 'nullable|string',
+        'google_subject' => 'nullable|string|max:64',
+        'google_email' => 'nullable|string|max:191',
     ];
 
     /**
