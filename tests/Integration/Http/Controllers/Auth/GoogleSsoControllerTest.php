@@ -120,6 +120,20 @@ class GoogleSsoControllerTest extends HttpTestCase
         $this->assertGuest();
     }
 
+    public function testAccountWithoutHostedDomainClaimIsRefused(): void
+    {
+        // A personal Google account registered with an address of the allowed
+        // domain: the e-mail checks out, the Workspace claim is missing.
+        $this->fakeGoogle($this->googleUser($this->sub('3c'), $this->email('personal'), ['hd' => null]));
+
+        $this->withSession(['sso.google.intent' => 'login'])
+            ->get(self::CALLBACK)
+            ->assertRedirect('/auth/login?sso_error=domain');
+
+        $this->assertGuest();
+        $this->assertDatabaseMissing('users', ['email' => $this->email('personal')]);
+    }
+
     public function testUnverifiedEmailIsRefused(): void
     {
         $this->fakeGoogle($this->googleUser($this->sub('4'), $this->email('unverified'), ['email_verified' => false]));

@@ -17,8 +17,10 @@ import styles from './account.module.css';
 const GOOGLE_ERRORS: Record<string, string> = {
     state: 'The Google session expired, please try again.',
     unverified: 'Your Google account email is not verified.',
-    domain: 'Your Google account is not in a domain allowed on this panel.',
+    domain: 'Only Google Workspace accounts from an allowed domain can be linked.',
     'already-linked': 'This Google account is already linked to another user.',
+    mismatch: 'The Google account you chose is not the one linked to this panel account.',
+    confirm: 'Confirm your password before linking a Google account.',
 };
 
 export default () => {

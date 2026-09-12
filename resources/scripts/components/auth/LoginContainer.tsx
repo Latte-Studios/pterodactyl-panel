@@ -27,7 +27,7 @@ const SSO_ERRORS: Record<string, string> = {
     disabled: 'Google sign-in is not enabled.',
     state: 'The Google sign-in session expired, please try again.',
     unverified: 'Your Google account email is not verified.',
-    domain: 'Your Google account is not in a domain allowed to use this panel.',
+    domain: 'Only Google Workspace accounts from an allowed domain can sign in to this panel.',
     'no-account': 'There is no panel account for this Google account. Ask an administrator.',
     'already-linked': 'This Google account is already linked to another user.',
 };

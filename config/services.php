@@ -35,7 +35,9 @@ return [
     | These values are the defaults; the Admin > Settings > Advanced page
     | stores the real ones in the settings table and they override whatever
     | is here at boot (see SettingsServiceProvider). The redirect URL is not
-    | configurable: it is always /auth/sso/google/callback on the panel.
+    | configurable: it is always /auth/sso/google/callback on the panel. Only
+    | Google Workspace accounts are accepted: the hosted domain claim has to be
+    | present and listed in allowed_domains, a personal account never passes.
     |
     */
 

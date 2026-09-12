@@ -128,11 +128,14 @@ class GoogleSsoService
             throw new GoogleSsoException(GoogleSsoException::REASON_UNVERIFIED);
         }
 
+        // Only a Google Workspace account carries the hosted domain claim. A
+        // personal Google account created with an address of an allowed domain
+        // verifies its e-mail just fine, so the e-mail alone is not enough.
         $allowed = $this->allowedDomains();
         $domain = Str::afterLast($email, '@');
-        $hosted = isset($raw['hd']) ? mb_strtolower((string) $raw['hd']) : null;
+        $hosted = mb_strtolower(trim((string) ($raw['hd'] ?? '')));
 
-        if (!in_array($domain, $allowed, true) || ($hosted !== null && !in_array($hosted, $allowed, true))) {
+        if ($hosted === '' || !in_array($hosted, $allowed, true) || !in_array($domain, $allowed, true)) {
             throw new GoogleSsoException(GoogleSsoException::REASON_DOMAIN);
         }
     }
