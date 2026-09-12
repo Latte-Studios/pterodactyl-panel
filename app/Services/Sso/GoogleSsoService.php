@@ -7,9 +7,9 @@ use Illuminate\Support\Str;
 use Pterodactyl\Models\User;
 use Pterodactyl\Rules\Username;
 use Pterodactyl\Facades\Activity;
+use Laravel\Socialite\Two\User as SocialiteUser;
 use Pterodactyl\Exceptions\Sso\GoogleSsoException;
 use Pterodactyl\Services\Users\UserCreationService;
-use Laravel\Socialite\Contracts\User as SocialiteUser;
 use Illuminate\Contracts\Config\Repository as ConfigRepository;
 
 class GoogleSsoService

@@ -7,6 +7,7 @@ use Pterodactyl\Facades\Activity;
 use Illuminate\Http\RedirectResponse;
 use Laravel\Socialite\Facades\Socialite;
 use GuzzleHttp\Exception\ClientException;
+use Laravel\Socialite\Two\GoogleProvider;
 use Pterodactyl\Services\Sso\GoogleSsoService;
 use Laravel\Socialite\Two\InvalidStateException;
 use Pterodactyl\Exceptions\Sso\GoogleSsoException;
@@ -50,7 +51,10 @@ class GoogleSsoController extends AbstractLoginController
             $parameters['hd'] = count($domains) === 1 ? $domains[0] : '*';
         }
 
-        return Socialite::driver('google')
+        /** @var GoogleProvider $google */
+        $google = Socialite::driver('google');
+
+        return $google
             ->scopes(['openid', 'email', 'profile'])
             ->with($parameters)
             ->redirect();
