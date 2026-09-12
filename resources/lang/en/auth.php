@@ -21,6 +21,18 @@ return [
         'checkpoint_failed' => 'The two-factor authentication token was invalid.',
     ],
 
+    'sso' => [
+        'google' => [
+            'disabled' => 'Google sign-in is not enabled.',
+            'state' => 'The sign-in session expired, please try again.',
+            'unverified' => 'Your Google account email is not verified.',
+            'domain' => 'Your Google account is not in an allowed domain.',
+            'no-account' => 'There is no panel account for this Google account. Ask an administrator.',
+            'already-linked' => 'This Google account is already linked to another user.',
+            'linked' => 'Your Google account has been linked.',
+        ],
+    ],
+
     'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
     'password_requirements' => 'Password must be at least 8 characters in length and should be unique to this site.',
     '2fa_must_be_enabled' => 'The administrator has required that 2-Factor Authentication be enabled for your account in order to use the Panel.',

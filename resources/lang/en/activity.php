@@ -15,6 +15,8 @@ return [
         'checkpoint' => 'Two-factor authentication requested',
         'recovery-token' => 'Used two-factor recovery token',
         'token' => 'Solved two-factor challenge',
+        'sso-success' => 'Logged in with Google',
+        'sso-fail' => 'Failed Google log in (:reason)',
         'ip-blocked' => 'Blocked request from unlisted IP address for :identifier',
         'sftp' => [
             'fail' => 'Failed SFTP log in',
@@ -27,6 +29,8 @@ return [
         'account' => [
             'email-changed' => 'Changed email from :old to :new',
             'password-changed' => 'Changed password',
+            'sso-linked' => 'Linked Google account :email',
+            'sso-unlinked' => 'Unlinked Google account',
         ],
         'api-key' => [
             'create' => 'Created new API key :identifier',
