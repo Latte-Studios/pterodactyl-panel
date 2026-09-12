@@ -27,7 +27,7 @@ test.describe('google sso', () => {
 
     test('login error from callback', async ({ page }, testInfo) => {
         await page.goto('/auth/login?sso_error=domain');
-        await expect(page.getByText(/not in a domain allowed/i)).toBeVisible();
+        await expect(page.getByText(/only google workspace accounts/i)).toBeVisible();
         await expect(page).not.toHaveURL(/sso_error/);
 
         await capture(page, testInfo, 'login-google-error');
@@ -37,8 +37,21 @@ test.describe('google sso', () => {
         test.skip(!(await login(page)), 'PLAYWRIGHT_USERNAME and PLAYWRIGHT_PASSWORD are not set');
 
         await page.goto('/account');
-        await expect(page.getByRole('link', { name: /link google account/i })).toBeVisible();
+        const link = page.getByRole('button', { name: /link google account/i });
+        await expect(link).toBeVisible();
 
         await capture(page, testInfo, 'account-google');
+
+        // Linking asks for the password first; only then does the browser
+        // leave for Google.
+        await link.click();
+        await page.getByLabel(/password/i).fill(process.env.PLAYWRIGHT_PASSWORD ?? '');
+        await capture(page, testInfo, 'account-google-confirm');
+
+        const [response] = await Promise.all([
+            page.waitForResponse(r => r.url().endsWith('/auth/sso/google') && r.status() === 302),
+            page.getByRole('button', { name: /continue with google/i }).click().catch(() => undefined),
+        ]);
+        expect(response.headers()['location']).toContain('https://accounts.google.com/');
     });
 });
