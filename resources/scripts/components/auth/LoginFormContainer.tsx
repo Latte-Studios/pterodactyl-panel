@@ -65,6 +65,7 @@ export default forwardRef<HTMLFormElement, Props>(({ title, subtitle, className,
                 <a rel={'noopener nofollow noreferrer'} href={'https://pterodactyl.io'} target={'_blank'}>
                     Pterodactyl Software
                 </a>
+                &nbsp;&amp; Latte Studios
             </p>
         </div>
     );

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { Link } from 'react-router-dom';
 import requestPasswordResetEmail from '@/api/auth/requestPasswordResetEmail';
 import { httpErrorToHuman } from '@/api/http';
@@ -88,21 +89,25 @@ export default () => {
                             Send Email
                         </Button>
                     </div>
-                    {recaptchaEnabled && (
-                        <Reaptcha
-                            ref={ref}
-                            size={'invisible'}
-                            sitekey={siteKey || '_invalid_key'}
-                            onVerify={(response) => {
-                                setToken(response);
-                                submitForm();
-                            }}
-                            onExpire={() => {
-                                setSubmitting(false);
-                                setToken('');
-                            }}
-                        />
-                    )}
+                    {/* Portalled for the same reason as on the login page: the
+                        card's backdrop-filter would trap Google's fixed badge. */}
+                    {recaptchaEnabled &&
+                        createPortal(
+                            <Reaptcha
+                                ref={ref}
+                                size={'invisible'}
+                                sitekey={siteKey || '_invalid_key'}
+                                onVerify={(response) => {
+                                    setToken(response);
+                                    submitForm();
+                                }}
+                                onExpire={() => {
+                                    setSubmitting(false);
+                                    setToken('');
+                                }}
+                            />,
+                            document.body
+                        )}
                     <div className={styles.links}>
                         <Link to={'/auth/login'} className={styles.link}>
                             Return to Login

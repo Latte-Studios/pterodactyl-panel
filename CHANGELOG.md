@@ -30,8 +30,19 @@ because they do not correspond to an upstream release.
   can customize its body with a placeholder template, with Discord, Slack and
   generic examples. Wings reports pressure changes through
   `POST /api/remote/nodes/pressure`.
+* Google Workspace sign-in. A "Continue with Google" button on the login page
+  signs in verified accounts from the allowed domains, links them by e-mail on
+  first use and can create regular users automatically. Accounts can also be
+  linked and unlinked from the account page and from the user view in the
+  administration area. The credentials, the domain list and auto-creation live
+  under Settings > Advanced; a linked Google account satisfies the two-factor
+  requirement, since Workspace enforces its own second step.
 
 ### Changed
+* The login footer credits Pterodactyl Software and Latte Studios.
+* The reCAPTCHA widget is rendered outside the blurred login card, so the badge
+  Google injects stays fixed in the corner of the window instead of inside the
+  card.
 * The administration area keeps AdminLTE but drops the skin-blue theme for a
   token based override in `public/themes/latte/admin.css`.
 * The console follows the layout the design system specifies: power controls in
