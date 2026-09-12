@@ -85,7 +85,19 @@ class NodeWatcherControllerTest extends HttpTestCase
             ])
             ->assertUnprocessable()
             ->assertJsonPath('errors.0.meta.source_field', 'body_template')
-            ->assertJsonPath('errors.0.detail', 'The rendered body is not valid JSON: Syntax error.');
+            ->assertJsonPath('errors.0.detail', 'The rendered body is not valid JSON: Syntax error. (for the "host.pressure" event)');
+
+        // Renders fine for a pressure change, where the node id is 1, but the
+        // test ping has no node and would leave the value empty.
+        $this->actingAs($this->admin)
+            ->postJson(route('admin.settings.node-watcher.webhooks'), [
+                'name' => 'Broken on ping',
+                'url' => 'https://example.com/hook',
+                'events' => [NodeWatcherWebhook::EVENT_PRESSURE],
+                'body_template' => '{"node": {{node.id}}}',
+            ])
+            ->assertUnprocessable()
+            ->assertJsonPath('errors.0.detail', 'The rendered body is not valid JSON: Syntax error. (for the "ping" event)');
 
         $this->assertSame(0, NodeWatcherWebhook::query()->count());
     }
@@ -212,5 +224,25 @@ class NodeWatcherControllerTest extends HttpTestCase
             ->postJson(route('admin.settings.node-watcher.preview'), ['body_template' => '{"node": {{node.name}}}'])
             ->assertOk()
             ->assertJsonPath('valid', false);
+    }
+
+    public function testPreviewCanUseTheSampleOfAnotherEvent(): void
+    {
+        $this->actingAs($this->admin)
+            ->postJson(route('admin.settings.node-watcher.preview'), ['body_template' => '{"node":"{{node.name|none}}","event":"{{event}}"}', 'event' => NodeWatcherWebhook::EVENT_PING])
+            ->assertOk()
+            ->assertJsonPath('valid', true)
+            ->assertJsonPath('body', "{\n    \"node\": \"none\",\n    \"event\": \"ping\"\n}");
+
+        $response = $this->actingAs($this->admin)
+            ->postJson(route('admin.settings.node-watcher.preview'), ['body_template' => '', 'event' => NodeWatcherWebhook::EVENT_UNREACHABLE])
+            ->assertOk()
+            ->assertJsonPath('valid', true);
+
+        $this->assertStringContainsString('"failures": 3', $response->json('body'));
+
+        $this->actingAs($this->admin)
+            ->postJson(route('admin.settings.node-watcher.preview'), ['body_template' => '', 'event' => 'nope'])
+            ->assertUnprocessable();
     }
 }

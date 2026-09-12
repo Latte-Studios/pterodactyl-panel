@@ -203,6 +203,13 @@
                                                         <option value="{{ $key }}">{{ $example['label'] }}</option>
                                                     @endforeach
                                                 </select>
+                                                <span class="input-group-btn" style="width: 1%;">
+                                                    <select class="form-control" id="pWebhookPreviewEvent" title="Event to preview" style="border-radius: 0; border-left: 0;">
+                                                        @foreach(\Pterodactyl\Models\NodeWatcherWebhook::SAMPLE_EVENTS as $event)
+                                                            <option value="{{ $event }}">{{ $event }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </span>
                                                 <span class="input-group-btn">
                                                     <button type="button" class="btn btn-default" id="pWebhookPreview">Preview</button>
                                                 </span>
@@ -211,7 +218,7 @@
                                             @if($errors->has('body_template'))
                                                 <p class="text-danger small">{{ $errors->first('body_template') }}</p>
                                             @endif
-                                            <p class="text-muted small">Leave empty to send the default JSON payload. Discord and Slack reject it and require a template. The rendered body must be valid JSON.</p>
+                                            <p class="text-muted small">Leave empty to send the default JSON payload. Discord and Slack reject it and require a template. The rendered body must be valid JSON for every event.</p>
                                             <p class="text-info small hidden" id="pWebhookTemplateNotice"></p>
                                             <pre id="pWebhookPreviewOutput" class="hidden" style="max-height: 320px; overflow: auto;"></pre>
                                         </div>
@@ -360,7 +367,7 @@
                     method: 'POST',
                     url: routes.preview,
                     contentType: 'application/json',
-                    data: JSON.stringify({ body_template: $('#pWebhookBody').val() }),
+                    data: JSON.stringify({ body_template: $('#pWebhookBody').val(), event: $('#pWebhookPreviewEvent').val() }),
                     headers: { 'X-CSRF-Token': csrf }
                 }).done(function (data) {
                     output.removeClass('hidden').toggleClass('text-danger', !data.valid)

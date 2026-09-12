@@ -44,13 +44,17 @@ class NodeWatcherWebhookFormRequest extends AdminFormRequest
                 return;
             }
 
-            try {
-                $this->container->make(TemplateRenderer::class)->validate(
-                    $template,
-                    $this->container->make(NodeWatcherService::class)->samplePayload(),
-                );
-            } catch (InvalidTemplateException $exception) {
-                $validator->errors()->add('body_template', $exception->getMessage());
+            // One template serves every event, and the events carry different
+            // fields, so the body has to come out as JSON for each of them.
+            $renderer = $this->container->make(TemplateRenderer::class);
+            foreach ($this->container->make(NodeWatcherService::class)->samplePayloads() as $event => $payload) {
+                try {
+                    $renderer->validate($template, $payload);
+                } catch (InvalidTemplateException $exception) {
+                    $validator->errors()->add('body_template', sprintf('%s (for the "%s" event)', $exception->getMessage(), $event));
+
+                    return;
+                }
             }
         });
     }

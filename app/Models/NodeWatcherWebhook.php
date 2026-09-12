@@ -64,6 +64,18 @@ class NodeWatcherWebhook extends Model
     ];
 
     /**
+     * Every event a webhook can receive, in the order the admin area lists them.
+     * Each one has a sample payload for validating and previewing templates.
+     */
+    public const SAMPLE_EVENTS = [
+        self::EVENT_PRESSURE,
+        self::EVENT_HEARTBEAT,
+        self::EVENT_UNREACHABLE,
+        self::EVENT_REACHABLE,
+        self::EVENT_PING,
+    ];
+
+    /**
      * What each subscription means, for the admin area.
      */
     public const EVENT_DESCRIPTIONS = [

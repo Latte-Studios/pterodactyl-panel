@@ -99,4 +99,24 @@ class NodeWatcherServiceTest extends IntegrationTestCase
         $this->assertSame('critical', $payload['data']['snapshot']['pressure']['level']);
         $this->assertNotNull(json_encode($payload));
     }
+
+    public function testEveryEventHasASampleShapedLikeTheRealPayload()
+    {
+        $samples = $this->service->samplePayloads();
+
+        $this->assertSame(NodeWatcherWebhook::SAMPLE_EVENTS, array_keys($samples));
+        foreach ($samples as $event => $sample) {
+            $this->assertSame($event, $sample['event']);
+        }
+
+        $this->assertSame('ok', $samples[NodeWatcherWebhook::EVENT_HEARTBEAT]['data']['snapshot']['pressure']['level']);
+        $this->assertArrayNotHasKey('current', $samples[NodeWatcherWebhook::EVENT_HEARTBEAT]['data']);
+        $this->assertSame(['failures', 'since', 'last_error'], array_keys($samples[NodeWatcherWebhook::EVENT_UNREACHABLE]['data']));
+        $this->assertSame($samples[NodeWatcherWebhook::EVENT_UNREACHABLE]['data'], $samples[NodeWatcherWebhook::EVENT_REACHABLE]['data']);
+        $this->assertNull($samples[NodeWatcherWebhook::EVENT_PING]['node']);
+        $this->assertSame([], $samples[NodeWatcherWebhook::EVENT_PING]['data']);
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->service->samplePayload('nope');
+    }
 }

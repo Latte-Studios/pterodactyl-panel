@@ -5,6 +5,7 @@ namespace Pterodactyl\Http\Controllers\Admin\Settings;
 use Illuminate\View\View;
 use Illuminate\Http\Request;
 use Pterodactyl\Models\Node;
+use Illuminate\Validation\Rule;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Prologue\Alerts\AlertsMessageBag;
@@ -148,13 +149,17 @@ class NodeWatcherController extends Controller
     }
 
     /**
-     * Render a template against the sample payload so that the editor can show
-     * what a receiver would get.
+     * Render a template against the sample payload of an event so that the
+     * editor can show what a receiver would get.
      */
     public function preview(Request $request): JsonResponse
     {
+        $request->validate([
+            'event' => ['sometimes', 'string', Rule::in(NodeWatcherWebhook::SAMPLE_EVENTS)],
+        ]);
+
         $template = (string) $request->input('body_template', '');
-        $payload = $this->service->samplePayload();
+        $payload = $this->service->samplePayload($request->input('event', NodeWatcherWebhook::EVENT_PRESSURE));
 
         if (trim($template) === '') {
             return new JsonResponse([
