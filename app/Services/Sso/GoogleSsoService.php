@@ -4,6 +4,7 @@ namespace Pterodactyl\Services\Sso;
 
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
 use Pterodactyl\Models\User;
 use Pterodactyl\Rules\Username;
 use Pterodactyl\Facades\Activity;
@@ -14,6 +15,21 @@ use Illuminate\Contracts\Config\Repository as ConfigRepository;
 
 class GoogleSsoService
 {
+    /**
+     * Session key holding the time the current session last went through
+     * Google. The two-factor policy only trusts a linked account when this is
+     * present: a session opened with the password alone has not proven the
+     * second factor.
+     */
+    public const SESSION_AUTHENTICATED_AT = 'sso.google.authenticated_at';
+
+    /**
+     * Session key holding the time the user confirmed their password before
+     * linking a Google account, and how long that confirmation stays valid.
+     */
+    public const SESSION_LINK_CONFIRMED_AT = 'sso.google.link_confirmed_at';
+    public const LINK_CONFIRMATION_TTL_SECONDS = 300;
+
     public function __construct(
         private ConfigRepository $config,
         private UserCreationService $creationService,
@@ -114,6 +130,56 @@ class GoogleSsoService
         Activity::event('user:account.sso-unlinked')->subject($user)->log();
 
         return $user;
+    }
+
+    /**
+     * Record on the session that the signed-in user just came back from Google.
+     */
+    public function markSessionAuthenticated(Request $request): void
+    {
+        $request->session()->put(self::SESSION_AUTHENTICATED_AT, CarbonImmutable::now()->toIso8601String());
+    }
+
+    /**
+     * Forget the mark, for when the signed-in user unlinks their own account. An
+     * administrator unlinking somebody else keeps their own session as it is.
+     */
+    public function forgetSessionAuthenticated(Request $request): void
+    {
+        if ($request->hasSession()) {
+            $request->session()->forget(self::SESSION_AUTHENTICATED_AT);
+        }
+    }
+
+    /**
+     * Whether the current session went through Google at some point. Requests
+     * without a session (API tokens) cannot carry the mark.
+     */
+    public function isSessionAuthenticated(Request $request): bool
+    {
+        return $request->hasSession() && $request->session()->has(self::SESSION_AUTHENTICATED_AT);
+    }
+
+    /**
+     * Record that the user confirmed their password and may start linking.
+     */
+    public function confirmLink(Request $request): void
+    {
+        $request->session()->put(self::SESSION_LINK_CONFIRMED_AT, CarbonImmutable::now()->toIso8601String());
+    }
+
+    /**
+     * Consume a pending link confirmation. Returns true only once, and only
+     * while the confirmation is still fresh.
+     */
+    public function consumeLinkConfirmation(Request $request): bool
+    {
+        $confirmed = $request->session()->pull(self::SESSION_LINK_CONFIRMED_AT);
+        if (!is_string($confirmed)) {
+            return false;
+        }
+
+        return CarbonImmutable::parse($confirmed)->addSeconds(self::LINK_CONFIRMATION_TTL_SECONDS)->isFuture();
     }
 
     /**

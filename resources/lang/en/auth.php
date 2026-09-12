@@ -29,6 +29,8 @@ return [
             'domain' => 'Only Google Workspace accounts from an allowed domain can sign in to this panel.',
             'no-account' => 'There is no panel account for this Google account. Ask an administrator.',
             'already-linked' => 'This Google account is already linked to another user.',
+            'mismatch' => 'The Google account you chose is not the one linked to this panel account.',
+            'confirm' => 'Confirm your password before linking a Google account.',
             'linked' => 'Your Google account has been linked.',
         ],
     ],

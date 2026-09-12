@@ -17,6 +17,8 @@ class GoogleSsoException extends DisplayException
     public const REASON_DOMAIN = 'domain';
     public const REASON_NO_ACCOUNT = 'no-account';
     public const REASON_ALREADY_LINKED = 'already-linked';
+    public const REASON_MISMATCH = 'mismatch';
+    public const REASON_CONFIRM = 'confirm';
 
     public function __construct(private string $reason, ?\Throwable $previous = null)
     {

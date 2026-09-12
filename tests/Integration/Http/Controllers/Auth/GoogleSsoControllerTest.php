@@ -12,6 +12,7 @@ use Laravel\Socialite\Two\GoogleProvider;
 use Illuminate\Support\Facades\Notification;
 use Laravel\Socialite\Two\User as GoogleUser;
 use Pterodactyl\Notifications\AccountCreated;
+use Pterodactyl\Services\Sso\GoogleSsoService;
 use Laravel\Socialite\Two\InvalidStateException;
 use Pterodactyl\Tests\Integration\Http\HttpTestCase;
 
@@ -81,6 +82,17 @@ class GoogleSsoControllerTest extends HttpTestCase
         $this->assertAuthenticatedAs($user);
         Event::assertDispatched(fn (DirectLogin $event) => $event->user->is($user));
         $this->assertActivityFor('auth:sso-success', $user, $user);
+    }
+
+    public function testSignInLeavesTheSessionMarkedAsGoogleAuthenticated(): void
+    {
+        User::factory()->create(['google_subject' => $this->sub('1b')]);
+        $this->fakeGoogle($this->googleUser($this->sub('1b'), $this->email('marked')));
+
+        $this->withSession(['sso.google.intent' => 'login'])
+            ->get(self::CALLBACK)
+            ->assertRedirect('/')
+            ->assertSessionHas(GoogleSsoService::SESSION_AUTHENTICATED_AT);
     }
 
     public function testExistingUserIsLinkedByEmailOnFirstSignIn(): void
@@ -246,12 +258,77 @@ class GoogleSsoControllerTest extends HttpTestCase
         $this->assertNull($user->refresh()->google_subject);
     }
 
-    public function testRedirectRecordsLinkIntentForSignedInUser(): void
+    public function testRedirectRecordsLinkIntentAfterAFreshPasswordConfirmation(): void
+    {
+        $this->actingAs(User::factory()->create())
+            ->withSession([GoogleSsoService::SESSION_LINK_CONFIRMED_AT => now()->toIso8601String()])
+            ->get('/auth/sso/google')
+            ->assertRedirect()
+            ->assertSessionHas('sso.google.intent', 'link')
+            // The confirmation is good for one round trip only.
+            ->assertSessionMissing(GoogleSsoService::SESSION_LINK_CONFIRMED_AT);
+    }
+
+    public function testRedirectRefusesToLinkWithoutAPasswordConfirmation(): void
     {
         $this->actingAs(User::factory()->create())
             ->get('/auth/sso/google')
-            ->assertRedirect()
-            ->assertSessionHas('sso.google.intent', 'link');
+            ->assertRedirect('/account?sso_error=confirm')
+            ->assertSessionMissing('sso.google.intent');
+    }
+
+    public function testRedirectRefusesToLinkWithAStalePasswordConfirmation(): void
+    {
+        $stale = now()->subSeconds(GoogleSsoService::LINK_CONFIRMATION_TTL_SECONDS + 1)->toIso8601String();
+
+        $this->actingAs(User::factory()->create())
+            ->withSession([GoogleSsoService::SESSION_LINK_CONFIRMED_AT => $stale])
+            ->get('/auth/sso/google')
+            ->assertRedirect('/account?sso_error=confirm')
+            ->assertSessionMissing(GoogleSsoService::SESSION_LINK_CONFIRMED_AT);
+    }
+
+    public function testRedirectRecordsReauthIntentForLinkedUser(): void
+    {
+        $user = User::factory()->create(['google_subject' => $this->sub('10'), 'google_email' => $this->email('linked')]);
+
+        $response = $this->actingAs($user)->get('/auth/sso/google?redirect=/admin');
+
+        $response->assertRedirect()->assertSessionHas('sso.google.intent', 'reauth');
+        $response->assertSessionHas('sso.google.intended', '/admin');
+        $location = $response->headers->get('Location');
+        $this->assertStringContainsString('login_hint=' . urlencode($this->email('linked')), $location);
+        $this->assertStringNotContainsString('select_account', $location);
+    }
+
+    public function testReauthMarksTheSessionWhenTheSubjectMatches(): void
+    {
+        $user = User::factory()->create(['google_subject' => $this->sub('11'), 'google_email' => $this->email('again')]);
+        $this->fakeGoogle($this->googleUser($this->sub('11'), $this->email('again')));
+
+        $this->actingAs($user)
+            ->withSession(['sso.google.intent' => 'reauth', 'sso.google.intended' => '/admin'])
+            ->get(self::CALLBACK)
+            ->assertRedirect('/admin')
+            ->assertSessionHas(GoogleSsoService::SESSION_AUTHENTICATED_AT);
+
+        $this->assertAuthenticatedAs($user);
+        Event::assertNotDispatched(DirectLogin::class);
+        $this->assertActivityFor('auth:sso-success', $user, $user);
+    }
+
+    public function testReauthRefusesAnotherGoogleAccount(): void
+    {
+        $user = User::factory()->create(['google_subject' => $this->sub('12'), 'google_email' => $this->email('mine')]);
+        $this->fakeGoogle($this->googleUser($this->sub('12-other'), $this->email('mine')));
+
+        $this->actingAs($user)
+            ->withSession(['sso.google.intent' => 'reauth'])
+            ->get(self::CALLBACK)
+            ->assertRedirect('/account?sso_error=mismatch')
+            ->assertSessionMissing(GoogleSsoService::SESSION_AUTHENTICATED_AT);
+
+        $this->assertSame($this->sub('12'), $user->refresh()->google_subject);
     }
 
     private function sub(string $name): string
