@@ -231,6 +231,7 @@
                                                 <tr><td><code>@{{sent_at}}</code></td><td>Timestamp</td></tr>
                                                 <tr><td><code>@{{panel.url}}</code></td><td>Panel URL</td></tr>
                                                 <tr><td><code>@{{json .}}</code></td><td>Default payload</td></tr>
+                                                <tr><td><code>@{{data.current|n/a}}</code></td><td>Text when missing</td></tr>
                                             </table>
                                             <p class="text-muted small" style="margin-top: 6px;"><code>@{{path}}</code> is escaped for use inside a JSON string, <code>@{{json path}}</code> inserts raw JSON and <code>@{{percent path}}</code> formats a number with one decimal.</p>
                                         </div>

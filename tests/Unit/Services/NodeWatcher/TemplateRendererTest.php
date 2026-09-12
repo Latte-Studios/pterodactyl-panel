@@ -81,6 +81,23 @@ class TemplateRendererTest extends TestCase
         $this->assertSame('null', $this->renderer->render('{{json node.nope}}', $this->payload));
     }
 
+    public function testFallbackIsUsedWhenThePathIsMissing()
+    {
+        $this->assertSame('"n/a"', $this->renderer->render('"{{node.nope|n/a}}"', $this->payload));
+        $this->assertSame('"n/a"', $this->renderer->render('"{{ node.nope | n/a }}"', $this->payload));
+        $this->assertSame('""', $this->renderer->render('"{{node.nope|}}"', $this->payload));
+        $this->assertSame('?%', $this->renderer->render('{{percent node.nope|?}}%', $this->payload));
+        $this->assertSame('[]', $this->renderer->render('{{json node.nope|[]}}', $this->payload));
+        $this->assertSame('so "raw"', $this->renderer->render('{{node.nope|so "raw"}}', $this->payload));
+    }
+
+    public function testFallbackIsIgnoredWhenThePathExists()
+    {
+        $this->assertSame('br-sp-01', $this->renderer->render('{{node.name|n/a}}', $this->payload));
+        $this->assertSame('91.3', $this->renderer->render('{{percent data.snapshot.cpu.percent|?}}', $this->payload));
+        $this->assertSame('true', $this->renderer->render('{{data.flag|n/a}}', $this->payload));
+    }
+
     public function testTextWithoutPlaceholdersIsLeftAlone()
     {
         $template = '{"a":"{{not a placeholder","b":"{{ }}"}';

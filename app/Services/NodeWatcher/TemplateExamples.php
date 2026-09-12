@@ -59,13 +59,13 @@ class TemplateExamples
                 'body' => <<<'JSON'
 {
   "username": "Node Watcher",
-  "content": "**{{node.name}}** is now **{{data.current}}** (was {{data.previous}})",
+  "content": "**{{node.name|Panel}}** · {{event}}",
   "embeds": [
     {
-      "title": "{{event}} on {{node.name}}",
-      "url": "{{panel.url}}/admin/nodes/view/{{node.id}}",
-      "description": "CPU {{percent data.snapshot.cpu.percent}}% · Memory {{percent data.snapshot.memory.percent}}% · Servers running {{data.snapshot.servers.running}}/{{data.snapshot.servers.total}}",
-      "footer": { "text": "{{node.fqdn}} · {{sent_at}}" }
+      "title": "{{event}} on {{node.name|the Panel}}",
+      "url": "{{panel.url}}/admin/nodes/view/{{node.id|}}",
+      "description": "Pressure **{{data.snapshot.pressure.level|n/a}}** (was {{data.previous|n/a}}) · CPU {{percent data.snapshot.cpu.percent|?}}% · Memory {{percent data.snapshot.memory.percent|?}}% · Servers running {{data.snapshot.servers.running|?}}/{{data.snapshot.servers.total|?}}\n{{data.last_error|}}",
+      "footer": { "text": "{{node.fqdn|no node}} · {{sent_at}}" }
     }
   ]
 }
@@ -75,18 +75,18 @@ JSON,
                 'label' => 'Slack',
                 'body' => <<<'JSON'
 {
-  "text": "{{node.name}} is now {{data.current}} (was {{data.previous}})",
+  "text": "{{node.name|Panel}} · {{event}}",
   "blocks": [
     {
       "type": "section",
       "text": {
         "type": "mrkdwn",
-        "text": "*<{{panel.url}}/admin/nodes/view/{{node.id}}|{{node.name}}>* is now *{{data.current}}*\nCPU {{percent data.snapshot.cpu.percent}}% · Memory {{percent data.snapshot.memory.percent}}% · Servers running {{data.snapshot.servers.running}}/{{data.snapshot.servers.total}}"
+        "text": "*<{{panel.url}}/admin/nodes/view/{{node.id|}}|{{node.name|Panel}}>* · {{event}}\nPressure *{{data.snapshot.pressure.level|n/a}}* (was {{data.previous|n/a}}) · CPU {{percent data.snapshot.cpu.percent|?}}% · Memory {{percent data.snapshot.memory.percent|?}}% · Servers running {{data.snapshot.servers.running|?}}/{{data.snapshot.servers.total|?}}\n{{data.last_error|}}"
       }
     },
     {
       "type": "context",
-      "elements": [ { "type": "mrkdwn", "text": "{{node.fqdn}} · {{sent_at}}" } ]
+      "elements": [ { "type": "mrkdwn", "text": "{{node.fqdn|no node}} · {{sent_at}}" } ]
     }
   ]
 }

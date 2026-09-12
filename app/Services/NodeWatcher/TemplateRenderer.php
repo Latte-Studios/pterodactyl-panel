@@ -15,20 +15,27 @@ use Pterodactyl\Exceptions\Service\NodeWatcher\InvalidTemplateException;
  *   {{path}}          the value, escaped for use inside a JSON string
  *   {{json path}}     the value serialized as JSON
  *   {{percent path}}  the value formatted as a number with one decimal place
+ *   {{path|text}}     "text", verbatim, when the path is missing from the payload;
+ *                     works with json and percent too
  */
 class TemplateRenderer
 {
-    private const PATTERN = '/\{\{\s*(?:(json|percent)\s+)?(\.|[A-Za-z0-9_\-]+(?:\.[A-Za-z0-9_\-]+)*)\s*\}\}/';
+    private const PATTERN = '/\{\{\s*(?:(json|percent)\s+)?(\.|[A-Za-z0-9_\-]+(?:\.[A-Za-z0-9_\-]+)*)\s*(?:\|((?:(?!\}\}).)*))?\}\}/';
 
     /**
      * Replaces every placeholder in the template with the matching value from
-     * the payload. Unknown paths become an empty string (or null for {{json}})
-     * so that a typo never blocks a delivery.
+     * the payload. Unknown paths become the fallback when one is given, and an
+     * empty string (or null for {{json}}) otherwise, so that a typo never
+     * blocks a delivery.
      */
     public function render(string $template, array $payload): string
     {
         return preg_replace_callback(self::PATTERN, function (array $match) use ($payload) {
             $value = $this->resolve($payload, $match[2]);
+
+            if (is_null($value) && isset($match[3])) {
+                return trim($match[3]);
+            }
 
             return match ($match[1]) {
                 'json' => $this->json($value),
