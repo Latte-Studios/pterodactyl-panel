@@ -90,6 +90,44 @@ class NodeWatcherControllerTest extends HttpTestCase
         $this->assertSame(0, NodeWatcherWebhook::query()->count());
     }
 
+    public function testReceiversThatRejectTheDefaultBodyRequireATemplate(): void
+    {
+        $this->actingAs($this->admin)
+            ->postJson(route('admin.settings.node-watcher.webhooks'), [
+                'name' => 'Discord',
+                'url' => 'https://canary.discord.com/api/webhooks/1/abc',
+                'events' => [NodeWatcherWebhook::EVENT_PRESSURE],
+                'body_template' => '',
+            ])
+            ->assertUnprocessable()
+            ->assertJsonPath('errors.0.meta.source_field', 'body_template')
+            ->assertJsonPath('errors.0.detail', 'Discord rejects the default body. Open "Customize body" and insert the Discord example.');
+
+        $this->assertSame(0, NodeWatcherWebhook::query()->count());
+
+        $webhook = NodeWatcherWebhook::factory()->create(['url' => 'https://hooks.slack.com/services/T0/B0/x', 'body_template' => null]);
+
+        $this->actingAs($this->admin)
+            ->patchJson(route('admin.settings.node-watcher.webhooks.update', ['webhook' => $webhook]), [
+                'name' => 'Slack',
+                'url' => $webhook->url,
+                'events' => [NodeWatcherWebhook::EVENT_PRESSURE],
+            ])
+            ->assertUnprocessable()
+            ->assertJsonPath('errors.0.meta.source_field', 'body_template');
+
+        $this->actingAs($this->admin)
+            ->patchJson(route('admin.settings.node-watcher.webhooks.update', ['webhook' => $webhook]), [
+                'name' => 'Slack',
+                'url' => $webhook->url,
+                'events' => [NodeWatcherWebhook::EVENT_PRESSURE],
+                'body_template' => '{"text":"{{node.name}}"}',
+            ])
+            ->assertRedirect(route('admin.settings.node-watcher'));
+
+        $this->assertSame('{"text":"{{node.name}}"}', $webhook->refresh()->body_template);
+    }
+
     public function testWebhookIsUpdatedWithoutTouchingTheSecret(): void
     {
         $webhook = NodeWatcherWebhook::factory()->create();

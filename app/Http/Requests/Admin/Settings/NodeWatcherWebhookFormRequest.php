@@ -5,6 +5,7 @@ namespace Pterodactyl\Http\Requests\Admin\Settings;
 use Illuminate\Validation\Validator;
 use Pterodactyl\Models\NodeWatcherWebhook;
 use Pterodactyl\Http\Requests\Admin\AdminFormRequest;
+use Pterodactyl\Services\NodeWatcher\TemplateExamples;
 use Pterodactyl\Services\NodeWatcher\TemplateRenderer;
 use Pterodactyl\Services\NodeWatcher\NodeWatcherService;
 use Pterodactyl\Exceptions\Service\NodeWatcher\InvalidTemplateException;
@@ -26,14 +27,20 @@ class NodeWatcherWebhookFormRequest extends AdminFormRequest
     }
 
     /**
-     * A custom body has to render to valid JSON, which the rules above cannot
-     * express on their own.
+     * A custom body has to render to valid JSON, and some receivers refuse the
+     * default payload altogether. Neither can be expressed by the rules above.
      */
     public function withValidator(Validator $validator): void
     {
         $validator->after(function (Validator $validator) {
             $template = $this->input('body_template');
             if (!is_string($template) || trim($template) === '') {
+                $example = TemplateExamples::forUrl((string) $this->input('url'));
+                if (!is_null($example)) {
+                    $label = TemplateExamples::all()[$example]['label'];
+                    $validator->errors()->add('body_template', sprintf('%s rejects the default body. Open "Customize body" and insert the %s example.', $label, $label));
+                }
+
                 return;
             }
 

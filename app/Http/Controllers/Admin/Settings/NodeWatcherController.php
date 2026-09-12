@@ -48,6 +48,7 @@ class NodeWatcherController extends Controller
             'nodes' => Node::query()->orderBy('name')->get(['id', 'name']),
             'heartbeatInterval' => (int) config('pterodactyl.node_watcher.heartbeat_interval'),
             'examples' => TemplateExamples::all(),
+            'requiredHosts' => TemplateExamples::hosts(),
         ]);
     }
 

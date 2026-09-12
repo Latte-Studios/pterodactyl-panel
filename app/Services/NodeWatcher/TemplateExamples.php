@@ -8,6 +8,47 @@ namespace Pterodactyl\Services\NodeWatcher;
 class TemplateExamples
 {
     /**
+     * Services that reject the default payload, mapped to the example that
+     * produces a body they accept. A host matches itself and any subdomain.
+     */
+    private const HOSTS = [
+        'discord' => ['discord.com', 'discordapp.com'],
+        'slack' => ['hooks.slack.com'],
+    ];
+
+    /**
+     * Returns the key of the example a webhook URL requires, or null when the
+     * receiver is not known to reject the default payload.
+     */
+    public static function forUrl(string $url): ?string
+    {
+        $host = strtolower((string) parse_url($url, PHP_URL_HOST));
+        if ($host === '') {
+            return null;
+        }
+
+        foreach (self::HOSTS as $key => $hosts) {
+            foreach ($hosts as $candidate) {
+                if ($host === $candidate || str_ends_with($host, '.' . $candidate)) {
+                    return $key;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * The hosts that require a template, keyed by example, for the admin area.
+     *
+     * @return array<string, string[]>
+     */
+    public static function hosts(): array
+    {
+        return self::HOSTS;
+    }
+
+    /**
      * @return array<string, array{label: string, body: string}>
      */
     public static function all(): array

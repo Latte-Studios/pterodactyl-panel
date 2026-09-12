@@ -21,7 +21,7 @@
                 <div class="alert alert-success">
                     <strong>Secret for "{{ $secret['name'] }}":</strong>
                     <code id="pNewSecret" style="user-select: all;">{{ $secret['secret'] }}</code>
-                    <p class="no-margin">Copy it now. It is used to sign every delivery with HMAC-SHA256 and will not be shown again.</p>
+                    <p class="no-margin">Copy it now. It is used to sign every delivery with HMAC-SHA256 and will not be shown again. Discord and Slack ignore the signature, so it can be discarded for them.</p>
                 </div>
             </div>
         </div>
@@ -192,7 +192,7 @@
                         <div class="row">
                             <div class="col-xs-12">
                                 <a href="#pWebhookTemplate" data-toggle="collapse" id="pWebhookTemplateToggle">Customize body <i class="fa fa-caret-down"></i></a>
-                                <div class="collapse @if(old('body_template')) in @endif" id="pWebhookTemplate">
+                                <div class="collapse @if(old('body_template') || $errors->has('body_template')) in @endif" id="pWebhookTemplate">
                                     <div class="row" style="margin-top: 12px;">
                                         <div class="form-group col-md-8">
                                             <label class="control-label">Body template</label>
@@ -208,7 +208,11 @@
                                                 </span>
                                             </div>
                                             <textarea class="form-control" name="body_template" id="pWebhookBody" rows="18" spellcheck="false" style="font-family: monospace; resize: vertical;">{{ old('body_template') }}</textarea>
-                                            <p class="text-muted small">Leave empty to send the default JSON payload. The rendered body must be valid JSON.</p>
+                                            @if($errors->has('body_template'))
+                                                <p class="text-danger small">{{ $errors->first('body_template') }}</p>
+                                            @endif
+                                            <p class="text-muted small">Leave empty to send the default JSON payload. Discord and Slack reject it and require a template. The rendered body must be valid JSON.</p>
+                                            <p class="text-info small hidden" id="pWebhookTemplateNotice"></p>
                                             <pre id="pWebhookPreviewOutput" class="hidden" style="max-height: 320px; overflow: auto;"></pre>
                                         </div>
                                         <div class="col-md-4">
@@ -250,6 +254,8 @@
     <script>
         (function () {
             var examples = @json(collect($examples)->map(fn ($example) => $example['body']));
+            var labels = @json(collect($examples)->map(fn ($example) => $example['label']));
+            var requiredHosts = @json($requiredHosts);
             var routes = {
                 store: '{{ route('admin.settings.node-watcher.webhooks') }}',
                 webhook: '{{ route('admin.settings.node-watcher.webhooks.update', ['webhook' => '__UUID__']) }}',
@@ -280,9 +286,45 @@
                 $('#pWebhookEnabled').prop('checked', editing ? webhook.enabled : true);
                 $('#pWebhookBody').val(editing ? webhook.body_template : '');
                 $('#pWebhookPreviewOutput').addClass('hidden').text('');
+                $('#pWebhookTemplateNotice').addClass('hidden').text('');
                 $('#pWebhookTemplate').collapse(editing && webhook.body_template ? 'show' : 'hide');
                 $('#pWebhookModal').modal('show');
+                insertRequiredExample();
             }
+
+            // Returns the example a URL requires, or null. Mirrors TemplateExamples::forUrl().
+            function requiredExample(value) {
+                var host;
+                try {
+                    host = new URL(value).hostname.toLowerCase();
+                } catch (e) {
+                    return null;
+                }
+                for (var key in requiredHosts) {
+                    for (var i = 0; i < requiredHosts[key].length; i++) {
+                        var candidate = requiredHosts[key][i];
+                        if (host === candidate || host.endsWith('.' + candidate)) {
+                            return key;
+                        }
+                    }
+                }
+                return null;
+            }
+
+            // Fills in the example a receiver needs when the body is still empty,
+            // so that the default payload is never sent to a service that rejects it.
+            function insertRequiredExample() {
+                var key = requiredExample($('#pWebhookUrl').val());
+                if (!key || $.trim($('#pWebhookBody').val()) !== '') {
+                    return;
+                }
+                $('#pWebhookBody').val(examples[key]);
+                $('#pWebhookTemplate').collapse('show');
+                $('#pWebhookTemplateNotice').removeClass('hidden')
+                    .text(labels[key] + ' rejects the default body, so the ' + labels[key] + ' example was inserted. Edit it as you like.');
+            }
+
+            $('#pWebhookUrl').on('change', insertRequiredExample);
 
             $('#pAddWebhook').on('click', function () {
                 openModal(null);
