@@ -8,6 +8,9 @@ export interface UserData {
     language: string;
     rootAdmin: boolean;
     useTotp: boolean;
+    /** The Google Workspace account linked for sign-in, when there is one. */
+    googleEmail: string | null;
+    googleLinkedAt: Date | null;
     createdAt: Date;
     updatedAt: Date;
 }

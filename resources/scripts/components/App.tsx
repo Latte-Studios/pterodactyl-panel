@@ -29,6 +29,8 @@ interface ExtendedWindow extends Window {
         /* eslint-disable camelcase */
         root_admin: boolean;
         use_totp: boolean;
+        google_email: string | null;
+        google_linked_at: string | null;
         language: string;
         updated_at: string;
         created_at: string;
@@ -52,6 +54,8 @@ const App = () => {
             language: PterodactylUser.language,
             rootAdmin: PterodactylUser.root_admin,
             useTotp: PterodactylUser.use_totp,
+            googleEmail: PterodactylUser.google_email ?? null,
+            googleLinkedAt: PterodactylUser.google_linked_at ? new Date(PterodactylUser.google_linked_at) : null,
             createdAt: new Date(PterodactylUser.created_at),
             updatedAt: new Date(PterodactylUser.updated_at),
         });

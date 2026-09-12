@@ -1,17 +1,55 @@
 import * as React from 'react';
+import { useEffect } from 'react';
 import { ExclamationIcon } from '@heroicons/react/outline';
 import UpdatePasswordForm from '@/components/dashboard/forms/UpdatePasswordForm';
 import UpdateEmailAddressForm from '@/components/dashboard/forms/UpdateEmailAddressForm';
 import ConfigureTwoFactorForm from '@/components/dashboard/forms/ConfigureTwoFactorForm';
+import GoogleAccountForm from '@/components/dashboard/forms/GoogleAccountForm';
 import PageContentBlock from '@/components/elements/PageContentBlock';
 import FlashMessageRender from '@/components/FlashMessageRender';
 import Alert from '@/components/elements/latte/Alert';
 import Card from '@/components/elements/latte/Card';
-import { useLocation } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
+import { useStoreState } from '@/state/hooks';
+import useFlash from '@/plugins/useFlash';
 import styles from './account.module.css';
 
+const GOOGLE_ERRORS: Record<string, string> = {
+    state: 'The Google session expired, please try again.',
+    unverified: 'Your Google account email is not verified.',
+    domain: 'Your Google account is not in a domain allowed on this panel.',
+    'already-linked': 'This Google account is already linked to another user.',
+};
+
 export default () => {
-    const { state } = useLocation<undefined | { twoFactorRedirect?: boolean }>();
+    const history = useHistory();
+    const location = useLocation<undefined | { twoFactorRedirect?: boolean }>();
+    const { state } = location;
+    const { addFlash, clearFlashes } = useFlash();
+    const googleEnabled = useStoreState((state) => state.settings.data!.sso.google.enabled);
+    const googleEmail = useStoreState((state) => state.user.data!.googleEmail);
+
+    // The Google callback comes back here after linking or refusing to; the
+    // outcome rides in the query so it survives the full-page round trip.
+    useEffect(() => {
+        const params = new URLSearchParams(location.search);
+        const linked = params.get('sso_linked');
+        const error = params.get('sso_error');
+        if (!linked && !error) {
+            return;
+        }
+
+        clearFlashes('account:google');
+        if (linked) {
+            addFlash({ key: 'account:google', type: 'success', message: 'Your Google account has been linked.' });
+        } else if (error) {
+            addFlash({ key: 'account:google', type: 'error', message: GOOGLE_ERRORS[error] ?? 'Linking failed.' });
+        }
+
+        params.delete('sso_linked');
+        params.delete('sso_error');
+        history.replace({ ...location, search: params.toString() ? '?' + params.toString() : '' });
+    }, []);
 
     return (
         <PageContentBlock title={'Account Overview'} eyebrow={'Account'} heading={'Overview'}>
@@ -32,6 +70,11 @@ export default () => {
                 <Card title={'Two-Step Verification'}>
                     <ConfigureTwoFactorForm />
                 </Card>
+                {(googleEnabled || googleEmail) && (
+                    <Card title={'Google Account'}>
+                        <GoogleAccountForm />
+                    </Card>
+                )}
             </div>
         </PageContentBlock>
     );

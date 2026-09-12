@@ -44,6 +44,8 @@ beforeAll(() => {
         language: 'en',
         rootAdmin: true,
         useTotp: false,
+        googleEmail: null,
+        googleLinkedAt: null,
         createdAt: new Date(),
         updatedAt: new Date(),
     });
