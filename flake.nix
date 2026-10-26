@@ -20,7 +20,7 @@
         system,
         ...
       }: let
-        php = pkgs.php; # PHP 8.2
+        php = pkgs.php; # follows nixpkgs-unstable; not pinned to a specific minor
 
         phpWithExtensions = php.buildEnv {
           extensions = {

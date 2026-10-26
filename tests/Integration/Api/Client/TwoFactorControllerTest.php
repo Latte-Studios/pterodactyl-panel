@@ -101,7 +101,9 @@ class TwoFactorControllerTest extends ClientApiIntegrationTestCase
 
         $tokens = RecoveryToken::query()->where('user_id', $user->id)->get();
         $this->assertCount(10, $tokens);
-        $this->assertStringStartsWith('$2y$10$', $tokens[0]->token);
+        // bcrypt prefix only: PASSWORD_DEFAULT's cost is the PHP default and
+        // changed from 10 to 12 in PHP 8.5.
+        $this->assertStringStartsWith('$2y$', $tokens[0]->token);
         // Ensure the recovery tokens that were created include a "created_at" timestamp
         // value on them.
         //

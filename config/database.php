@@ -3,6 +3,21 @@
 use Illuminate\Support\Str;
 use Pterodactyl\Helpers\Time;
 
+// PHP 8.4 moved the MySQL PDO SSL constants onto the Pdo\Mysql class; the old
+// PDO::MYSQL_ATTR_SSL_* spellings emit deprecation notices on PHP 8.5+, but
+// the replacement class does not exist before 8.4, so resolve per runtime.
+$mysqlSslOptions = extension_loaded('pdo_mysql') ? array_filter(PHP_VERSION_ID >= 80400 ? [
+    Pdo\Mysql::ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+    Pdo\Mysql::ATTR_SSL_CERT => env('MYSQL_ATTR_SSL_CERT'),
+    Pdo\Mysql::ATTR_SSL_KEY => env('MYSQL_ATTR_SSL_KEY'),
+    Pdo\Mysql::ATTR_SSL_VERIFY_SERVER_CERT => env('MYSQL_ATTR_SSL_VERIFY_SERVER_CERT', true),
+] : [
+    PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+    PDO::MYSQL_ATTR_SSL_CERT => env('MYSQL_ATTR_SSL_CERT'),
+    PDO::MYSQL_ATTR_SSL_KEY => env('MYSQL_ATTR_SSL_KEY'),
+    PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => env('MYSQL_ATTR_SSL_VERIFY_SERVER_CERT', true),
+]) : [];
+
 return [
     /*
     |--------------------------------------------------------------------------
@@ -52,12 +67,7 @@ return [
             'engine' => null,
             'timezone' => env('DB_TIMEZONE', Time::getMySQLTimezoneOffset(env('APP_TIMEZONE', 'UTC'))),
             'sslmode' => env('DB_SSLMODE', 'prefer'),
-            'options' => extension_loaded('pdo_mysql') ? array_filter([
-                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
-                PDO::MYSQL_ATTR_SSL_CERT => env('MYSQL_ATTR_SSL_CERT'),
-                PDO::MYSQL_ATTR_SSL_KEY => env('MYSQL_ATTR_SSL_KEY'),
-                PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => env('MYSQL_ATTR_SSL_VERIFY_SERVER_CERT', true),
-            ]) : [],
+            'options' => $mysqlSslOptions,
         ],
 
         'mariadb' => [
@@ -77,12 +87,7 @@ return [
             'engine' => null,
             'timezone' => env('DB_TIMEZONE', Time::getMySQLTimezoneOffset(env('APP_TIMEZONE', 'UTC'))),
             'sslmode' => env('DB_SSLMODE', 'prefer'),
-            'options' => extension_loaded('pdo_mysql') ? array_filter([
-                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
-                PDO::MYSQL_ATTR_SSL_CERT => env('MYSQL_ATTR_SSL_CERT'),
-                PDO::MYSQL_ATTR_SSL_KEY => env('MYSQL_ATTR_SSL_KEY'),
-                PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => env('MYSQL_ATTR_SSL_VERIFY_SERVER_CERT', true),
-            ]) : [],
+            'options' => $mysqlSslOptions,
         ],
     ],
 

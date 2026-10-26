@@ -2,23 +2,22 @@
 
 namespace Pterodactyl\Tests\Unit\Http\Controllers\Admin\Nodes;
 
-use Mockery;
 use GuzzleHttp\Psr7\Request;
-use GuzzleHttp\Psr7\Response;
 use Pterodactyl\Models\Node;
+use GuzzleHttp\Psr7\Response;
 use Pterodactyl\Tests\TestCase;
-use Illuminate\Http\Request as HttpRequest;
 use Illuminate\Support\Facades\Cache;
 use GuzzleHttp\Exception\ClientException;
-use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\ServerException;
+use GuzzleHttp\Exception\ConnectException;
+use Illuminate\Http\Request as HttpRequest;
 use Pterodactyl\Repositories\Wings\DaemonConfigurationRepository;
 use Pterodactyl\Exceptions\Http\Connection\DaemonConnectionException;
 use Pterodactyl\Http\Controllers\Admin\Nodes\NodeUtilizationController;
 
 class NodeUtilizationControllerTest extends TestCase
 {
-    protected function setUp(): void
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -86,7 +85,7 @@ class NodeUtilizationControllerTest extends TestCase
 
     public function testSubsequentRequestsAreServedFromTheCache(): void
     {
-        $repository = Mockery::mock(DaemonConfigurationRepository::class);
+        $repository = \Mockery::mock(DaemonConfigurationRepository::class);
         $repository->shouldReceive('setNode')->once()->andReturnSelf();
         $repository->shouldReceive('getSystemUtilization')->once()->andReturn(['cpu' => ['percent' => 1.0]]);
 
@@ -108,7 +107,7 @@ class NodeUtilizationControllerTest extends TestCase
 
     private function repositoryReturning(array $data): DaemonConfigurationRepository
     {
-        $repository = Mockery::mock(DaemonConfigurationRepository::class);
+        $repository = \Mockery::mock(DaemonConfigurationRepository::class);
         $repository->shouldReceive('setNode')->once()->andReturnSelf();
         $repository->shouldReceive('getSystemUtilization')->once()->andReturn($data);
 
@@ -117,7 +116,7 @@ class NodeUtilizationControllerTest extends TestCase
 
     private function repositoryThrowing(DaemonConnectionException $exception): DaemonConfigurationRepository
     {
-        $repository = Mockery::mock(DaemonConfigurationRepository::class);
+        $repository = \Mockery::mock(DaemonConfigurationRepository::class);
         $repository->shouldReceive('setNode')->once()->andReturnSelf();
         $repository->shouldReceive('getSystemUtilization')->once()->andThrow($exception);
 

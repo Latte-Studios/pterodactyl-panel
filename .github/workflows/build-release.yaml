@@ -55,7 +55,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: "8.3"
+          php-version: "8.5"
           extensions: bcmath, curl, gd, mbstring, pdo_mysql, xml, zip
           tools: composer:v2
           coverage: none
