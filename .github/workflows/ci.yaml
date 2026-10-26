@@ -54,6 +54,11 @@ jobs:
       - run: cp .env.ci .env
       - run: composer install --no-interaction --no-progress --no-suggest --prefer-dist
       - run: vendor/bin/php-cs-fixer fix --dry-run --diff
+        env:
+          # The pinned 3.64 refuses to run on PHP versions it does not know
+          # (the 8.5 matrix legs); the fixers are fine for this codebase's
+          # 8.2-level syntax.
+          PHP_CS_FIXER_IGNORE_ENV: 1
       - run: vendor/bin/phpunit --bootstrap vendor/autoload.php tests/Unit
         env:
           DB_HOST: UNIT_NO_DB
